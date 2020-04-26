@@ -36,7 +36,7 @@ class Redis implements Bootstrap {
     public static function start($worker)
     {
         $config = config('redis');
-        static::$_manager = new RedisManager('phpredis', $config);
+        static::$_manager = new RedisManager('', 'phpredis', $config);
     }
 
     /**
