@@ -1,0 +1,38 @@
+{
+  "name": "workerman/webman",
+  "type": "library",
+  "keywords": [
+    "high performance",
+    "http service"
+  ],
+  "homepage": "http://www.workerman.net",
+  "license": "MIT",
+  "description": "High performance HTTP Service Framework.",
+  "authors": [
+    {
+      "name": "walkor",
+      "email": "walkor@workerman.net",
+      "homepage": "http://www.workerman.net",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "walkor@workerman.net",
+    "issues": "https://github.com/walkor/webman/issues",
+    "forum": "http://wenda.workerman.net/",
+    "wiki": "http://doc.workerman.net/",
+    "source": "https://github.com/walkor/webman"
+  },
+  "require": {
+    "php": ">=7.3",
+    "workerman/webman-framework": "dev-master"
+  },
+  "suggest": {
+    "ext-event": "For better performance. "
+  },
+  "autoload": {
+    "files": [
+      "./support/helpers.php"
+    ]
+  }
+}
