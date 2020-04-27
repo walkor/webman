@@ -25,7 +25,12 @@
   },
   "require": {
     "php": ">=7.3",
-    "workerman/webman-framework": "dev-master"
+    "workerman/webman-framework": "dev-master",
+    "illuminate/database": "^7.6",
+    "illuminate/redis": "^7.6",
+    "monolog/monolog": "^2.0",
+    "twig/twig": "^3.0",
+    "vlucas/phpdotenv": "^4.1"
   },
   "suggest": {
     "ext-event": "For better performance. "
