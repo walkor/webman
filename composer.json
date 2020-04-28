@@ -24,7 +24,7 @@
     "source": "https://github.com/walkor/webman"
   },
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.0",
     "workerman/webman-framework": "dev-master",
     "illuminate/database": "^7.6",
     "illuminate/redis": "^7.6",
