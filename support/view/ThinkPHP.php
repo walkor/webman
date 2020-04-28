@@ -34,7 +34,7 @@ class ThinkPHP implements View
         $view = $view ? : new Template([
             'view_path'   => app_path().'/',
             'cache_path'  => runtime_path() . '/views/',
-            'view_suffix' => 'html'
+            'view_suffix' => config('view.view_suffix', 'html')
         ]);
         $app_name = $app == null ? request()->app : $app;
         if ($app_name === '') {

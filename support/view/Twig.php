@@ -31,15 +31,14 @@ class Twig implements View
      */
     public static function render($template, $vars, $app = null)
     {
-        static $view;
-        $view = $view ? : new Environment(new FilesystemLoader(app_path()), [
-            'cache' => runtime_path() . '/views',
-        ]);
+        static $view, $view_suffix;
+        $view = $view ? : new Environment(new FilesystemLoader(app_path()));
+        $view_suffix = $view_suffix ? : config('view.view_suffix', 'html');
         $app_name = $app == null ? request()->app : $app;
         if ($app_name === '') {
-            $view_path = "view/$template";
+            $view_path = "view/$template.$view_suffix";
         } else {
-            $view_path = "$app_name/view/$template";
+            $view_path = "$app_name/view/$template.$view_suffix";
         }
         return $view->render($view_path, $vars);
     }

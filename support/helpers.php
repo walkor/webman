@@ -134,7 +134,11 @@ function redirect($location, $status = 302, $headers = [])
  */
 function view($template, $vars = [], $app = null)
 {
-    return Raw::render($template, $vars, $app);
+    static $handler;
+    if (null === $handler) {
+        $handler = config('view.handler');
+    }
+    return $handler::render($template, $vars, $app);
 }
 
 /**

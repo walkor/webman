@@ -18,6 +18,7 @@ use Webman\View;
 
 /**
  * Class Blade
+ * composer require jenssegers/blade
  * @package support\view
  */
 class Blade implements View
