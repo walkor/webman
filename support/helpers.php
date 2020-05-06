@@ -21,16 +21,6 @@ use Webman\Exception\ClassNotFoundException;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
 
-/**
- * @param int $status
- * @param array $headers
- * @param string $body
- * @return Response
- */
-function response($body = '', $status = 200, $headers = array())
-{
-    return new Response($status, $headers, $body);
-}
 
 /**
  * @return string
@@ -61,19 +51,14 @@ function runtime_path()
 }
 
 /**
- * @param $name
- * @return
+ * @param int $status
+ * @param array $headers
+ * @param string $body
+ * @return Response
  */
-function singleton($name, $constructor = [])
+function response($body = '', $status = 200, $headers = array())
 {
-    static $instances;
-    if (isset($instances[$name])) {
-        return $instances[$name];
-    }
-    if (\class_exists($name)) {
-        return $instances[$name] = new $name(... $constructor);
-    }
-    throw new ClassNotFoundException("Class $name not found");
+    return new Response($status, $headers, $body);
 }
 
 /**
@@ -138,7 +123,7 @@ function view($template, $vars = [], $app = null)
     if (null === $handler) {
         $handler = config('view.handler');
     }
-    return $handler::render($template, $vars, $app);
+    return new Response(200, [], $handler::render($template, $vars, $app));
 }
 
 /**
@@ -194,4 +179,20 @@ if (!function_exists('env')) {
 
         return $value;
     }
+}
+
+/**
+ * @param $name
+ * @return
+ */
+function singleton($name, $constructor = [])
+{
+    static $instances;
+    if (isset($instances[$name])) {
+        return $instances[$name];
+    }
+    if (\class_exists($name)) {
+        return $instances[$name] = new $name(... $constructor);
+    }
+    throw new ClassNotFoundException("Class $name not found");
 }

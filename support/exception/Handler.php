@@ -14,6 +14,7 @@
 namespace support\exception;
 
 use support\Request;
+use support\Response;
 use Throwable;
 use Webman\Exception\ExceptionHandler;
 
@@ -32,7 +33,7 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    public function render(Request $request, Throwable $exception)
+    public function render(Request $request, Throwable $exception) : Response
     {
         return parent::render($request, $exception);
     }

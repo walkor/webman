@@ -13,8 +13,5 @@
  */
 
 return [
-    '' => [
-        //support\middleware\AuthCheck::class,
-        //support\middleware\AccessControl::class,
-    ]
+    '' => support\exception\Handler::class,
 ];
