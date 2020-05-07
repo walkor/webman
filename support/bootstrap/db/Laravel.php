@@ -32,7 +32,6 @@ class Laravel implements Bootstrap
         $capsule = new Capsule;
         $configs = config('database');
         $default_config = $configs['connections'][$configs['default']];
-        unset($configs['connections'][$configs['default']]);
         $capsule->addConnection($default_config);
 
         foreach ($configs['connections'] as $name => $config) {
