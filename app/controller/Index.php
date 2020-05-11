@@ -2,7 +2,6 @@
 namespace app\controller;
 
 use support\Request;
-use support\bootstrap\Log;
 
 class Index
 {
@@ -30,4 +29,5 @@ class Index
         }
         return json(['code' => 1, 'msg' => 'file not found']);
     }
+    
 }
