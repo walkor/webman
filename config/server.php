@@ -17,7 +17,7 @@ return [
     'ssl'             => false,
     'context'         => [],
     'process_name'    => 'webman',
-    'process_count'   => env('SERVER_PROCESS_COUNT', shell_exec('nproc') ? shell_exec('nproc') * 2 : 4),
+    'process_count'   => env('SERVER_PROCESS_COUNT', shell_exec('nproc') ? (int)shell_exec('nproc') * 2 : 4),
     'user'            => env('SERVER_PROCESS_USER', ''),
     'group'           => env('SERVER_PROCESS_GROUUP', ''),
     'pid_file'        => runtime_path() . '/webman.pid',
