@@ -13,6 +13,7 @@
  */
 namespace support\bootstrap;
 
+use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Webman\Bootstrap;
 use Illuminate\Redis\RedisManager;
 
@@ -20,7 +21,7 @@ use Illuminate\Redis\RedisManager;
  * Class Redis
  * @package support
  *
- * String methods
+ * Strings methods
  * @method static int append($key, $value)
  * @method static int bitCount($key)
  * @method static int decr($key, $value)
@@ -36,7 +37,7 @@ use Illuminate\Redis\RedisManager;
  * @method static array getMultiple(array $keys)
  * @method static bool mSet($pairs)
  * @method static bool mSetNx($pairs)
- * @method static bool set($key, $val, ...$timeout)
+ * @method static bool set($key, $val, $timeout = null)
  * @method static bool setBit($key, $offset, $value)
  * @method static bool setEx($key, $ttl, $value)
  * @method static bool pSetEx($key, $ttl, $value)
@@ -45,9 +46,27 @@ use Illuminate\Redis\RedisManager;
  * @method static int strLen($key)
  * Keys methods
  * @method static int del(...$keys)
+ * @method static int unlink(...$keys)
+ * @method static false|string dump($key)
  * @method static int exists(...$keys)
  * @method static bool expire($key, $ttl)
+ * @method static bool pexpire($key, $ttl)
  * @method static bool expireAt($key, $timestamp)
+ * @method static bool pexpireAt($key, $timestamp)
+ * @method static array keys($pattern)
+ * @method static bool|array scan($it)
+ * @method static void migrate($host, $port, $keys, $dbIndex, $timeout, $copy = false, $replace = false)
+ * @method static bool move($key, $dbIndex)
+ * @method static string|int|bool object($information, $key)
+ * @method static bool persist($key)
+ * @method static string randomKey()
+ * @method static bool rename($srcKey, $dstKey)
+ * @method static bool renameNx($srcKey, $dstKey)
+ * @method static string type($key)
+ * @method static int|array sort($key, $options = [])
+ * @method static int ttl($key)
+ * @method static int pttl($key)
+ * @method static void restore($key, $ttl, $value)
  *
  */
 class Redis implements Bootstrap {
