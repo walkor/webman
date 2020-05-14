@@ -83,6 +83,25 @@ use Illuminate\Redis\RedisManager;
  * @method static array hMGet($key, $memberKeys)
  * @method static array hScan($key, $iterator, $pattern = '', $count = 0)
  * @method static int hStrLen($key, $hashKey)
+ * Lists methods
+ * @method static array blPop(...$keys, $timeout)
+ * @method static array brPop(...$keys, $timeout)
+ * @method static false|string bRPopLPush($srcKey, $dstKey, $timeout)
+ * @method static false|string lIndex($key, $index)
+ * @method static int lInsert($key, $position, $pivot, $value)
+ * @method static false|string lPop($key)
+ * @method static false|int lPush($key, ...$entries)
+ * @method static false|int lPushx($key, $value)
+ * @method static array lRange($key, $start, $end)
+ * @method static false|int lRem($key, $value, $count)
+ * @method static bool lSet($key, $index, $value)
+ * @method static false|array lTrim($key, $start, $end)
+ * @method static false|string rPop($key)
+ * @method static false|string rPopLPush($srcKey, $dstKey)
+ * @method static false|int rPush($key, ...$entries)
+ * @method static false|int rPushX($key, $value)
+ * @method static false|int lLen($key)
+ * 
  *
  */
 class Redis implements Bootstrap {
