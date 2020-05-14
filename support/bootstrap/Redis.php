@@ -140,7 +140,11 @@ use Illuminate\Redis\RedisManager;
  * @method static double zScore($key, $member)
  * @method static int zunionstore($keyOutput, $arrayZSetKeys, $arrayWeights = [], $aggregateFunction = '')
  * @method static false|array zScan($key, $iterator, $pattern = '', $count = 0)
- * 
+ * HyperLogLogs methods
+ * @method static int pfAdd($key, $values)
+ * @method static int pfCount($keys)
+ * @method static bool pfMerge($dstKey, $srcKeys)
+ *
  *
  */
 class Redis implements Bootstrap {
