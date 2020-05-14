@@ -20,7 +20,35 @@ use Illuminate\Redis\RedisManager;
  * Class Redis
  * @package support
  *
- * @method static mixed get($key)
+ * String methods
+ * @method static int append($key, $value)
+ * @method static int bitCount($key)
+ * @method static int decr($key, $value)
+ * @method static int decrBy($key, $value)
+ * @method static string|bool get($key)
+ * @method static int getBit($key, $offset)
+ * @method static string getRange($key, $start, $end)
+ * @method static string getSet($key, $value)
+ * @method static int incr($key, $value)
+ * @method static int incrBy($key, $value)
+ * @method static float incrByFloat($key, $value)
+ * @method static array mGet(array $keys)
+ * @method static array getMultiple(array $keys)
+ * @method static bool mSet($pairs)
+ * @method static bool mSetNx($pairs)
+ * @method static bool set($key, $val, ...$timeout)
+ * @method static bool setBit($key, $offset, $value)
+ * @method static bool setEx($key, $ttl, $value)
+ * @method static bool pSetEx($key, $ttl, $value)
+ * @method static bool setNx($key, $value)
+ * @method static string setRange($key, $offset, $value)
+ * @method static int strLen($key)
+ * Keys methods
+ * @method static int del(...$keys)
+ * @method static int exists(...$keys)
+ * @method static bool expire($key, $ttl)
+ * @method static bool expireAt($key, $timestamp)
+ *
  */
 class Redis implements Bootstrap {
 
