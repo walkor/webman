@@ -13,7 +13,6 @@
  */
 namespace support\bootstrap;
 
-use phpDocumentor\Reflection\Types\Float_;
 use Webman\Bootstrap;
 use Illuminate\Redis\RedisManager;
 
