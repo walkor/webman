@@ -20,9 +20,14 @@ use Illuminate\Redis\RedisManager;
  * Class Redis
  * @package support
  *
+ * Keys method
  * @method static mixed get($key)
  * @method static bool set($key, $val, $timeout)
- * @method static int del(...$key)
+ * @method static int del(...$keys)
+ * @method static int exists(...$keys)
+ * @method static bool expire($key, $ttl)
+ * @method static bool expireAt($key, $timestamp)
+ *
  */
 class Redis implements Bootstrap {
 
