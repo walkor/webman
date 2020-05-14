@@ -101,6 +101,22 @@ use Illuminate\Redis\RedisManager;
  * @method static false|int rPush($key, ...$entries)
  * @method static false|int rPushX($key, $value)
  * @method static false|int lLen($key)
+ * Sets methods
+ * @method static int sAdd($key, $value)
+ * @method static int sCard($key)
+ * @method static array sDiff(...$keys)
+ * @method static false|int sDiffStore($dst, ...$keys)
+ * @method static false|array sInter(...$keys)
+ * @method static false|int sInterStore($dst, ...$keys)
+ * @method static bool sIsMember($key, $member)
+ * @method static array sMembers($key)
+ * @method static bool sMove($src, $dst, $member)
+ * @method static false|string|array sPop($key, $count = 0)
+ * @method static false|string|array sRandMember($key, $count = 0)
+ * @method static int sRem($key, ...$members)
+ * @method static array sUnion(...$keys)
+ * @method static false|int sUnionStore($dst, ...$keys)
+ * @method static false|array sScan($key, $iterator, $pattern = '', $count = 0)
  * 
  *
  */
