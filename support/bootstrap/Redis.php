@@ -21,7 +21,8 @@ use Illuminate\Redis\RedisManager;
  * @package support
  *
  * @method static mixed get($key)
- * @method static bool set($key ,$val ,$timeout)
+ * @method static bool set($key, $val, $timeout)
+ * @method static int del(...$key)
  */
 class Redis implements Bootstrap {
 
