@@ -67,6 +67,22 @@ use Illuminate\Redis\RedisManager;
  * @method static int ttl($key)
  * @method static int pttl($key)
  * @method static void restore($key, $ttl, $value)
+ * Hashes methods
+ * @method static false|int hSet($key, $hashKey, $value)
+ * @method static bool hSetNx($key, $hashKey, $value)
+ * @method static false|string hGet($key, $hashKey)
+ * @method static false|int hLen($key)
+ * @method static false|int hDel($key, ...$hashKeys)
+ * @method static array hKeys($key)
+ * @method static array hVals($key)
+ * @method static array hGetAll($key)
+ * @method static bool hExists($key, $hashKey)
+ * @method static int hIncrBy($key, $hashKey, $value)
+ * @method static float hIncrByFloat($key, $hashKey, $value)
+ * @method static bool hMSet($key, $members)
+ * @method static array hMGet($key, $memberKeys)
+ * @method static array hScan($key, $iterator, $pattern = '', $count = 0)
+ * @method static int hStrLen($key, $hashKey)
  *
  */
 class Redis implements Bootstrap {
