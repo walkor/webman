@@ -165,6 +165,11 @@ use Illuminate\Redis\RedisManager;
  * @method static array xReadGroup($strGroup, $strConsumer, $arrStreams, $iCount = 0, $iBlock = null)
  * @method static array xRevRange($strStream, $strEnd, $strStart, $iCount = 0)
  * @method static int xTrim($strStream, $iMaxLen, $booApproximate = null)
+ * Pub/sub methods
+ * @method static mixed pSubscribe($patterns, $callback)
+ * @method static mixed publish($channel, $message)
+ * @method static mixed subscribe($channels, $callback)
+ * @method static mixed pubSub($keyword, $argument = null)
  *
  */
 class Redis implements Bootstrap {
