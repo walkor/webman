@@ -172,6 +172,12 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed pubSub($keyword, $argument = null)
  * Generic methods
  * @method static mixed rawCommand(...$commandAndArgs)
+ * Transactions methods
+ * @method static \Redis multi()
+ * @method static mixed exec()
+ * @method static mixed discard()
+ * @method static mixed watch($keys)
+ * @method static mixed unwatch($keys)
  */
 class Redis implements Bootstrap {
 
