@@ -188,7 +188,15 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed _prefix($value)
  * @method static mixed _serialize($value)
  * @method static mixed _unserialize($value)
- *
+ * Introspection methods
+ * @method static bool isConnected()
+ * @method static mixed getHost()
+ * @method static mixed getPort()
+ * @method static false|int getDbNum()
+ * @method static false|double getTimeout()
+ * @method static mixed getReadTimeout()
+ * @method static mixed getPersistentID()
+ * @method static mixed getAuth()
  */
 class Redis implements Bootstrap {
 
