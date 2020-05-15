@@ -151,7 +151,20 @@ use Illuminate\Redis\RedisManager;
  * @method static double geoDist($key, ...$members, $unit = '')
  * @method static int|array geoRadius($key, $longitude, $latitude, $radius, $unit, $options = [])
  * @method static array geoRadiusByMember($key, $member, $radius, $units, $options = [])
- * 
+ * Streams methods
+ * @method static int xAck($stream, $group, $arrMessages)
+ * @method static string xAdd($strKey, $strId, $arrMessage, $iMaxLen = 0, $booApproximate = false)
+ * @method static array xClaim($strKey, $strGroup, $strConsumer, $minIdleTime, $arrIds, $arrOptions = [])
+ * @method static int xDel($strKey, $arrIds)
+ * @method static mixed xGroup($command, $strKey, $strGroup, $strMsgId, $booMKStream = null)
+ * @method static mixed xInfo($command, $strStream, $strGroup = null)
+ * @method static int xLen($stream)
+ * @method static array xPending($strStream, $strGroup, $strStart = 0, $strEnd = 0, $iCount = 0, $strConsumer = null)
+ * @method static array xRange($strStream, $strStart, $strEnd, $iCount = 0)
+ * @method static array xRead($arrStreams, $iCount = 0, $iBlock = null)
+ * @method static array xReadGroup($strGroup, $strConsumer, $arrStreams, $iCount = 0, $iBlock = null)
+ * @method static array xRevRange($strStream, $strEnd, $strStart, $iCount = 0)
+ * @method static int xTrim($strStream, $iMaxLen, $booApproximate = null)
  *
  */
 class Redis implements Bootstrap {
