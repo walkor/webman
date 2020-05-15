@@ -148,6 +148,10 @@ use Illuminate\Redis\RedisManager;
  * @method static int geoAdd($key, $longitude, $latitude, $member, ...$items)
  * @method static array geoHash($key, ...$members)
  * @method static array geoPos($key, ...$members)
+ * @method static double geoDist($key, ...$members, $unit = '')
+ * @method static int|array geoRadius($key, $longitude, $latitude, $radius, $unit, $options = [])
+ * @method static array geoRadiusByMember($key, $member, $radius, $units, $options = [])
+ * 
  *
  */
 class Redis implements Bootstrap {
