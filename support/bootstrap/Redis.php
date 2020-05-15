@@ -13,7 +13,6 @@
  */
 namespace support\bootstrap;
 
-use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 use Webman\Bootstrap;
 use Illuminate\Redis\RedisManager;
 
