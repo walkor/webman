@@ -144,7 +144,10 @@ use Illuminate\Redis\RedisManager;
  * @method static int pfAdd($key, $values)
  * @method static int pfCount($keys)
  * @method static bool pfMerge($dstKey, $srcKeys)
- *
+ * Geocoding methods
+ * @method static int geoAdd($key, $longitude, $latitude, $member, ...$items)
+ * @method static array geoHash($key, ...$members)
+ * @method static array geoPos($key, ...$members)
  *
  */
 class Redis implements Bootstrap {
