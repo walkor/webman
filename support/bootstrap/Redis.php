@@ -178,6 +178,17 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed discard()
  * @method static mixed watch($keys)
  * @method static mixed unwatch($keys)
+ * Scripting methods
+ * @method static mixed eval($script, $args = [], $numKeys = 0)
+ * @method static mixed evalSha($sha, $args = [], $numKeys = 0)
+ * @method static mixed script($command, ...$scripts)
+ * @method static mixed client(...$args)
+ * @method static null|string getLastError()
+ * @method static bool clearLastError()
+ * @method static mixed _prefix($value)
+ * @method static mixed _serialize($value)
+ * @method static mixed _unserialize($value)
+ *
  */
 class Redis implements Bootstrap {
 
