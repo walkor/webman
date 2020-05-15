@@ -170,7 +170,8 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed publish($channel, $message)
  * @method static mixed subscribe($channels, $callback)
  * @method static mixed pubSub($keyword, $argument = null)
- *
+ * Generic methods
+ * @method static mixed rawCommand(...$commandAndArgs)
  */
 class Redis implements Bootstrap {
 
