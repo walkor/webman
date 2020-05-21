@@ -22,7 +22,7 @@ $config['group'] && $worker->group = $config['group'];
 
 $worker->onWorkerStart = function ($worker) {
     Dotenv::createMutable(base_path())->load();
-    Config::reload(config_path(), ['route', 'server']);
+    Config::reload(config_path(), ['route']);
     $app = new App($worker, Request::class);
     $worker->onMessage = [$app, 'onMessage'];
 };

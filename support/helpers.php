@@ -21,7 +21,6 @@ use Webman\Exception\ClassNotFoundException;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
 
-
 /**
  * @return string
  */
@@ -195,4 +194,18 @@ function singleton($name, $constructor = [])
         return $instances[$name] = new $name(... $constructor);
     }
     throw new ClassNotFoundException("Class $name not found");
+}
+
+/**
+ * @return int
+ */
+function cpu_count() {
+    ob_start();
+    if (strtolower(PHP_OS) === 'darwin') {
+        $count = shell_exec('sysctl -n machdep.cpu.core_count');
+    } else {
+        $count = shell_exec('nproc');
+    }
+    $count = (int)$count > 0 ? (int)$count : 4;
+    return $count;
 }
