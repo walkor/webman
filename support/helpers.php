@@ -200,7 +200,6 @@ function singleton($name, $constructor = [])
  * @return int
  */
 function cpu_count() {
-    ob_start();
     if (strtolower(PHP_OS) === 'darwin') {
         $count = shell_exec('sysctl -n machdep.cpu.core_count');
     } else {
