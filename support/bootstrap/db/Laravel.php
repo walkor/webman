@@ -29,6 +29,9 @@ class Laravel implements Bootstrap
      */
     public static function start($worker)
     {
+        if (!class_exists('\Illuminate\Database\Capsule\Manager')) {
+            return;
+        }
         $capsule = new Capsule;
         $configs = config('database');
         $default_config = $configs['connections'][$configs['default']];

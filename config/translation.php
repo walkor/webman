@@ -12,10 +12,14 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+/**
+ * 多语言配置
+ */
 return [
-    support\bootstrap\Session::class,
-    support\bootstrap\db\Laravel::class,
-    support\bootstrap\Redis::class,
-    support\bootstrap\Log::class,
-    support\bootstrap\Translation::class,
+    // 默认语言
+    'locale' => 'zh_CN',
+    // 回退语言
+    'fallback_locale' => ['zh_CN', 'en'],
+    // 语言文件存放的文件夹
+    'path' => base_path() . '/resource/translations',
 ];

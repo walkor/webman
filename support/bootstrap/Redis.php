@@ -210,6 +210,9 @@ class Redis implements Bootstrap {
      */
     public static function start($worker)
     {
+        if (!class_exists('\Illuminate\Redis\RedisManager')) {
+            return;
+        }
         $config = config('redis');
         static::$_manager = new RedisManager('', 'phpredis', $config);
     }

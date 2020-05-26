@@ -15,6 +15,7 @@
 use support\Request;
 use support\Response;
 use support\view\Raw;
+use support\bootstrap\Translation;
 use Webman\App;
 use Webman\Config;
 use Webman\Exception\ClassNotFoundException;
@@ -194,6 +195,30 @@ function singleton($name, $constructor = [])
         return $instances[$name] = new $name(... $constructor);
     }
     throw new ClassNotFoundException("Class $name not found");
+}
+
+/**
+ * @param null|string $id
+ * @param array $parameters
+ * @param string|null $domain
+ * @param string|null $locale
+ * @return string
+ */
+function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null)
+{
+    return Translation::trans($id, $parameters, $domain, $locale);
+}
+
+/**
+ * @param null|string $locale
+ * @return string
+ */
+function locale(?string $locale)
+{
+    if (!$locale) {
+        return Translation::getLocale();
+    }
+    Translation::setLocale($locale);
 }
 
 /**
