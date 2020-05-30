@@ -26,8 +26,6 @@
   "require": {
     "php": ">=7.0",
     "workerman/webman-framework": "dev-master",
-    "illuminate/database": "^7.6",
-    "illuminate/redis": "^7.6",
     "monolog/monolog": "^2.0",
     "vlucas/phpdotenv": "^4.1"
   },
