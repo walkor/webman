@@ -45,7 +45,6 @@ class Translation implements Bootstrap {
         $translator->addLoader('phpfile', new PhpFileLoader());
         $translator->setFallbackLocales($config['fallback_locale']);
         if (!$translations_path = realpath($config['path'])) {
-            echo "config translation.path ".($config['path'] ?? '')." not exists\r\n";
             return;
         }
         foreach (glob($translations_path . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . '*.php') as $file) {
