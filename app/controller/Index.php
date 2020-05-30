@@ -2,23 +2,32 @@
 namespace app\controller;
 
 use support\Request;
-use JasonGrimes\Paginator;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Formatter\IntlFormatter;
 
-class User
+class Index
 {
-    /**
-     * 用户列表
-     */
-    public function get(Request $request)
+    public function index(Request $request)
     {
-        return 'ok';
-        locale('fr');
-        return  response(trans(
-            'apple',
-            ['%count%' => 1]
-        ));
+        return response('hello webman');
     }
 
+    public function view(Request $request)
+    {
+        return view('index/view', ['name' => 'webman']);
+    }
+
+    public function json(Request $request)
+    {
+        return json(['code' => 0, 'msg' => 'ok']);
+    }
+
+    public function file(Request $request)
+    {
+        $file = $request->file('upload');
+        if ($file && $file->isValid()) {
+            $file->move(public_path().'/files/myfile.'.$file->getExtension());
+            return json(['code' => 0, 'msg' => 'upload success']);
+        }
+        return json(['code' => 1, 'msg' => 'file not found']);
+    }
+    
 }
