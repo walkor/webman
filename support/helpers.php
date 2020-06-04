@@ -30,21 +30,33 @@ function base_path()
     return BASE_PATH;
 }
 
+/**
+ * @return string
+ */
 function app_path()
 {
     return BASE_PATH . DIRECTORY_SEPARATOR . 'app';
 }
 
+/**
+ * @return string
+ */
 function public_path()
 {
     return BASE_PATH . DIRECTORY_SEPARATOR . 'public';
 }
 
+/**
+ * @return string
+ */
 function config_path()
 {
     return BASE_PATH . DIRECTORY_SEPARATOR . 'config';
 }
 
+/**
+ * @return string
+ */
 function runtime_path()
 {
     return BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
@@ -109,6 +121,14 @@ function redirect($location, $status = 302, $headers = [])
         $response->withHeaders($headers);
     }
     return $response;
+}
+
+/**
+ * @return Response
+ */
+function notfound()
+{
+    return new Response(404, [], file_get_contents(public_path().'/404.html'));
 }
 
 /**
@@ -191,6 +211,7 @@ function singleton($name, $constructor = [])
     if (isset($instances[$name])) {
         return $instances[$name];
     }
+    $constructor = array_values($constructor);
     if (\class_exists($name)) {
         return $instances[$name] = new $name(... $constructor);
     }
@@ -204,7 +225,7 @@ function singleton($name, $constructor = [])
  * @param string|null $locale
  * @return string
  */
-function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null)
+function trans(string $id, array $parameters = [], string $domain = null, string $locale = null)
 {
     return Translation::trans($id, $parameters, $domain, $locale);
 }
@@ -213,7 +234,7 @@ function trans(?string $id, array $parameters = [], string $domain = null, strin
  * @param null|string $locale
  * @return string
  */
-function locale(?string $locale)
+function locale(string $locale)
 {
     if (!$locale) {
         return Translation::getLocale();

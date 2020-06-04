@@ -11,14 +11,29 @@ Dotenv::createMutable(base_path())->load();
 Config::load(config_path(), ['route']);
 $config = config('server');
 
-$worker = new Worker($config['listen'], $config['context']);
-$worker->count      = $config['process_count'];
-$worker->name       = $config['process_name'];
+Worker::$onMasterReload = function (){
+    foreach (array_keys(opcache_get_status()['scripts']) as $file) {
+        opcache_invalidate($file, true);
+    }
+};
+
 Worker::$pidFile    = $config['pid_file'];
 Worker::$stdoutFile = $config['stdout_file'];
-$config['ssl'] && $worker->transport = 'ssl';
-$config['user'] && $worker->user = $config['user'];
-$config['group'] && $worker->group = $config['group'];
+
+$worker = new Worker($config['listen'], $config['context']);
+$property_map = [
+    'name',
+    'count',
+    'user',
+    'group',
+    'reusePort',
+    'transport',
+];
+foreach ($property_map as $property) {
+    if (isset($config[$property])) {
+        $worker->$property = $config[$property];
+    }
+}
 
 $worker->onWorkerStart = function ($worker) {
     Dotenv::createMutable(base_path())->load();
@@ -26,5 +41,65 @@ $worker->onWorkerStart = function ($worker) {
     $app = new App($worker, Request::class);
     $worker->onMessage = [$app, 'onMessage'];
 };
+
+
+foreach (config('process', []) as $config) {
+    $worker = new Worker($config['listen'], $config['context'] ?? []);
+    $property_map = [
+        'name',
+        'count',
+        'user',
+        'group',
+        'reloadable',
+        'reusePort',
+        'transport',
+        'protocol',
+    ];
+    foreach ($property_map as $property) {
+        if (isset($config[$property])) {
+            $worker->$property = $config[$property];
+        }
+    }
+
+    $worker->onWorkerStart = function ($worker) use ($config) {
+        Dotenv::createMutable(base_path())->load();
+        Config::reload(config_path(), ['route']);
+
+        if (!class_exists($config['class'])) {
+            echo "process error: class {$config['class']} not exists\r\n";
+            return;
+        }
+
+        $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);
+        if (!in_array(support\bootstrap\Log::class, $bootstrap)) {
+            $bootstrap[] = support\bootstrap\Log::class;
+        }
+        foreach ($bootstrap as $class_name) {
+            /** @var \Webman\Bootstrap $class_name */
+            $class_name::start($worker);
+        }
+
+        $class = singleton($config['class'], $config['constructor'] ?? []);
+
+        $callback_map = [
+            'onConnect',
+            'onMessage',
+            'onClose',
+            'onError',
+            'onBufferFull',
+            'onBufferDrain',
+            'onWorkerStop',
+            'onWebSocketConnect'
+        ];
+        foreach ($callback_map as $name) {
+            if (method_exists($class, $name)) {
+                $worker->$name = [$class, $name];
+            }
+        }
+        if (method_exists($class, 'onWorkerStart')) {
+            call_user_func([$class, 'onWorkerStart'], $worker);
+        }
+    };
+}
 
 Worker::runAll();
