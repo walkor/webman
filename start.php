@@ -12,8 +12,10 @@ Config::load(config_path(), ['route']);
 $config = config('server');
 
 Worker::$onMasterReload = function (){
-    foreach (array_keys(opcache_get_status()['scripts']) as $file) {
-        opcache_invalidate($file, true);
+    if ($status = opcache_get_status()) {
+        foreach (array_keys($status['scripts']) as $file) {
+            opcache_invalidate($file, true);
+        }
     }
 };
 
