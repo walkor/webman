@@ -2,8 +2,9 @@
 namespace process;
 
 use Workerman\Timer;
+use Workerman\Worker;
 
-class Monitor
+class FileMonitor
 {
     /**
      * @var array
@@ -21,6 +22,9 @@ class Monitor
      */
     public function __construct($path, $extensions)
     {
+        if (Worker::$daemonize) {
+            return;
+        }
         $this->_paths = (array)$path;
         $this->_extensions = $extensions;
         Timer::add(1, function () {
@@ -53,6 +57,12 @@ class Monitor
             }
             // check mtime
             if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions)) {
+                $var = 0;
+                exec("php -l " . $file, $out, $var);
+                if ($var) {
+                    $last_mtime = $file->getMTime();
+                    continue;
+                }
                 echo $file . " update and reload\n";
                 // send SIGUSR1 signal to master process for reload
                 posix_kill(posix_getppid(), SIGUSR1);

@@ -18,13 +18,11 @@ use support\view\Blade;
 use support\view\ThinkPHP;
 
 return [
-    [
-        'class'       => process\Monitor::class,
-        'listen'      => null,
-        'count'       => 1,
-        'name'        => 'monitor',
-        'reloadable'  => false,
+    // 文件更新检测等
+    'monitor' => [
+        'class'       => process\FileMonitor::class,
         'constructor' => [
+            // 监控这些目录
             'monitor_dir' => [
                 app_path(),
                 config_path(),
@@ -32,15 +30,16 @@ return [
                 base_path() . '/support',
                 base_path() . '/resource'
             ],
+            // 监控这些后缀的文件
             'monitor_extenstions' => [
                 'php', 'html', 'htm'
             ]
         ]
     ],
-    /*[
-        'class'       => process\Websocket::class,
-        'listen'      => 'websocket://0.0.0.0:8888',
-        'count'       => 1,
-        'name'        => 'websocket'
+    // 其它进程
+    /*'websocket' => [
+        'class'  => process\Websocket::class,
+        'listen' => 'websocket://0.0.0.0:8888',
+        'count'  => 10,
     ],*/
 ];
