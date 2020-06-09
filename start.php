@@ -6,6 +6,7 @@ use Webman\App;
 use Webman\Config;
 use support\Request;
 use Dotenv\Dotenv;
+use support\bootstrap\Log;
 
 Dotenv::createMutable(base_path())->load();
 Config::load(config_path(), ['route']);
@@ -40,7 +41,11 @@ foreach ($property_map as $property) {
 $worker->onWorkerStart = function ($worker) {
     Dotenv::createMutable(base_path())->load();
     Config::reload(config_path(), ['route']);
-    $app = new App($worker, Request::class);
+    foreach (config('bootstrap', []) as $class_name) {
+        /** @var \Webman\Bootstrap $class_name */
+        $class_name::start($worker);
+    }
+    $app = new App($worker, Request::class, Log::channel('default'));
     $worker->onMessage = [$app, 'onMessage'];
 };
 

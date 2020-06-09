@@ -13,8 +13,8 @@
  */
 namespace support\exception;
 
-use support\Request;
-use support\Response;
+use Webman\Http\Request;
+use Webman\Http\Response;
 use Throwable;
 use Webman\Exception\ExceptionHandler;
 
