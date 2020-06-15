@@ -2,15 +2,24 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Workerman\Worker;
+use Workerman\Protocols\Http;
 use Webman\App;
 use Webman\Config;
-use support\Request;
+use Webman\Route;
+use Webman\Middleware;
 use Dotenv\Dotenv;
+use support\Request;
 use support\bootstrap\Log;
+use support\bootstrap\Container;
+
 
 Dotenv::createMutable(base_path())->load();
-Config::load(config_path(), ['route']);
+Config::load(config_path(), ['route', 'container']);
 $config = config('server');
+
+if ($timezone = config('app.default_timezone')) {
+    date_default_timezone_set($timezone);
+}
 
 Worker::$onMasterReload = function (){
     if ($status = opcache_get_status()) {
@@ -40,12 +49,17 @@ foreach ($property_map as $property) {
 
 $worker->onWorkerStart = function ($worker) {
     Dotenv::createMutable(base_path())->load();
-    Config::reload(config_path(), ['route']);
+    Config::reload(config_path(), ['route', 'container']);
     foreach (config('bootstrap', []) as $class_name) {
         /** @var \Webman\Bootstrap $class_name */
         $class_name::start($worker);
     }
-    $app = new App($worker, Request::class, Log::channel('default'));
+    $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
+    Route::load(config_path() . '/route.php');
+    Middleware::load(config('middleware', []));
+    Middleware::load(['__static__' => config('static.middleware', [])]);
+    Http::requestClass(Request::class);
+
     $worker->onMessage = [$app, 'onMessage'];
 };
 
@@ -90,8 +104,8 @@ foreach (config('process', []) as $process_name => $config) {
             if (isset($server['listen'])) {
                 echo "listen: {$server['listen']}\n";
             }
-            $class = singleton($server['class'], $server['constructor'] ?? []);
-            init_worker($listen, $class);
+            $class = Container::make($server['class'], $server['constructor'] ?? []);
+            worker_bind($listen, $class);
             $listen->listen();
         }
 
@@ -100,34 +114,13 @@ foreach (config('process', []) as $process_name => $config) {
                 echo "process error: class {$config['class']} not exists\r\n";
                 return;
             }
-            $class = singleton($config['class'], $config['constructor'] ?? []);
 
-            init_worker($worker, $class);
+            $class = Container::make($config['class'], $config['constructor'] ?? []);
+            worker_bind($worker, $class);
         }
 
     };
 }
 
-function init_worker($worker, $class)
-{
-    $callback_map = [
-        'onConnect',
-        'onMessage',
-        'onClose',
-        'onError',
-        'onBufferFull',
-        'onBufferDrain',
-        'onWorkerStop',
-        'onWebSocketConnect'
-    ];
-    foreach ($callback_map as $name) {
-        if (method_exists($class, $name)) {
-            $worker->$name = [$class, $name];
-        }
-    }
-    if (method_exists($class, 'onWorkerStart')) {
-        call_user_func([$class, 'onWorkerStart'], $worker);
-    }
-}
 
 Worker::runAll();
