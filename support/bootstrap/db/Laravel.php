@@ -15,6 +15,7 @@ namespace support\bootstrap\db;
 
 use Webman\Bootstrap;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Workerman\Worker;
 
 /**
  * Class Laravel
@@ -23,7 +24,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class Laravel implements Bootstrap
 {
     /**
-     * @param \Workerman\Worker $worker
+     * @param Worker $worker
      *
      * @return void
      */

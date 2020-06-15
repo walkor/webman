@@ -1,4 +1,17 @@
 <?php
+/**
+ * This file is part of webman.
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the MIT-LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @author    walkor<walkor@workerman.net>
+ * @copyright walkor<walkor@workerman.net>
+ * @link      http://www.workerman.net/
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+
 namespace support\middleware;
 
 use Webman\MiddlewareInterface;
@@ -11,7 +24,7 @@ class StaticFile implements MiddlewareInterface
     {
         // 禁止访问.开头的隐藏文件
         if (strpos($request->path(), '/.') !== false) {
-            return notfound();
+            return response('<h1>403 forbidden</h1>', [], 403);
         }
         /** @var Response $response */
         $response = $next($request);

@@ -124,14 +124,6 @@ function redirect($location, $status = 302, $headers = [])
 }
 
 /**
- * @return Response
- */
-function notfound()
-{
-    return new Response(404, [], file_get_contents(public_path().'/404.html'));
-}
-
-/**
  * @param $template
  * @param array $vars
  * @param null $app
@@ -202,23 +194,6 @@ if (!function_exists('env')) {
 }
 
 /**
- * @param $name
- * @return
- */
-function singleton($name, $constructor = [])
-{
-    static $instances;
-    if (isset($instances[$name])) {
-        return $instances[$name];
-    }
-    $constructor = array_values($constructor);
-    if (\class_exists($name)) {
-        return $instances[$name] = new $name(... $constructor);
-    }
-    throw new ClassNotFoundException("Class $name not found");
-}
-
-/**
  * @param null|string $id
  * @param array $parameters
  * @param string|null $domain
@@ -240,6 +215,31 @@ function locale(string $locale)
         return Translation::getLocale();
     }
     Translation::setLocale($locale);
+}
+
+/**
+ * @param $worker
+ * @param $class
+ */
+function worker_bind($worker, $class) {
+    $callback_map = [
+        'onConnect',
+        'onMessage',
+        'onClose',
+        'onError',
+        'onBufferFull',
+        'onBufferDrain',
+        'onWorkerStop',
+        'onWebSocketConnect'
+    ];
+    foreach ($callback_map as $name) {
+        if (method_exists($class, $name)) {
+            $worker->$name = [$class, $name];
+        }
+    }
+    if (method_exists($class, 'onWorkerStart')) {
+        call_user_func([$class, 'onWorkerStart'], $worker);
+    }
 }
 
 /**

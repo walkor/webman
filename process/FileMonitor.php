@@ -1,4 +1,17 @@
 <?php
+/**
+ * This file is part of webman.
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the MIT-LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @author    walkor<walkor@workerman.net>
+ * @copyright walkor<walkor@workerman.net>
+ * @link      http://www.workerman.net/
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+
 namespace process;
 
 use Workerman\Timer;
@@ -17,16 +30,17 @@ class FileMonitor
     protected $_extensions = [];
 
     /**
-     * Monitor constructor.
-     * @param $path
+     * FileMonitor constructor.
+     * @param $monitor_dir
+     * @param $monitor_extenstions
      */
-    public function __construct($path, $extensions)
+    public function __construct($monitor_dir, $monitor_extenstions)
     {
         if (Worker::$daemonize) {
             return;
         }
-        $this->_paths = (array)$path;
-        $this->_extensions = $extensions;
+        $this->_paths = (array)$monitor_dir;
+        $this->_extensions = $monitor_extenstions;
         Timer::add(1, function () {
             foreach ($this->_paths as $path) {
                 $this->check_files_change($path);
@@ -34,7 +48,9 @@ class FileMonitor
         });
     }
 
-    // check files func
+    /**
+     * @param $monitor_dir
+     */
     public function check_files_change($monitor_dir)
     {
         static $last_mtime;

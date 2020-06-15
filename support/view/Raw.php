@@ -15,6 +15,10 @@ namespace support\view;
 
 use Webman\View;
 
+/**
+ * Class Raw
+ * @package support\view
+ */
 class Raw implements View
 {
     public static function render($template, $vars, $app = null)

@@ -18,7 +18,7 @@ use support\view\Blade;
 use support\view\ThinkPHP;
 
 return [
-    // 文件更新检测等
+    // 文件更新检测
     'monitor' => [
         'class'       => process\FileMonitor::class,
         'constructor' => [

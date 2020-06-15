@@ -14,7 +14,7 @@
 
 return [
     '' => [
-        //support\middleware\AuthCheck::class,
-        //support\middleware\AccessControl::class,
+        //support\middleware\AuthCheckTest::class,
+        //support\middleware\AccessControlTest::class,
     ]
 ];

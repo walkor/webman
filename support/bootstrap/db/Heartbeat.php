@@ -17,7 +17,8 @@ use Webman\Bootstrap;
 use support\Db;
 
 /**
- * mysql心跳。定时发送一个查询，防止mysql连接长时间不活跃被mysql服务端断开
+ * mysql心跳。定时发送一个查询，防止mysql连接长时间不活跃被mysql服务端断开。
+ * 默认不开启，如需开启请到 config/bootstrap.php中添加 support\bootstrap\db\Heartbeat::class,
  * @package support\bootstrap\db
  */
 class Heartbeat implements Bootstrap
