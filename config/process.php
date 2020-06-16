@@ -20,7 +20,7 @@ use support\view\ThinkPHP;
 return [
     // 文件更新检测
     'monitor' => [
-        'class'       => process\FileMonitor::class,
+        'handler'     => process\FileMonitor::class,
         'constructor' => [
             // 监控这些目录
             'monitor_dir' => [
@@ -37,7 +37,7 @@ return [
         ]
     ],
     // 其它进程
-    /*'websocket' => [
+    /*'handler'  => [
         'class'  => process\Websocket::class,
         'listen' => 'websocket://0.0.0.0:8888',
         'count'  => 10,

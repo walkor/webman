@@ -98,26 +98,26 @@ foreach (config('process', []) as $process_name => $config) {
         }
 
         foreach ($config['services'] ?? [] as $server) {
-            if (!class_exists($server['class'])) {
-                echo "process error: class {$config['class']} not exists\r\n";
+            if (!class_exists($server['handler'])) {
+                echo "process error: class {$config['handler']} not exists\r\n";
                 continue;
             }
             $listen = new Worker($server['listen'] ?? null, $server['context'] ?? []);
             if (isset($server['listen'])) {
                 echo "listen: {$server['listen']}\n";
             }
-            $class = Container::make($server['class'], $server['constructor'] ?? []);
+            $class = Container::make($server['handler'], $server['constructor'] ?? []);
             worker_bind($listen, $class);
             $listen->listen();
         }
 
-        if (isset($config['class'])) {
-            if (!class_exists($config['class'])) {
-                echo "process error: class {$config['class']} not exists\r\n";
+        if (isset($config['handler'])) {
+            if (!class_exists($config['handler'])) {
+                echo "process error: class {$config['handler']} not exists\r\n";
                 return;
             }
 
-            $class = Container::make($config['class'], $config['constructor'] ?? []);
+            $class = Container::make($config['handler'], $config['constructor'] ?? []);
             worker_bind($worker, $class);
         }
 
