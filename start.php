@@ -3,6 +3,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Workerman\Worker;
 use Workerman\Protocols\Http;
+use Workerman\Connection\TcpConnection;
 use Webman\App;
 use Webman\Config;
 use Webman\Route;
@@ -29,8 +30,9 @@ Worker::$onMasterReload = function (){
     }
 };
 
-Worker::$pidFile    = $config['pid_file'];
-Worker::$stdoutFile = $config['stdout_file'];
+Worker::$pidFile                      = $config['pid_file'];
+Worker::$stdoutFile                   = $config['stdout_file'];
+TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10*1024*1024;
 
 $worker = new Worker($config['listen'], $config['context']);
 $property_map = [
