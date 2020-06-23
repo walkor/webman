@@ -37,8 +37,8 @@ return [
         ]
     ],
     // 其它进程
-    /*'handler'  => [
-        'class'  => process\Websocket::class,
+    /*'websocket'  => [
+        'handler'  => process\Websocket::class,
         'listen' => 'websocket://0.0.0.0:8888',
         'count'  => 10,
     ],*/
