@@ -15,6 +15,8 @@ namespace support\bootstrap\db;
 
 use Webman\Bootstrap;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Container\Container;
 use Workerman\Worker;
 
 /**
@@ -42,9 +44,10 @@ class Laravel implements Bootstrap
             $capsule->addConnection($config, $name);
         }
 
+        $capsule->setEventDispatcher(new Dispatcher(new Container));
+
         $capsule->setAsGlobal();
 
-        // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
         $capsule->bootEloquent();
     }
 }
