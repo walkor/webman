@@ -24,7 +24,7 @@ class StaticFile implements MiddlewareInterface
     {
         // 禁止访问.开头的隐藏文件
         if (strpos($request->path(), '/.') !== false) {
-            return response('<h1>403 forbidden</h1>', [], 403);
+            return response('<h1>403 forbidden</h1>', 403);
         }
         /** @var Response $response */
         $response = $next($request);
