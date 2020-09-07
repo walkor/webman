@@ -36,7 +36,7 @@ use Illuminate\Redis\RedisManager;
  * @method static array getMultiple(array $keys)
  * @method static bool mSet($pairs)
  * @method static bool mSetNx($pairs)
- * @method static bool set($key, $val, $timeout = null)
+ * @method static bool set($key, $value, $expireResolution = null, $expireTTL = null, $flag = null)
  * @method static bool setBit($key, $offset, $value)
  * @method static bool setEx($key, $ttl, $value)
  * @method static bool pSetEx($key, $ttl, $value)
