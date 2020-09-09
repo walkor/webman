@@ -21,6 +21,7 @@ return [
     // 文件更新检测
     'monitor' => [
         'handler'     => process\FileMonitor::class,
+        'reloadable'  => false,
         'constructor' => [
             // 监控这些目录
             'monitor_dir' => [
