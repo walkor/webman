@@ -44,7 +44,9 @@ class Laravel implements Bootstrap
             $capsule->addConnection($config, $name);
         }
 
-        $capsule->setEventDispatcher(new Dispatcher(new Container));
+        if (class_exists('\Illuminate\Events\Dispatcher')) {
+            $capsule->setEventDispatcher(new Dispatcher(new Container));
+        }
 
         $capsule->setAsGlobal();
 
