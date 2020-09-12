@@ -52,6 +52,9 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
+    foreach (config('autoload.files', []) as $file) {
+        include_once $file;
+    }
     Dotenv::createMutable(base_path())->load();
     Config::reload(config_path(), ['route', 'container']);
     foreach (config('bootstrap', []) as $class_name) {
@@ -87,6 +90,9 @@ foreach (config('process', []) as $process_name => $config) {
     }
 
     $worker->onWorkerStart = function ($worker) use ($config) {
+        foreach (config('autoload.files', []) as $file) {
+            include_once $file;
+        }
         Dotenv::createMutable(base_path())->load();
         Config::reload(config_path(), ['route']);
 
