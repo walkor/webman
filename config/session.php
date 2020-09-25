@@ -14,7 +14,7 @@
 
 return [
 
-    'type'    => 'file', // or redis
+    'type'    => 'file', // or redis or redis_cluster
 
     'handler' => Webman\FileSessionHandler::class,
 
@@ -30,6 +30,11 @@ return [
             'database'  => '',
             'prefix'    => 'redis_session_',
         ],
+        'redis_cluster' => [
+            'host'    => ['127.0.0.1:7000', '127.0.0.1:7001', '127.0.0.1:7001'],
+            'timeout' => 2,
+            'auth'    => '',
+        ]
     ],
 
     'session_name' => 'PHPSID',
