@@ -25,7 +25,7 @@ if ($timezone = config('app.default_timezone')) {
 Worker::$onMasterReload = function (){
     if (function_exists('opcache_get_status')) {
         if ($status = opcache_get_status()) {
-            if ($scripts = $status['scripts']) {
+            if (isset($status['scripts']) && $scripts = $status['scripts']) {
                 foreach (array_keys($scripts) as $file) {
                     opcache_invalidate($file, true);
                 }
