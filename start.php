@@ -13,8 +13,12 @@ use support\Request;
 use support\bootstrap\Log;
 use support\bootstrap\Container;
 
+if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
+    Dotenv::createUnsafeImmutable(base_path())->load();
+} else {
+    Dotenv::createMutable(base_path())->load();
+}
 
-Dotenv::createMutable(base_path())->load();
 Config::load(config_path(), ['route', 'container']);
 $config = config('server');
 
@@ -57,7 +61,11 @@ $worker->onWorkerStart = function ($worker) {
     foreach (config('autoload.files', []) as $file) {
         include_once $file;
     }
-    Dotenv::createMutable(base_path())->load();
+    if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
+        Dotenv::createUnsafeImmutable(base_path())->load();
+    } else {
+        Dotenv::createMutable(base_path())->load();
+    }
     Config::reload(config_path(), ['route', 'container']);
     foreach (config('bootstrap', []) as $class_name) {
         /** @var \Webman\Bootstrap $class_name */
