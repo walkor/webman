@@ -19,7 +19,7 @@ return [
     'name'                 => 'webman',
     'count'                => env('SERVER_PROCESS_COUNT', cpu_count() * 2),
     'user'                 => env('SERVER_PROCESS_USER', ''),
-    'group'                => env('SERVER_PROCESS_GROUUP', ''),
+    'group'                => env('SERVER_PROCESS_GROUP', ''),
     'pid_file'             => runtime_path() . '/webman.pid',
     'max_request'          => 1000000,
     'stdout_file'          => runtime_path() . '/logs/stdout.log',
