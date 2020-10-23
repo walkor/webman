@@ -19,4 +19,5 @@ return [
     support\bootstrap\Redis::class,
     support\bootstrap\Log::class,
     support\bootstrap\Translation::class,
+    support\bootstrap\Stomp::class,
 ];

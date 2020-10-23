@@ -38,9 +38,11 @@ return [
         ]
     ],
     // 其它进程
-    /*'websocket'  => [
-        'handler'  => process\Websocket::class,
-        'listen' => 'websocket://0.0.0.0:8888',
-        'count'  => 10,
-    ],*/
+    'stomp_consumer'  => [
+        'handler'     => process\StompConsumer::class,
+        'count'       => 1,
+        'constructor' => [
+            'consumer_dir' => app_path() . '/stomp'
+        ]
+    ],
 ];

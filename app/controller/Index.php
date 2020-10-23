@@ -2,11 +2,13 @@
 namespace app\controller;
 
 use support\Request;
+use support\bootstrap\Stomp;
 
 class Index
 {
     public function index(Request $request)
     {
+        Stomp::send('/topic/foo', json_encode(['hello' => 'world']));
         return response('hello webman');
     }
 
