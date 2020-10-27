@@ -58,6 +58,11 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
+    register_shutdown_function(function ($start_time) {
+        if (time() - $start_time <= 1) {
+            sleep(1);
+        }
+    }, time());
     foreach (config('autoload.files', []) as $file) {
         include_once $file;
     }
