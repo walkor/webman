@@ -58,6 +58,11 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
+    set_error_handler(function ($level, $message, $file = '', $line = 0, $context = []) {
+        if (error_reporting() & $level) {
+            throw new ErrorException($message, 0, $level, $file, $line);
+        }
+    });
     register_shutdown_function(function ($start_time) {
         if (time() - $start_time <= 1) {
             sleep(1);
