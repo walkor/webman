@@ -17,6 +17,7 @@ use Webman\Bootstrap;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use Jenssegers\Mongodb\Connection;
 use Workerman\Worker;
 
 /**
@@ -37,6 +38,13 @@ class Laravel implements Bootstrap
         }
         $capsule = new Capsule;
         $configs = config('database');
+
+        $capsule->getDatabaseManager()->extend('mongodb', function($config, $name) {
+            $config['name'] = $name;
+
+            return new Connection($config);
+        });
+
         $default_config = $configs['connections'][$configs['default']];
         $capsule->addConnection($default_config);
 
