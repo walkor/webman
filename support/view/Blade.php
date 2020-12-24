@@ -24,6 +24,20 @@ use Webman\View;
 class Blade implements View
 {
     /**
+     * @var array
+     */
+    protected static $_vars = [];
+
+    /**
+     * @param $name
+     * @param null $value
+     */
+    public static function assign($name, $value = null)
+    {
+        static::$_vars += \is_array($name) ? $name : [$name => $value];
+    }
+
+    /**
      * @param $template
      * @param $vars
      * @param string $app
@@ -31,14 +45,15 @@ class Blade implements View
      */
     public static function render($template, $vars, $app = null)
     {
-        static $balde;
-        $balde = $balde ? : new BladeView(app_path(), runtime_path() . '/views');
-        $app_name = $app == null ? request()->app : $app;
-        if ($app_name === '') {
-            $view_path = "view/$template";
-        } else {
-            $view_path = "$app_name/view/$template";
+        static $views = [];
+        $app = $app === null ? request()->app : $app;
+        if (!isset($views[$app])) {
+            $view_path = $app === '' ? app_path(). '/view' : app_path(). "/$app/view";
+            $views[$app] = new BladeView($view_path, runtime_path() . '/views');
         }
-        return $balde->render($view_path, $vars);
+        $vars += static::$_vars;
+        $content = $views[$app]->render($template, $vars);
+        static::$_vars = [];
+        return $content;
     }
 }

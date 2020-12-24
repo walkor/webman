@@ -24,6 +24,20 @@ use Webman\View;
 class Twig implements View
 {
     /**
+     * @var array
+     */
+    protected static $_vars = [];
+
+    /**
+     * @param $name
+     * @param null $value
+     */
+    public static function assign($name, $value = null)
+    {
+        static::$_vars += \is_array($name) ? $name : [$name => $value];
+    }
+
+    /**
      * @param $template
      * @param $vars
      * @param string $app
@@ -31,15 +45,16 @@ class Twig implements View
      */
     public static function render($template, $vars, $app = null)
     {
-        static $view, $view_suffix;
-        $view = $view ? : new Environment(new FilesystemLoader(app_path()));
+        static $views = [], $view_suffix;
         $view_suffix = $view_suffix ? : config('view.view_suffix', 'html');
-        $app_name = $app == null ? request()->app : $app;
-        if ($app_name === '') {
-            $view_path = "view/$template.$view_suffix";
-        } else {
-            $view_path = "$app_name/view/$template.$view_suffix";
+        $app = $app === null ? request()->app : $app;
+        if (!isset($views[$app])) {
+            $view_path = $app === '' ? app_path(). '/view/' : app_path(). "/$app/view/";
+            $views[$app] = new Environment(new FilesystemLoader($view_path));
         }
-        return $view->render($view_path, $vars);
+        $vars += static::$_vars;
+        $content = $views[$app]->render("$template.$view_suffix", $vars);
+        static::$_vars = [];
+        return $content;
     }
 }
