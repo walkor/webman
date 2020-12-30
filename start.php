@@ -71,8 +71,8 @@ $worker->onWorkerStart = function ($worker) {
     foreach (config('autoload.files', []) as $file) {
         include_once $file;
     }
-    if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
-        Dotenv::createUnsafeImmutable(base_path())->load();
+    if (method_exists('Dotenv\Dotenv', 'createUnsafeMutable')) {
+        Dotenv::createUnsafeMutable(base_path())->load();
     } else {
         Dotenv::createMutable(base_path())->load();
     }
