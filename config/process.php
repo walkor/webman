@@ -29,11 +29,12 @@ return [
                 config_path(),
                 base_path() . '/process',
                 base_path() . '/support',
-                base_path() . '/resource'
+                base_path() . '/resource',
+                base_path() . '/.env',
             ],
             // 监控这些后缀的文件
             'monitor_extenstions' => [
-                'php', 'html', 'htm'
+                'php', 'html', 'htm', 'env'
             ]
         ]
     ],
