@@ -44,12 +44,12 @@ class Raw implements View
     public static function render($template, $vars, $app = null)
     {
         static $view_suffix;
-        $view_suffix = $view_suffix ? : config('view.view_suffix', 'html');
-        $app = $app === null ? request()->app : $app;
+        $view_suffix = $view_suffix ? : \config('view.view_suffix', 'html');
+        $app = $app === null ? \request()->app : $app;
         if ($app === '') {
-            $view_path = app_path() . "/view/$template.$view_suffix";
+            $view_path = \app_path() . "/view/$template.$view_suffix";
         } else {
-            $view_path = app_path() . "/$app/view/$template.$view_suffix";
+            $view_path = \app_path() . "/$app/view/$template.$view_suffix";
         }
         \extract(static::$_vars);
         \extract($vars);

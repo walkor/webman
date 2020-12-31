@@ -46,11 +46,11 @@ class Twig implements View
     public static function render($template, $vars, $app = null)
     {
         static $views = [], $view_suffix;
-        $view_suffix = $view_suffix ? : config('view.view_suffix', 'html');
-        $app = $app === null ? request()->app : $app;
+        $view_suffix = $view_suffix ? : \config('view.view_suffix', 'html');
+        $app = $app === null ? \request()->app : $app;
         if (!isset($views[$app])) {
-            $view_path = $app === '' ? app_path(). '/view/' : app_path(). "/$app/view/";
-            $views[$app] = new Environment(new FilesystemLoader($view_path));
+            $view_path = $app === '' ? \app_path(). '/view/' : \app_path(). "/$app/view/";
+            $views[$app] = new Environment(new FilesystemLoader($view_path), \config('view.options', []));
         }
         $vars += static::$_vars;
         $content = $views[$app]->render("$template.$view_suffix", $vars);

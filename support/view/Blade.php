@@ -46,10 +46,10 @@ class Blade implements View
     public static function render($template, $vars, $app = null)
     {
         static $views = [];
-        $app = $app === null ? request()->app : $app;
+        $app = $app === null ? \request()->app : $app;
         if (!isset($views[$app])) {
-            $view_path = $app === '' ? app_path(). '/view' : app_path(). "/$app/view";
-            $views[$app] = new BladeView($view_path, runtime_path() . '/views');
+            $view_path = $app === '' ? \app_path(). '/view' : \app_path(). "/$app/view";
+            $views[$app] = new BladeView($view_path, \runtime_path() . '/views');
         }
         $vars += static::$_vars;
         $content = $views[$app]->render($template, $vars);
