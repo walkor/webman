@@ -82,7 +82,7 @@ function response($body = '', $status = 200, $headers = array())
  */
 function json($data, $options = JSON_UNESCAPED_UNICODE)
 {
-    return new Response(200, ['Content-Type' => 'application/json'], json_encode($data, $options));
+    return new Response(200, ['Content-Type' => 'application/json;charset=UTF-8'], json_encode($data, $options));
 }
 
 /**
