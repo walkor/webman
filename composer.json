@@ -33,6 +33,9 @@
     "ext-event": "For better performance. "
   },
   "autoload": {
+    "psr-4": {
+      "app\\": "app/"
+    },
     "files": [
       "./support/helpers.php"
     ]
