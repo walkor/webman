@@ -32,15 +32,15 @@ class FileMonitor
     /**
      * FileMonitor constructor.
      * @param $monitor_dir
-     * @param $monitor_extensions
+     * @param $monitor_extenstions
      */
-    public function __construct($monitor_dir, $monitor_extensions)
+    public function __construct($monitor_dir, $monitor_extenstions)
     {
         if (Worker::$daemonize) {
             return;
         }
         $this->_paths = (array)$monitor_dir;
-        $this->_extensions = $monitor_extensions;
+        $this->_extensions = $monitor_extenstions;
         Timer::add(1, function () {
             foreach ($this->_paths as $path) {
                 $this->check_files_change($path);
