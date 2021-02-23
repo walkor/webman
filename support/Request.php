@@ -19,5 +19,18 @@ namespace support;
  */
 class Request extends \Webman\Http\Request
 {
+    /**
+     * Parse first line of http header buffer.
+     *
+     * @return void
+     */
+    protected function parseHeadFirstLine()
+    {
+		parent::parseHeadFirstLine();
 
+		if (config('server.merge_slashes'))
+		{
+			$this->_data['uri'] = preg_replace('/\/+/', '/', $this->_data['uri']);
+		}
+    }
 }
