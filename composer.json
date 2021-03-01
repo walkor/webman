@@ -1,6 +1,6 @@
 {
   "name": "workerman/webman",
-  "type": "library",
+  "type": "project",
   "keywords": [
     "high performance",
     "http service"
