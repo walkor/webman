@@ -17,6 +17,7 @@ return [
     support\bootstrap\Session::class,
     support\bootstrap\db\Laravel::class,
     support\bootstrap\Redis::class,
+    support\bootstrap\Cache::class,
     support\bootstrap\Log::class,
     support\bootstrap\Translation::class,
 ];
