@@ -78,7 +78,7 @@ class FileMonitor
             // check mtime
             if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions)) {
                 $var = 0;
-                exec("php -l " . $file, $out, $var);
+                exec(PHP_BINDIR . "/php -l " . $file, $out, $var);
                 if ($var) {
                     $last_mtime = $file->getMTime();
                     continue;
