@@ -34,7 +34,7 @@ class Twig implements View
      */
     public static function assign($name, $value = null)
     {
-        static::$_vars += \is_array($name) ? $name : [$name => $value];
+        static::$_vars = \array_merge(static::$_vars, \is_array($name) ? $name : [$name => $value]);
     }
 
     /**
@@ -52,7 +52,7 @@ class Twig implements View
             $view_path = $app === '' ? \app_path(). '/view/' : \app_path(). "/$app/view/";
             $views[$app] = new Environment(new FilesystemLoader($view_path), \config('view.options', []));
         }
-        $vars += static::$_vars;
+        $vars = \array_merge(static::$_vars, $vars);
         $content = $views[$app]->render("$template.$view_suffix", $vars);
         static::$_vars = [];
         return $content;
