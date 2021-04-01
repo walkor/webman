@@ -34,7 +34,7 @@ class Blade implements View
      */
     public static function assign($name, $value = null)
     {
-        static::$_vars += \is_array($name) ? $name : [$name => $value];
+        static::$_vars = \array_merge(static::$_vars, \is_array($name) ? $name : [$name => $value]);
     }
 
     /**
@@ -51,7 +51,7 @@ class Blade implements View
             $view_path = $app === '' ? \app_path(). '/view' : \app_path(). "/$app/view";
             $views[$app] = new BladeView($view_path, \runtime_path() . '/views');
         }
-        $vars += static::$_vars;
+        $vars = \array_merge(static::$_vars, $vars);
         $content = $views[$app]->render($template, $vars);
         static::$_vars = [];
         return $content;
