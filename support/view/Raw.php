@@ -32,7 +32,7 @@ class Raw implements View
      */
     public static function assign($name, $value = null)
     {
-        static::$_vars += \is_array($name) ? $name : [$name => $value];
+        static::$_vars = \array_merge(static::$_vars, \is_array($name) ? $name : [$name => $value]);
     }
 
     /**
