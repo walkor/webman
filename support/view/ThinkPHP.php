@@ -33,7 +33,7 @@ class ThinkPHP implements View
      */
     public static function assign($name, $value = null)
     {
-        static::$_vars += \is_array($name) ? $name : [$name => $value];
+        static::$_vars = \array_merge(static::$_vars, \is_array($name) ? $name : [$name => $value]);
     }
 
     /**
@@ -54,7 +54,7 @@ class ThinkPHP implements View
         $options = $default_options + \config('view.options', []);
         $views = new Template($options);
         \ob_start();
-        $vars += static::$_vars;
+        $vars = \array_merge(static::$_vars, $vars);
         $views->fetch($template, $vars);
         $content = \ob_get_clean();
         static::$_vars = [];
