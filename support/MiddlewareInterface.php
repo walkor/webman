@@ -12,20 +12,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-namespace support\middleware;
+namespace support;
 
-use support\MiddlewareInterface;
-use support\Request;
-use support\Response;
-
-class AuthCheckTest implements MiddlewareInterface
+interface MiddlewareInterface
 {
-    public function process(Request $request, callable $next) : Response
-    {
-        $session = $request->session();
-        if (!$session->get('userinfo')) {
-            return redirect('/user/login');
-        }
-        return $next($request);
-    }
+    public function process(Request $request, callable $handler): Response;
 }
