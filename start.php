@@ -134,8 +134,8 @@ foreach (config('process', []) as $process_name => $config) {
             if (isset($server['listen'])) {
                 echo "listen: {$server['listen']}\n";
             }
-            $class = Container::make($server['handler'], $server['constructor'] ?? []);
-            worker_bind($listen, $class);
+            $instance = Container::make($server['handler'], $server['constructor'] ?? []);
+            worker_bind($listen, $instance);
             $listen->listen();
         }
 
@@ -145,8 +145,8 @@ foreach (config('process', []) as $process_name => $config) {
                 return;
             }
 
-            $class = Container::make($config['handler'], $config['constructor'] ?? []);
-            worker_bind($worker, $class);
+            $instance = Container::make($config['handler'], $config['constructor'] ?? []);
+            worker_bind($worker, $instance);
         }
 
     };
