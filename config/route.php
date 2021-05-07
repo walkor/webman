@@ -19,4 +19,4 @@ Route::any('/test', function ($request) {
     return response('test');
 });
 
-Route::any('/route-test', 'app\controller\Index@index');
+Route::any('/route-test', [app\controller\Index::class, 'index']);
