@@ -57,9 +57,7 @@ class FileMonitor
         if (!$last_mtime) {
             $last_mtime = time();
         }
-
         clearstatcache();
-
         if (!is_dir($monitor_dir)) {
             if (!is_file($monitor_dir)) {
                 return;
