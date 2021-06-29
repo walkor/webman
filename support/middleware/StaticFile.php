@@ -14,9 +14,9 @@
 
 namespace support\middleware;
 
-use Webman\MiddlewareInterface;
-use Webman\Http\Response;
-use Webman\Http\Request;
+use support\MiddlewareInterface;
+use support\Request;
+use support\Response;
 
 class StaticFile implements MiddlewareInterface
 {
