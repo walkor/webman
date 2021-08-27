@@ -28,14 +28,26 @@ class FileMonitor
      * @var array
      */
     protected $_extensions = [];
+    
+     /**
+     * @var bool
+     */
+    protected $_staticmode = true;
+    
+     /**
+     * @var array
+     */
+    protected static $_static = [];
 
     /**
      * FileMonitor constructor.
      * @param $monitor_dir
      * @param $monitor_extensions
+     * @param $staticmode bool
      */
-    public function __construct($monitor_dir, $monitor_extensions)
+    public function __construct($monitor_dir, $monitor_extensions, $staticmode=true)
     {
+        $this->_staticmode = $staticmode;
         if (Worker::$daemonize) {
             return;
         }
@@ -62,11 +74,23 @@ class FileMonitor
             if (!is_file($monitor_dir)) {
                 return;
             }
-            $iterator = [new \SplFileInfo($monitor_dir)];
+            if($this->_staticmode){
+                self::$_static[$monitor_dir]['iterator'] = self::$_static[$monitor_dir]['iterator'] ?? [new \SplFileInfo($monitor_dir)];
+                $iterator = self::$_static[$monitor_dir]['iterator'];
+            }else{
+               $iterator = [new \SplFileInfo($monitor_dir)]; 
+            }
         } else {
             // recursive traversal directory
-            $dir_iterator = new \RecursiveDirectoryIterator($monitor_dir);
-            $iterator = new \RecursiveIteratorIterator($dir_iterator);
+            if($this->_staticmode){
+                self::$_static[$monitor_dir]['dir_iterator'] = self::$_static[$monitor_dir]['dir_iterator'] ?? new \RecursiveDirectoryIterator($monitor_dir);
+                $dir_iterator = self::$_static[$monitor_dir]['dir_iterator'];
+                self::$_static[$monitor_dir]['iterator'] = self::$_static[$monitor_dir]['iterator'] ?? new \RecursiveIteratorIterator($dir_iterator);  
+                $iterator = self::$_static[$monitor_dir]['iterator'];
+            }else{
+              $dir_iterator = new \RecursiveDirectoryIterator($monitor_dir);
+              $iterator = new \RecursiveIteratorIterator($dir_iterator);  
+            }
         }
         foreach ($iterator as $file) {
             /** var SplFileInfo $file */
