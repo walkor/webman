@@ -12,20 +12,34 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+$type = env('SESSION_DRIVER', 'file');
+
+switch ($type) {
+    case 'redis':
+        $handler = Webman\RedisSessionHandler::class;
+        break;
+    case 'redis_cluster':
+        $handler = Webman\RedisClusterSessionHandler::class;
+        break;
+    default:
+        $handler = Webman\FileSessionHandler::class;
+        break;
+}
+
 return [
 
-    'type'    => 'file', // or redis or redis_cluster
+    'type'    => $type,
 
-    'handler' => Webman\FileSessionHandler::class,
+    'handler' => $handler,
 
     'config' => [
         'file' => [
             'save_path' => runtime_path() . '/sessions',
         ],
         'redis' => [
-            'host'      => '127.0.0.1',
-            'port'      => 6379,
-            'auth'      => '',
+            'host'      => env('REDIS_HOST', '127.0.0.1'),
+            'port'      => env('REDIS_PORT', 6379),
+            'auth'      => env('REDIS_PASSWORD', null),
             'timeout'   => 2,
             'database'  => '',
             'prefix'    => 'redis_session_',
