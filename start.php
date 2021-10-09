@@ -13,6 +13,9 @@ use support\Request;
 use support\bootstrap\Log;
 use support\bootstrap\Container;
 
+ini_set('display_errors', 'on');
+error_reporting(E_ALL);
+
 if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
     Dotenv::createUnsafeImmutable(base_path())->load();
 } else {
@@ -90,67 +93,68 @@ $worker->onWorkerStart = function ($worker) {
     $worker->onMessage = [$app, 'onMessage'];
 };
 
-
-foreach (config('process', []) as $process_name => $config) {
-    $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
-    $property_map = [
-        'count',
-        'user',
-        'group',
-        'reloadable',
-        'reusePort',
-        'transport',
-        'protocol',
-    ];
-    $worker->name = $process_name;
-    foreach ($property_map as $property) {
-        if (isset($config[$property])) {
-            $worker->$property = $config[$property];
+// Windows does not support custom processes.
+if (\DIRECTORY_SEPARATOR === '/') {
+    foreach (config('process', []) as $process_name => $config) {
+        $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
+        $property_map = [
+            'count',
+            'user',
+            'group',
+            'reloadable',
+            'reusePort',
+            'transport',
+            'protocol',
+        ];
+        $worker->name = $process_name;
+        foreach ($property_map as $property) {
+            if (isset($config[$property])) {
+                $worker->$property = $config[$property];
+            }
         }
+
+        $worker->onWorkerStart = function ($worker) use ($config) {
+            foreach (config('autoload.files', []) as $file) {
+                include_once $file;
+            }
+            Dotenv::createMutable(base_path())->load();
+            Config::reload(config_path(), ['route']);
+
+            $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);
+            if (!in_array(support\bootstrap\Log::class, $bootstrap)) {
+                $bootstrap[] = support\bootstrap\Log::class;
+            }
+            foreach ($bootstrap as $class_name) {
+                /** @var \Webman\Bootstrap $class_name */
+                $class_name::start($worker);
+            }
+
+            foreach ($config['services'] ?? [] as $server) {
+                if (!class_exists($server['handler'])) {
+                    echo "process error: class {$server['handler']} not exists\r\n";
+                    continue;
+                }
+                $listen = new Worker($server['listen'] ?? null, $server['context'] ?? []);
+                if (isset($server['listen'])) {
+                    echo "listen: {$server['listen']}\n";
+                }
+                $instance = Container::make($server['handler'], $server['constructor'] ?? []);
+                worker_bind($listen, $instance);
+                $listen->listen();
+            }
+
+            if (isset($config['handler'])) {
+                if (!class_exists($config['handler'])) {
+                    echo "process error: class {$config['handler']} not exists\r\n";
+                    return;
+                }
+
+                $instance = Container::make($config['handler'], $config['constructor'] ?? []);
+                worker_bind($worker, $instance);
+            }
+
+        };
     }
-
-    $worker->onWorkerStart = function ($worker) use ($config) {
-        foreach (config('autoload.files', []) as $file) {
-            include_once $file;
-        }
-        Dotenv::createMutable(base_path())->load();
-        Config::reload(config_path(), ['route']);
-
-        $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);
-        if (!in_array(support\bootstrap\Log::class, $bootstrap)) {
-            $bootstrap[] = support\bootstrap\Log::class;
-        }
-        foreach ($bootstrap as $class_name) {
-            /** @var \Webman\Bootstrap $class_name */
-            $class_name::start($worker);
-        }
-
-        foreach ($config['services'] ?? [] as $server) {
-            if (!class_exists($server['handler'])) {
-                echo "process error: class {$server['handler']} not exists\r\n";
-                continue;
-            }
-            $listen = new Worker($server['listen'] ?? null, $server['context'] ?? []);
-            if (isset($server['listen'])) {
-                echo "listen: {$server['listen']}\n";
-            }
-            $instance = Container::make($server['handler'], $server['constructor'] ?? []);
-            worker_bind($listen, $instance);
-            $listen->listen();
-        }
-
-        if (isset($config['handler'])) {
-            if (!class_exists($config['handler'])) {
-                echo "process error: class {$config['handler']} not exists\r\n";
-                return;
-            }
-
-            $instance = Container::make($config['handler'], $config['constructor'] ?? []);
-            worker_bind($worker, $instance);
-        }
-
-    };
 }
-
 
 Worker::runAll();
