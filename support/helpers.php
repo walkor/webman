@@ -129,7 +129,7 @@ function redirect($location, $status = 302, $headers = [])
  * @param $template
  * @param array $vars
  * @param null $app
- * @return string
+ * @return Response
  */
 function view($template, $vars = [], $app = null)
 {
