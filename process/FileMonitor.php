@@ -39,6 +39,11 @@ class FileMonitor
         if (Worker::$daemonize) {
             return;
         }
+        $disable_functions = explode(',', ini_get('disable_functions'));
+        if (in_array('exec', $disable_functions)) {
+            echo "\nFileMonitor turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH ."/php.ini\n";
+            return;
+        }
         $this->_paths = (array)$monitor_dir;
         $this->_extensions = $monitor_extensions;
         Timer::add(1, function () {
