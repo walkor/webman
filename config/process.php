@@ -18,12 +18,12 @@ use support\view\Blade;
 use support\view\ThinkPHP;
 
 return [
-    // 文件更新检测
+    // File update detection and automatic reload
     'monitor' => [
         'handler'     => process\FileMonitor::class,
         'reloadable'  => false,
         'constructor' => [
-            // 监控这些目录
+            // Monitor these directories
             'monitor_dir' => [
                 app_path(),
                 config_path(),
@@ -32,13 +32,13 @@ return [
                 base_path() . '/resource',
                 base_path() . '/.env',
             ],
-            // 监控这些后缀的文件
+            // Files with these suffixes will be monitored
             'monitor_extensions' => [
                 'php', 'html', 'htm', 'env'
             ]
         ]
     ],
-    // 其它进程
+    // Other porcesss
     /*'websocket'  => [
         'handler'  => process\Websocket::class,
         'listen' => 'websocket://0.0.0.0:8888',

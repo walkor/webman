@@ -13,13 +13,13 @@
  */
 
 /**
- * 多语言配置
+ * Multilingual configuration
  */
 return [
-    // 默认语言
+    // Default language
     'locale' => 'zh_CN',
-    // 回退语言
+    // Fallback language
     'fallback_locale' => ['zh_CN', 'en'],
-    // 语言文件存放的文件夹
+    // Folder where language files are stored
     'path' => base_path() . '/resource/translations',
 ];

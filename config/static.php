@@ -13,11 +13,11 @@
  */
 
 /**
- * 静态文件设置
+ * Static file settings
  */
 return [
-    'enable'     => true, // 是否支持静态文件
-    'middleware' => [     // 静态文件中间件
-        support\middleware\StaticFile::class,
+    'enable'     => true,
+    'middleware' => [     // Static file Middleware
+        //app\middleware\StaticFile::class,
     ],
 ];

@@ -14,12 +14,10 @@
 
 use support\Request;
 use support\Response;
-use support\view\Raw;
 use support\bootstrap\Translation;
 use Webman\App;
 use Webman\Config;
 use Webman\Route;
-use Workerman\Protocols\Http\Session;
 use Webman\Exception\ClassNotFoundException;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
@@ -188,43 +186,6 @@ function session($key = null, $default = null)
         return null;
     }
     return $session->get($key, $default);
-}
-
-if (!function_exists('env')) {
-    /**
-     * @param $key
-     * @param null $default
-     * @return array|bool|false|mixed|string
-     */
-    function env($key, $default = null)
-    {
-        $value = getenv($key);
-
-        if ($value === false) {
-            return $default;
-        }
-
-        switch (strtolower($value)) {
-            case 'true':
-            case '(true)':
-                return true;
-            case 'false':
-            case '(false)':
-                return false;
-            case 'empty':
-            case '(empty)':
-                return '';
-            case 'null':
-            case '(null)':
-                return null;
-        }
-
-        if (($valueLength = strlen($value)) > 1 && $value[0] === '"' && $value[$valueLength - 1] === '"') {
-            return substr($value, 1, -1);
-        }
-
-        return $value;
-    }
 }
 
 /**

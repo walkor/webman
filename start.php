@@ -16,10 +16,12 @@ use support\bootstrap\Container;
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
-if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
-    Dotenv::createUnsafeImmutable(base_path())->load();
-} else {
-    Dotenv::createMutable(base_path())->load();
+if (class_exists('Dotenv\Dotenv')) {
+    if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
+        Dotenv::createUnsafeImmutable(base_path())->load();
+    } else {
+        Dotenv::createMutable(base_path())->load();
+    }
 }
 
 Config::load(config_path(), ['route', 'container']);
@@ -43,6 +45,7 @@ Worker::$onMasterReload = function (){
 
 Worker::$pidFile                      = $config['pid_file'];
 Worker::$stdoutFile                   = $config['stdout_file'];
+Worker::$logFile                      = $config['log_file'];
 TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10*1024*1024;
 
 $worker = new Worker($config['listen'], $config['context']);
@@ -74,11 +77,15 @@ $worker->onWorkerStart = function ($worker) {
     foreach (config('autoload.files', []) as $file) {
         include_once $file;
     }
-    if (method_exists('Dotenv\Dotenv', 'createUnsafeMutable')) {
-        Dotenv::createUnsafeMutable(base_path())->load();
-    } else {
-        Dotenv::createMutable(base_path())->load();
+
+    if (class_exists('Dotenv\Dotenv')) {
+        if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
+            Dotenv::createUnsafeImmutable(base_path())->load();
+        } else {
+            Dotenv::createMutable(base_path())->load();
+        }
     }
+
     Config::reload(config_path(), ['route', 'container']);
     foreach (config('bootstrap', []) as $class_name) {
         /** @var \Webman\Bootstrap $class_name */
@@ -117,7 +124,9 @@ if (\DIRECTORY_SEPARATOR === '/') {
             foreach (config('autoload.files', []) as $file) {
                 include_once $file;
             }
-            Dotenv::createMutable(base_path())->load();
+            if (class_exists('Dotenv\Dotenv')) {
+                Dotenv::createMutable(base_path())->load();
+            }
             Config::reload(config_path(), ['route']);
 
             $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);

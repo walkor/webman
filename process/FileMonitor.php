@@ -17,6 +17,10 @@ namespace process;
 use Workerman\Timer;
 use Workerman\Worker;
 
+/**
+ * Class FileMonitor
+ * @package process
+ */
 class FileMonitor
 {
     /**
