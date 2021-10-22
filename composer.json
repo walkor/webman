@@ -29,12 +29,16 @@
     "monolog/monolog": "^2.0",
     "vlucas/phpdotenv": ">=4.1,<6.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
   "suggest": {
     "ext-event": "For better performance. "
   },
   "autoload": {
     "psr-4": {
-      "app\\": "app/"
+      "app\\": "app/",
+      "support\\": "support"
     },
     "files": [
       "./support/helpers.php"

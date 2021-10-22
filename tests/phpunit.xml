@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
+        backupGlobals="true"
+        bootstrap="bootstrap.php"
+>
+    <testsuites>
+        <testsuite name="All">
+            <directory>.</directory>
+            <file>./TestConfig.php</file>
+        </testsuite>
+    </testsuites>
+    <coverage cacheDirectory="tmp/coverage"
+              processUncoveredFiles="true"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <include>
+            <directory suffix=".php">../app</directory>
+        </include>
+    </coverage>
+    <logging>
+        <junit outputFile="tmp/junit.xml"/>
+        <teamcity outputFile="tmp/teamcity.txt"/>
+        <testdoxHtml outputFile="tmp/testdox.html"/>
+        <testdoxText outputFile="tmp/testdox.txt"/>
+        <testdoxXml outputFile="tmp/testdox.xml"/>
+        <text outputFile="tmp/logfile.txt"/>
+    </logging>
+</phpunit>
