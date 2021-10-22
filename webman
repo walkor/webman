@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+
+use Dotenv\Dotenv;
+use Symfony\Component\Console\Application as Cli;
+use Symfony\Component\Finder\Finder;
+use Webman\Bootstrap;
+use Webman\Config;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
+    Dotenv::createUnsafeImmutable(base_path())->load();
+} else {
+    Dotenv::createMutable(base_path())->load();
+}
+Config::load(config_path(), ['route', 'container']);
+if ($timezone = config('app.default_timezone')) {
+    date_default_timezone_set($timezone);
+}
+foreach (config('autoload.files', []) as $file) {
+    include_once $file;
+}
+foreach (config('bootstrap', []) as $class_name) {
+    /** @var Bootstrap $class_name */
+    $class_name::start(null);
+}
+$cli = new Cli();
+$cli->setName('webman命令行工具');
+$finder = new Finder();
+$finder->name('*.php');
+foreach ($finder->in(app_path() . DIRECTORY_SEPARATOR . 'command')->files() as $file) {
+    $class_name = 'app\\command\\' . $file->getRelativePath() . '\\' . $file->getBasename('.php');
+    $cli->add(new $class_name);
+}
+
+$cli->run();

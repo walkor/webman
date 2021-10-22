@@ -27,7 +27,9 @@
     "php": ">=7.2",
     "workerman/webman-framework": "^1.0",
     "monolog/monolog": "^2.0",
-    "vlucas/phpdotenv": ">=4.1,<6.0"
+    "vlucas/phpdotenv": ">=4.1,<6.0",
+    "symfony/console": "^5.3",
+    "symfony/finder": "^5.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5"
@@ -38,7 +40,7 @@
   "autoload": {
     "psr-4": {
       "app\\": "app/",
-      "support\\": "support"
+      "support\\": "support/"
     },
     "files": [
       "./support/helpers.php"
