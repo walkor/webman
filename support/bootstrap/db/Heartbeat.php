@@ -17,8 +17,10 @@ use Webman\Bootstrap;
 use support\Db;
 
 /**
- * mysql心跳。定时发送一个查询，防止mysql连接长时间不活跃被mysql服务端断开。
- * 默认不开启，如需开启请到 config/bootstrap.php中添加 support\bootstrap\db\Heartbeat::class,
+ * MySQL heartbeat.
+ * Send a query regularly to prevent the MySQL connection from being inactive for a long time and being disconnected
+ * by the MySQL server.
+ * Add support\bootstrap\db\Heartbeat::class to config/bootstrap.php to enable it.
  * @package support\bootstrap\db
  */
 class Heartbeat implements Bootstrap
@@ -30,8 +32,14 @@ class Heartbeat implements Bootstrap
      */
     public static function start($worker)
     {
-        \Workerman\Timer::add(55, function (){
-            Db::select('select 1 limit 1');
+        $connections = config('database.connections');
+        if (!$connections) {
+            return;
+        }
+        \Workerman\Timer::add(55, function () use ($connections){
+            foreach ($connections as $key => $item) {
+                Db::connection($key)->select('select 1 limit 1');
+            }
         });
     }
 }

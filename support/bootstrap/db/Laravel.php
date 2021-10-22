@@ -38,10 +38,12 @@ class Laravel implements Bootstrap
         }
         $capsule = new Capsule;
         $configs = config('database');
+        if (empty($configs)) {
+            return;
+        }
 
         $capsule->getDatabaseManager()->extend('mongodb', function($config, $name) {
             $config['name'] = $name;
-
             return new Connection($config);
         });
 
