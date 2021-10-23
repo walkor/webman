@@ -13,6 +13,9 @@
  */
 namespace support\bootstrap\db;
 
+
+use Workerman\Worker;
+use Workerman\Timer;
 use Webman\Bootstrap;
 use support\Db;
 
@@ -26,7 +29,7 @@ use support\Db;
 class Heartbeat implements Bootstrap
 {
     /**
-     * @param \Workerman\Worker $worker
+     * @param Worker $worker
      *
      * @return void
      */
@@ -36,7 +39,7 @@ class Heartbeat implements Bootstrap
         if (!$connections) {
             return;
         }
-        \Workerman\Timer::add(55, function () use ($connections){
+        Timer::add(55, function () use ($connections){
             foreach ($connections as $key => $item) {
                 Db::connection($key)->select('select 1 limit 1');
             }
