@@ -18,7 +18,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 use Jenssegers\Mongodb\Connection;
+use Workerman\Timer;
 use Workerman\Worker;
+use support\Db;
 
 /**
  * Class Laravel
@@ -61,5 +63,15 @@ class Laravel implements Bootstrap
         $capsule->setAsGlobal();
 
         $capsule->bootEloquent();
+
+        $connections = config('database.connections');
+        if (!$connections) {
+            return;
+        }
+        Timer::add(55, function () use ($connections){
+            foreach ($connections as $key => $item) {
+                Db::connection($key)->select('select 1 limit 1');
+            }
+        });
     }
 }
