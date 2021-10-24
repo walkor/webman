@@ -12,10 +12,6 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-use support\view\Raw;
-use support\view\Twig;
-use support\view\Blade;
-use support\view\ThinkPHP;
 
 return [
     // File update detection and automatic reload
