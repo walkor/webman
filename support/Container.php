@@ -11,10 +11,8 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace support\bootstrap;
+namespace support;
 
-use Workerman\Worker;
-use Webman\Bootstrap;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -24,7 +22,7 @@ use Psr\Container\ContainerInterface;
  * @method static mixed make($name, array $parameters)
  * @method static bool has($name)
  */
-class Container implements Bootstrap
+class Container
 {
     /**
      * @var ContainerInterface
@@ -32,12 +30,14 @@ class Container implements Bootstrap
     protected static $_instance = null;
 
     /**
-     * @param Worker $worker
-     * @return void
+     * @return ContainerInterface
      */
-    public static function start($worker)
+    public static function instance()
     {
-        static::$_instance = include config_path() . '/container.php';
+        if (!static::$_instance) {
+            static::$_instance = include config_path() . '/container.php';
+        }
+        return static::$_instance;
     }
 
     /**
@@ -47,15 +47,6 @@ class Container implements Bootstrap
      */
     public static function __callStatic($name, $arguments)
     {
-        return static::$_instance->{$name}(... $arguments);
-    }
-
-    /**
-     * instance
-     * @return
-     */
-    public static function instance()
-    {
-        return static::$_instance;
+        return static::instance()->{$name}(... $arguments);
     }
 }

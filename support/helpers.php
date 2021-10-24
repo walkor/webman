@@ -14,11 +14,10 @@
 
 use support\Request;
 use support\Response;
-use support\bootstrap\Translation;
+use support\Translation;
 use Webman\App;
 use Webman\Config;
 use Webman\Route;
-use Webman\Exception\ClassNotFoundException;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
 

@@ -10,8 +10,8 @@ use Webman\Route;
 use Webman\Middleware;
 use Dotenv\Dotenv;
 use support\Request;
-use support\bootstrap\Log;
-use support\bootstrap\Container;
+use support\Log;
+use support\Container;
 
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
@@ -130,9 +130,6 @@ if (\DIRECTORY_SEPARATOR === '/') {
             Config::reload(config_path(), ['route']);
 
             $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);
-            if (!in_array(support\bootstrap\Log::class, $bootstrap)) {
-                $bootstrap[] = support\bootstrap\Log::class;
-            }
             foreach ($bootstrap as $class_name) {
                 /** @var \Webman\Bootstrap $class_name */
                 $class_name::start($worker);

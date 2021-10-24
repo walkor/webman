@@ -11,9 +11,8 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace support\bootstrap;
+namespace support;
 
-use Webman\Bootstrap;
 use Illuminate\Redis\RedisManager;
 
 /**
@@ -198,24 +197,24 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed getPersistentID()
  * @method static mixed getAuth()
  */
-class Redis implements Bootstrap {
+class Redis
+{
 
     /**
      * @var RedisManager
      */
-    protected static $_manager = null;
+    protected static $_instance = null;
 
     /**
-     * @param \Workerman\Worker $worker
-     * @return void
+     * @return RedisManager
      */
-    public static function start($worker)
+    public static function instance()
     {
-        if (!class_exists('\Illuminate\Redis\RedisManager')) {
-            return;
+        if (!static::$_instance) {
+            $config = config('redis');
+            static::$_instance = new RedisManager('', 'phpredis', $config);
         }
-        $config = config('redis');
-        static::$_manager = new RedisManager('', 'phpredis', $config);
+        return static::$_instance;
     }
 
     /**
@@ -223,7 +222,7 @@ class Redis implements Bootstrap {
      * @return \Illuminate\Redis\Connections\Connection
      */
     public static function connection($name = 'default') {
-        return static::$_manager->connection($name);
+        return static::instance()->connection($name);
     }
 
     /**
@@ -233,6 +232,6 @@ class Redis implements Bootstrap {
      */
     public static function __callStatic($name, $arguments)
     {
-        return static::$_manager->connection('default')->{$name}(... $arguments);
+        return static::instance()->connection('default')->{$name}(... $arguments);
     }
 }
