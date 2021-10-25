@@ -19,7 +19,8 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 use Jenssegers\Mongodb\Connection;
 use Workerman\Worker;
-use Workerman\timer;
+use Workerman\Timer;
+use support\Db;
 
 /**
  * Class Laravel
