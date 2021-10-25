@@ -66,7 +66,6 @@ class LaravelDb implements Bootstrap
         if (!$connections) {
             return;
         }
-        
         Timer::add(55, function () use ($connections) {
             foreach ($connections as $key => $item) {
                 if ($item['driver'] == 'mysql') {
