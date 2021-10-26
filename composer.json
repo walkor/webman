@@ -38,10 +38,5 @@
     "files": [
       "./support/helpers.php"
     ]
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-    ]
   }
 }
