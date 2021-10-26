@@ -38,6 +38,12 @@ class LaravelDb implements Bootstrap
         if (!class_exists('\Illuminate\Database\Capsule\Manager')) {
             return;
         }
+
+        $connections = config('database.connections');
+        if (!$connections) {
+            return;
+        }
+
         $capsule = new Capsule;
         $configs = config('database');
 
@@ -47,10 +53,10 @@ class LaravelDb implements Bootstrap
             return new Connection($config);
         });
 
-        $default_config = $configs['connections'][$configs['default']];
+        $default_config = $connections[$configs['default']];
         $capsule->addConnection($default_config);
 
-        foreach ($configs['connections'] as $name => $config) {
+        foreach ($connections as $name => $config) {
             $capsule->addConnection($config, $name);
         }
 
@@ -63,10 +69,6 @@ class LaravelDb implements Bootstrap
         $capsule->bootEloquent();
 
         // Heartbeat
-        $connections = config('database.connections');
-        if (!$connections) {
-            return;
-        }
         Timer::add(55, function () use ($connections) {
             foreach ($connections as $key => $item) {
                 if ($item['driver'] == 'mysql') {
