@@ -44,7 +44,7 @@ class FileMonitor
             return;
         }
         $disable_functions = explode(',', ini_get('disable_functions'));
-        if (in_array('exec', $disable_functions)) {
+        if (in_array('exec', $disable_functions, true)) {
             echo "\nFileMonitor turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH ."/php.ini\n";
             return;
         }
@@ -60,7 +60,7 @@ class FileMonitor
     /**
      * @param $monitor_dir
      */
-    public function check_files_change($monitor_dir)
+    public function check_files_change($monitor_dir): void
     {
         static $last_mtime;
         if (!$last_mtime) {
@@ -83,7 +83,7 @@ class FileMonitor
                 continue;
             }
             // check mtime
-            if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions)) {
+            if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions,true)) {
                 $var = 0;
                 exec(PHP_BINARY . " -l " . $file, $out, $var);
                 if ($var) {
