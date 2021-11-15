@@ -14,12 +14,11 @@
 namespace support;
 
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Webman\Exception\NotFoundException;
 
 /**
  * Class Translation
- * @package support\bootstrap
+ * @package support
  * @method static string trans(?string $id, array $parameters = [], string $domain = null, string $locale = null)
  * @method static void setLocale(string $locale)
  * @method static string getLocale()
