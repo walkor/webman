@@ -15,6 +15,8 @@
 use Dotenv\Dotenv;
 use Webman\Config;
 
+$worker = $worker ?? null;
+
 if ($timezone = config('app.default_timezone')) {
     date_default_timezone_set($timezone);
 }
@@ -24,11 +26,15 @@ set_error_handler(function ($level, $message, $file = '', $line = 0, $context = 
         throw new ErrorException($message, 0, $level, $file, $line);
     }
 });
-register_shutdown_function(function ($start_time) {
-    if (time() - $start_time <= 1) {
-        sleep(1);
-    }
-}, time());
+
+if ($worker) {
+    register_shutdown_function(function ($start_time) {
+        if (time() - $start_time <= 1) {
+            sleep(1);
+        }
+    }, time());
+}
+
 foreach (config('autoload.files', []) as $file) {
     include_once $file;
 }
@@ -42,7 +48,7 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
 }
 
 Config::reload(config_path(), ['route', 'container']);
-$worker = $worker ?? null;
+
 foreach (config('bootstrap', []) as $class_name) {
     /** @var \Webman\Bootstrap $class_name */
     $class_name::start($worker);
