@@ -69,12 +69,14 @@ class LaravelDb implements Bootstrap
         $capsule->bootEloquent();
 
         // Heartbeat
-        Timer::add(55, function () use ($connections) {
-            foreach ($connections as $key => $item) {
-                if ($item['driver'] == 'mysql') {
-                    Db::connection($key)->select('select 1');
+        if ($worker) {
+            Timer::add(55, function () use ($connections) {
+                foreach ($connections as $key => $item) {
+                    if ($item['driver'] == 'mysql') {
+                        Db::connection($key)->select('select 1');
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
