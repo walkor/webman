@@ -42,6 +42,7 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
 }
 
 Config::reload(config_path(), ['route', 'container']);
+$worker = $worker ?? null;
 foreach (config('bootstrap', []) as $class_name) {
     /** @var \Webman\Bootstrap $class_name */
     $class_name::start($worker);
