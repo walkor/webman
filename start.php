@@ -25,7 +25,6 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
 }
 
 Config::load(config_path(), ['route', 'container']);
-$config = config('server');
 
 if ($timezone = config('app.default_timezone')) {
     date_default_timezone_set($timezone);
@@ -43,6 +42,7 @@ Worker::$onMasterReload = function (){
     }
 };
 
+$config                               = config('server');
 Worker::$pidFile                      = $config['pid_file'];
 Worker::$stdoutFile                   = $config['stdout_file'];
 Worker::$logFile                      = $config['log_file'];
@@ -64,33 +64,8 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
-    set_error_handler(function ($level, $message, $file = '', $line = 0, $context = []) {
-        if (error_reporting() & $level) {
-            throw new ErrorException($message, 0, $level, $file, $line);
-        }
-    });
-    register_shutdown_function(function ($start_time) {
-        if (time() - $start_time <= 1) {
-            sleep(1);
-        }
-    }, time());
-    foreach (config('autoload.files', []) as $file) {
-        include_once $file;
-    }
+    require_once base_path() . '/support/bootstrap.php';
 
-    if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
-        if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
-            Dotenv::createUnsafeImmutable(base_path())->load();
-        } else {
-            Dotenv::createMutable(base_path())->load();
-        }
-    }
-
-    Config::reload(config_path(), ['route', 'container']);
-    foreach (config('bootstrap', []) as $class_name) {
-        /** @var \Webman\Bootstrap $class_name */
-        $class_name::start($worker);
-    }
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
     Route::load(config_path() . '/route.php');
     Middleware::load(config('middleware', []));
@@ -121,20 +96,8 @@ if (\DIRECTORY_SEPARATOR === '/') {
         }
 
         $worker->onWorkerStart = function ($worker) use ($config) {
-            foreach (config('autoload.files', []) as $file) {
-                include_once $file;
-            }
-            if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
-                Dotenv::createMutable(base_path())->load();
-            }
-            Config::reload(config_path(), ['route']);
-
-            $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);
-            foreach ($bootstrap as $class_name) {
-                /** @var \Webman\Bootstrap $class_name */
-                $class_name::start($worker);
-            }
-
+            require_once base_path() . '/support/bootstrap.php';
+            
             foreach ($config['services'] ?? [] as $server) {
                 if (!class_exists($server['handler'])) {
                     echo "process error: class {$server['handler']} not exists\r\n";
