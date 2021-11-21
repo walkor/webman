@@ -60,7 +60,7 @@ class FileMonitor
     /**
      * @param $monitor_dir
      */
-    public function check_files_change($monitor_dir): void
+    public function check_files_change($monitor_dir)
     {
         static $last_mtime;
         if (!$last_mtime) {
