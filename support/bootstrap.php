@@ -35,6 +35,8 @@ if ($worker) {
     }, time());
 }
 
+Config::reload(config_path(), ['route', 'container']);
+
 foreach (config('autoload.files', []) as $file) {
     include_once $file;
 }
@@ -46,8 +48,6 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
         Dotenv::createMutable(base_path())->load();
     }
 }
-
-Config::reload(config_path(), ['route', 'container']);
 
 foreach (config('bootstrap', []) as $class_name) {
     /** @var \Webman\Bootstrap $class_name */
