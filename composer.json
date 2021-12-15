@@ -36,7 +36,8 @@
       "" : "./"
     },
     "files": [
-      "./support/helpers.php"
+      "./support/helpers.php",
+      "./support/bootstrap.php"
     ]
   }
 }

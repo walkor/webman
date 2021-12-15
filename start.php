@@ -64,8 +64,6 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
-    require_once base_path() . '/support/bootstrap.php';
-
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
     Route::load(config_path() . '/route.php');
     Middleware::load(config('middleware', []));
@@ -96,8 +94,6 @@ if (\DIRECTORY_SEPARATOR === '/') {
         }
 
         $worker->onWorkerStart = function ($worker) use ($config) {
-            require_once base_path() . '/support/bootstrap.php';
-            
             foreach ($config['services'] ?? [] as $server) {
                 if (!class_exists($server['handler'])) {
                     echo "process error: class {$server['handler']} not exists\r\n";
