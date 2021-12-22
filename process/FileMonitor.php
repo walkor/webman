@@ -60,7 +60,7 @@ class FileMonitor
     /**
      * @param $monitor_dir
      */
-    public function check_files_change($monitor_dir): void
+    public function check_files_change($monitor_dir)
     {
         static $last_mtime;
         if (!$last_mtime) {
@@ -83,7 +83,7 @@ class FileMonitor
                 continue;
             }
             // check mtime
-            if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions,true)) {
+            if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions, true)) {
                 $var = 0;
                 exec(PHP_BINARY . " -l " . $file, $out, $var);
                 if ($var) {
