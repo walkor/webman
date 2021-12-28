@@ -16,6 +16,10 @@ use support\Container;
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
+if (file_exists(base_path().'/.env')) {
+    \support\Env::load(base_path().'/.env');
+}
+
 if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
     if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
         Dotenv::createUnsafeImmutable(base_path())->load();
