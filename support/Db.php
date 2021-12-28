@@ -19,6 +19,8 @@ use Illuminate\Database\Connection;
 /**
  * Class Db
  * @package support
+ *
+ * @method static \Illuminate\Database\Query\Expression raw($value)
  * @method static array select(string $query, $bindings = [], $useReadPdo = true)
  * @method static mixed selectOne(string $query, $bindings = [], $useReadPdo = true)
  * @method static array selectFromWriteConnection(string $query, $bindings = [], $useReadPdo = true)
