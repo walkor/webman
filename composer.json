@@ -25,10 +25,7 @@
   },
   "require": {
     "php": ">=7.2",
-    "workerman/webman-framework": "^1.0",
-    "monolog/monolog": "^2.0",
-    "illuminate/database": "^8.0",
-    "illuminate/events": "^8.77"
+    "workerman/webman-framework": "^1.0"
   },
   "suggest": {
     "ext-event": "For better performance. "
