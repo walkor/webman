@@ -15,6 +15,8 @@
 use support\Request;
 use support\Response;
 use support\Translation;
+use support\Container;
+use Workerman\Worker;
 use Webman\App;
 use Webman\Config;
 use Webman\Route;
@@ -235,6 +237,54 @@ function worker_bind($worker, $class) {
     if (method_exists($class, 'onWorkerStart')) {
         call_user_func([$class, 'onWorkerStart'], $worker);
     }
+}
+
+function worker_start($process_name, $config) {
+    $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
+    $property_map = [
+        'count',
+        'user',
+        'group',
+        'reloadable',
+        'reusePort',
+        'transport',
+        'protocol',
+    ];
+    $worker->name = $process_name;
+    foreach ($property_map as $property) {
+        if (isset($config[$property])) {
+            $worker->$property = $config[$property];
+        }
+    }
+
+    $worker->onWorkerStart = function ($worker) use ($config) {
+        require_once base_path() . '/support/bootstrap.php';
+
+        foreach ($config['services'] ?? [] as $server) {
+            if (!class_exists($server['handler'])) {
+                echo "process error: class {$server['handler']} not exists\r\n";
+                continue;
+            }
+            $listen = new Worker($server['listen'] ?? null, $server['context'] ?? []);
+            if (isset($server['listen'])) {
+                echo "listen: {$server['listen']}\n";
+            }
+            $instance = Container::make($server['handler'], $server['constructor'] ?? []);
+            worker_bind($listen, $instance);
+            $listen->listen();
+        }
+
+        if (isset($config['handler'])) {
+            if (!class_exists($config['handler'])) {
+                echo "process error: class {$config['handler']} not exists\r\n";
+                return;
+            }
+
+            $instance = Container::make($config['handler'], $config['constructor'] ?? []);
+            worker_bind($worker, $instance);
+        }
+
+    };
 }
 
 /**

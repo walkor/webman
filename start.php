@@ -13,6 +13,8 @@ use support\Request;
 use support\Log;
 use support\Container;
 
+const WEBMAN_VERSION = '1.2';
+
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
@@ -65,10 +67,12 @@ foreach ($property_map as $property) {
 
 $worker->onWorkerStart = function ($worker) {
     require_once base_path() . '/support/bootstrap.php';
-
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
-    Route::load(config_path() . '/route.php');
+    Route::load(config_path());
     Middleware::load(config('middleware', []));
+    foreach (config('ext', []) as $name => $project) {
+        Middleware::load($project['middleware']??[]);
+    }
     Middleware::load(['__static__' => config('static.middleware', [])]);
     Http::requestClass(Request::class);
 
@@ -78,51 +82,12 @@ $worker->onWorkerStart = function ($worker) {
 // Windows does not support custom processes.
 if (\DIRECTORY_SEPARATOR === '/') {
     foreach (config('process', []) as $process_name => $config) {
-        $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
-        $property_map = [
-            'count',
-            'user',
-            'group',
-            'reloadable',
-            'reusePort',
-            'transport',
-            'protocol',
-        ];
-        $worker->name = $process_name;
-        foreach ($property_map as $property) {
-            if (isset($config[$property])) {
-                $worker->$property = $config[$property];
-            }
+        worker_start($process_name, $config);
+    }
+    foreach (config('ext', []) as $key => $project) {
+        foreach ($project['process'] ?? [] as $process_name => $config) {
+            worker_start("ext.$key.$process_name", $config);
         }
-
-        $worker->onWorkerStart = function ($worker) use ($config) {
-            require_once base_path() . '/support/bootstrap.php';
-            
-            foreach ($config['services'] ?? [] as $server) {
-                if (!class_exists($server['handler'])) {
-                    echo "process error: class {$server['handler']} not exists\r\n";
-                    continue;
-                }
-                $listen = new Worker($server['listen'] ?? null, $server['context'] ?? []);
-                if (isset($server['listen'])) {
-                    echo "listen: {$server['listen']}\n";
-                }
-                $instance = Container::make($server['handler'], $server['constructor'] ?? []);
-                worker_bind($listen, $instance);
-                $listen->listen();
-            }
-
-            if (isset($config['handler'])) {
-                if (!class_exists($config['handler'])) {
-                    echo "process error: class {$config['handler']} not exists\r\n";
-                    return;
-                }
-
-                $instance = Container::make($config['handler'], $config['constructor'] ?? []);
-                worker_bind($worker, $instance);
-            }
-
-        };
     }
 }
 

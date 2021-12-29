@@ -16,7 +16,7 @@
 return [
     // File update detection and automatic reload
     'monitor' => [
-        'handler'     => process\FileMonitor::class,
+        'handler'     => process\Monitor::class,
         'reloadable'  => false,
         'constructor' => [
             // Monitor these directories
@@ -33,11 +33,5 @@ return [
                 'php', 'html', 'htm', 'env'
             ]
         ]
-    ],
-    // Other porcesss
-    /*'websocket'  => [
-        'handler'  => process\Websocket::class,
-        'listen' => 'websocket://0.0.0.0:8888',
-        'count'  => 10,
-    ],*/
+    ]
 ];

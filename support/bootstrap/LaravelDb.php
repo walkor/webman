@@ -53,8 +53,10 @@ class LaravelDb implements Bootstrap
             return new Connection($config);
         });
 
-        $default_config = $connections[$configs['default']];
-        $capsule->addConnection($default_config);
+        if (isset($configs['default'])) {
+            $default_config = $connections[$configs['default']];
+            $capsule->addConnection($default_config);
+        }
 
         foreach ($connections as $name => $config) {
             $capsule->addConnection($config, $name);
