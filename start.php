@@ -68,7 +68,7 @@ $worker->onWorkerStart = function ($worker) {
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
     Route::load(config_path());
     Middleware::load(config('middleware', []));
-    foreach (config('ext', []) as $name => $project) {
+    foreach (config('plugin', []) as $name => $project) {
         Middleware::load($project['middleware']??[]);
     }
     Middleware::load(['__static__' => config('static.middleware', [])]);
@@ -82,9 +82,9 @@ if (\DIRECTORY_SEPARATOR === '/') {
     foreach (config('process', []) as $process_name => $config) {
         worker_start($process_name, $config);
     }
-    foreach (config('ext', []) as $key => $project) {
+    foreach (config('plugin', []) as $key => $project) {
         foreach ($project['process'] ?? [] as $process_name => $config) {
-            worker_start("ext.$key.$process_name", $config);
+            worker_start("plugin.$key.$process_name", $config);
         }
     }
 }

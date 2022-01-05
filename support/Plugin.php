@@ -1,17 +1,19 @@
 <?php
 namespace support;
 
-class Ext
+class Plugin
 {
     public static function install($event)
     {
+        if (!static::requireAutoloadFile()) {
+            return;
+        }
         $autoload = $event->getOperation()->getPackage()->getAutoload();
         if (!isset($autoload['psr-4'])) {
             return;
         }
         $namespace = key($autoload['psr-4']);
         $install_function = "\\{$namespace}Install::install";
-        require_once __DIR__ . '/../vendor/autoload.php';
         if (is_callable($install_function)) {
             $install_function();
         }
@@ -19,6 +21,9 @@ class Ext
 
     public static function uninstall($event)
     {
+        if (!static::requireAutoloadFile()) {
+            return;
+        }
         $autoload = $event->getOperation()->getPackage()->getAutoload();
         if (!isset($autoload['psr-4'])) {
             return;
@@ -29,5 +34,14 @@ class Ext
         if (is_callable($uninstall_function)) {
             $uninstall_function();
         }
+    }
+
+    protected static function requireAutoloadFile()
+    {
+        if (!is_file($autoload_file = __DIR__ . '/../vendor/autoload.php')) {
+            return false;
+        }
+        require_once __DIR__ . '/../vendor/autoload.php';
+        return true;
     }
 }

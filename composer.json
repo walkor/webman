@@ -41,10 +41,10 @@
   },
   "scripts": {
     "post-package-install": [
-      "support\\Ext::install"
+      "support\\Plugin::install"
     ],
     "pre-package-uninstall": [
-      "support\\Ext::uninstall"
+      "support\\Plugin::uninstall"
     ]
   }
 }

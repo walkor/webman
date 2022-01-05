@@ -263,6 +263,31 @@ function locale(string $locale = null)
     Translation::setLocale($locale);
 }
 
+function copy_dir($source, $dest)
+{
+    if (is_dir($source)) {
+        if (!is_dir($dest)) {
+            mkdir($dest);
+        }
+        $files = scandir($source);
+        foreach ($files as $file) {
+            if ($file !== "." && $file !== "..") {
+                copy_dir("$source/$file", "$dest/$file");
+            }
+        }
+    } else if (file_exists($source)) {
+        copy($source, $dest);
+    }
+}
+
+function remove_dir($dir) {
+    $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+        (is_dir("$dir/$file") && !is_link($dir)) ? remove_dir("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+}
+
 /**
  * @param $worker
  * @param $class
