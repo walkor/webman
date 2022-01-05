@@ -78,7 +78,7 @@ class Monitor
             $iterator = [new \SplFileInfo($monitor_dir)];
         } else {
             // recursive traversal directory
-            $dir_iterator = new \RecursiveDirectoryIterator($monitor_dir);
+            $dir_iterator = new \RecursiveDirectoryIterator($monitor_dir, \FilesystemIterator::FOLLOW_SYMLINKS);
             $iterator = new \RecursiveIteratorIterator($dir_iterator);
         }
         foreach ($iterator as $file) {

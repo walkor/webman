@@ -16,12 +16,17 @@ use support\Request;
 use support\Response;
 use support\Translation;
 use support\Container;
+use support\view\Raw;
+use support\view\Blade;
+use support\view\ThinkPHP;
+use support\view\Twig;
 use Workerman\Worker;
 use Webman\App;
 use Webman\Config;
 use Webman\Route;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
+define('WEBMAN_VERSION', '1.2.0');
 
 /**
  * @return string
@@ -137,6 +142,50 @@ function view($template, $vars = [], $app = null)
         $handler = config('view.handler');
     }
     return new Response(200, [], $handler::render($template, $vars, $app));
+}
+
+/**
+ * @param $template
+ * @param array $vars
+ * @param null $app
+ * @return Response
+ */
+function raw_view($template, $vars = [], $app = null)
+{
+    return new Response(200, [], Raw::render($template, $vars, $app));
+}
+
+/**
+ * @param $template
+ * @param array $vars
+ * @param null $app
+ * @return Response
+ */
+function blade_view($template, $vars = [], $app = null)
+{
+    return new Response(200, [], Blade::render($template, $vars, $app));
+}
+
+/**
+ * @param $template
+ * @param array $vars
+ * @param null $app
+ * @return Response
+ */
+function think_view($template, $vars = [], $app = null)
+{
+    return new Response(200, [], ThinkPHP::render($template, $vars, $app));
+}
+
+/**
+ * @param $template
+ * @param array $vars
+ * @param null $app
+ * @return Response
+ */
+function twig_view($template, $vars = [], $app = null)
+{
+    return new Response(200, [], Twig::render($template, $vars, $app));
 }
 
 /**

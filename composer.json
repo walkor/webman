@@ -38,5 +38,13 @@
     "files": [
       "./support/helpers.php"
     ]
+  },
+  "scripts": {
+    "post-package-install": [
+      "support\\Ext::install"
+    ],
+    "pre-package-uninstall": [
+      "support\\Ext::uninstall"
+    ]
   }
 }

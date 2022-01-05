@@ -13,8 +13,6 @@ use support\Request;
 use support\Log;
 use support\Container;
 
-const WEBMAN_VERSION = '1.2';
-
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
