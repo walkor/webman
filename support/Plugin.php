@@ -14,7 +14,8 @@ class Plugin
         }
         $namespace = key($autoload['psr-4']);
         $install_function = "\\{$namespace}Install::install";
-        if (is_callable($install_function)) {
+        $plugin_const = "\\{$namespace}Install::WEBMAN_PLUGIN";
+        if (defined($plugin_const) && is_callable($install_function)) {
             $install_function();
         }
     }
@@ -30,8 +31,8 @@ class Plugin
         }
         $namespace = key($autoload['psr-4']);
         $uninstall_function = "\\{$namespace}Install::uninstall";
-        require_once __DIR__ . '/../vendor/autoload.php';
-        if (is_callable($uninstall_function)) {
+        $plugin_const = "\\{$namespace}Install::WEBMAN_PLUGIN";
+        if (defined($plugin_const) && is_callable($uninstall_function)) {
             $uninstall_function();
         }
     }
