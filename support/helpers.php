@@ -26,7 +26,7 @@ use Webman\Config;
 use Webman\Route;
 
 define('BASE_PATH', realpath(__DIR__ . '/../'));
-define('WEBMAN_VERSION', '1.2.1');
+define('WEBMAN_VERSION', '1.2.2');
 
 /**
  * @return string
