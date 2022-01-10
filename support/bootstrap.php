@@ -13,7 +13,10 @@
  */
 
 use Dotenv\Dotenv;
+use support\Container;
 use Webman\Config;
+use Webman\Route;
+use Webman\Middleware;
 
 $worker = $worker ?? null;
 
@@ -49,6 +52,19 @@ foreach (config('autoload.files', []) as $file) {
     include_once $file;
 }
 
+$container = Container::instance();
+Route::container($container);
+Middleware::container($container);
+
+Route::load(config_path());
+Middleware::load(config('middleware', []));
+foreach (config('plugin', []) as $firm => $projects) {
+    foreach ($projects as $name => $project) {
+        Middleware::load($project['middleware'] ?? []);
+    }
+}
+Middleware::load(['__static__' => config('static.middleware', [])]);
+
 foreach (config('bootstrap', []) as $class_name) {
     /** @var \Webman\Bootstrap $class_name */
     $class_name::start($worker);
@@ -62,3 +78,4 @@ foreach (config('plugin', []) as $firm => $projects) {
         }
     }
 }
+

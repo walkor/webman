@@ -66,16 +66,7 @@ foreach ($property_map as $property) {
 $worker->onWorkerStart = function ($worker) {
     require_once base_path() . '/support/bootstrap.php';
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
-    Route::load(config_path());
-    Middleware::load(config('middleware', []));
-    foreach (config('plugin', []) as $firm => $projects) {
-        foreach ($projects as $name => $project) {
-            Middleware::load($project['middleware'] ?? []);
-        }
-    }
-    Middleware::load(['__static__' => config('static.middleware', [])]);
     Http::requestClass(Request::class);
-
     $worker->onMessage = [$app, 'onMessage'];
 };
 
