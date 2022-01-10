@@ -53,3 +53,12 @@ foreach (config('bootstrap', []) as $class_name) {
     /** @var \Webman\Bootstrap $class_name */
     $class_name::start($worker);
 }
+
+foreach (config('plugin', []) as $firm => $projects) {
+    foreach ($projects as $name => $project) {
+        foreach ($project['bootstrap'] ?? [] as $class_name) {
+            /** @var \Webman\Bootstrap $class_name */
+            $class_name::start($worker);
+        }
+    }
+}
