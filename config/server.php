@@ -20,9 +20,9 @@ return [
     'count'                => cpu_count() * 2,
     'user'                 => '',
     'group'                => '',
+    'reusePort'            => false,
     'pid_file'             => runtime_path() . '/webman.pid',
     'stdout_file'          => runtime_path() . '/logs/stdout.log',
     'log_file'             => runtime_path() . '/logs/workerman.log',
-    'max_request'          => 1000000,
     'max_package_size'     => 10*1024*1024
 ];
