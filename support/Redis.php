@@ -178,7 +178,7 @@ use Illuminate\Redis\RedisManager;
  * @method static mixed watch($keys)
  * @method static mixed unwatch($keys)
  * Scripting methods
- * @method static mixed eval($script, $args = [], $numKeys = 0)
+ * @method mixed eval($script, $numkeys, $keyOrArg1 = null, $keyOrArgN = null)
  * @method static mixed evalSha($sha, $args = [], $numKeys = 0)
  * @method static mixed script($command, ...$scripts)
  * @method static mixed client(...$args)
