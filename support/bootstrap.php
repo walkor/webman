@@ -56,7 +56,6 @@ $container = Container::instance();
 Route::container($container);
 Middleware::container($container);
 
-Route::load(config_path());
 Middleware::load(config('middleware', []));
 foreach (config('plugin', []) as $firm => $projects) {
     foreach ($projects as $name => $project) {
@@ -78,4 +77,6 @@ foreach (config('plugin', []) as $firm => $projects) {
         }
     }
 }
+
+Route::load(config_path());
 
