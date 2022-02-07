@@ -39,7 +39,8 @@ class Translation
     {
         if (!static::$_instance) {
             $config = config('translation', []);
-            if (!$translations_path = realpath($config['path'])) {
+            // Phar support. Compatible with the 'realpath' function in the phar file.
+            if (!$translations_path = \get_realpath($config['path'])) {
                 throw new NotFoundException("File {$config['path']} not found");
             }
 
