@@ -37,26 +37,28 @@ class Monitor
      * FileMonitor constructor.
      * @param $monitor_dir
      * @param $monitor_extensions
+     * @param $memory_limit
      */
     public function __construct($monitor_dir, $monitor_extensions, $memory_limit = null)
     {
+        $this->_paths = (array)$monitor_dir;
+        $this->_extensions = $monitor_extensions;
+        if (!Worker::getAllWorkers()) {
+            return;
+        }
         $disable_functions = explode(',', ini_get('disable_functions'));
         if (in_array('exec', $disable_functions, true)) {
             echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH ."/php.ini\n";
         } else {
             if (!Worker::$daemonize) {
-                $this->_paths = (array)$monitor_dir;
-                $this->_extensions = $monitor_extensions;
                 Timer::add(1, function () {
-                    foreach ($this->_paths as $path) {
-                        $this->checkFilesChange($path);
-                    }
+                    $this->checkAllFilesChange();
                 });
             }
         }
 
         $memory_limit = $this->getMemoryLimit($memory_limit);
-        if (DIRECTORY_SEPARATOR === '/' && $memory_limit) {
+        if ($memory_limit && DIRECTORY_SEPARATOR === '/') {
             Timer::add(60, [$this, 'checkMemory'], [$memory_limit]);
         }
     }
@@ -94,15 +96,36 @@ class Monitor
                     $last_mtime = $file->getMTime();
                     continue;
                 }
+                $last_mtime = $file->getMTime();
                 echo $file . " update and reload\n";
                 // send SIGUSR1 signal to master process for reload
-                posix_kill(posix_getppid(), SIGUSR1);
-                $last_mtime = $file->getMTime();
+                if(DIRECTORY_SEPARATOR === '/') {
+                    posix_kill(posix_getppid(), SIGUSR1);
+                } else {
+                    return true;
+                }
                 break;
             }
         }
     }
-    
+
+    /**
+     * @return bool
+     */
+    public function checkAllFilesChange()
+    {
+        foreach ($this->_paths as $path) {
+            if ($this->checkFilesChange($path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $memory_limit
+     * @return void
+     */
     public function checkMemory($memory_limit)
     {
         $ppid = posix_getppid();
