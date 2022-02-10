@@ -26,7 +26,7 @@ use Webman\Config;
 use Webman\Route;
 
 // Phar support.
-if (class_exists(Phar::class, false) && Phar::running()) {
+if (is_phar()) {
     define('BASE_PATH', dirname(__DIR__));
 } else {
     define('BASE_PATH', realpath(__DIR__ . '/../'));
@@ -69,32 +69,17 @@ function config_path()
 /**
  * Phar support.
  * Compatible with the 'realpath' function in the phar file.
- * 
+ *
  * @return string
  */
 function runtime_path()
 {
-    if (class_exists(\Phar::class, false) && Phar::running()) {
-        return getcwd() . DIRECTORY_SEPARATOR . 'runtime';
-    } else {
-        return BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
+    static $runtime_path;
+    if (!$runtime_path) {
+        $runtime_path = is_phar() ? dirname(Phar::running(false)) . DIRECTORY_SEPARATOR . 'runtime'
+            : $runtime_path = BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
     }
-}
-
-/**
- * Phar support.
- * Compatible with the 'realpath' function in the phar file.
- *
- * @param string $file_path
- * @return string
- */
-function get_realpath(string $file_path): string
-{
-    if (class_exists(\Phar::class, false) && Phar::running()) {
-        return $file_path;
-    } else {
-        return realpath($file_path);
-    }
+    return $runtime_path;
 }
 
 /**
@@ -292,6 +277,12 @@ function locale(string $locale = null)
     Translation::setLocale($locale);
 }
 
+/**
+ * Copy dir.
+ * @param $source
+ * @param $dest
+ * @return void
+ */
 function copy_dir($source, $dest)
 {
     if (is_dir($source)) {
@@ -309,6 +300,11 @@ function copy_dir($source, $dest)
     }
 }
 
+/**
+ * Remove dir.
+ * @param $dir
+ * @return bool
+ */
 function remove_dir($dir) {
     $files = array_diff(scandir($dir), array('.','..'));
     foreach ($files as $file) {
@@ -342,6 +338,11 @@ function worker_bind($worker, $class) {
     }
 }
 
+/**
+ * @param $process_name
+ * @param $config
+ * @return void
+ */
 function worker_start($process_name, $config) {
     $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
     $property_map = [
@@ -388,6 +389,30 @@ function worker_start($process_name, $config) {
         }
 
     };
+}
+
+/**
+ * Phar support.
+ * Compatible with the 'realpath' function in the phar file.
+ *
+ * @param string $file_path
+ * @return string
+ */
+function get_realpath(string $file_path): string
+{
+    if (is_phar()) {
+        return $file_path;
+    } else {
+        return realpath($file_path);
+    }
+}
+
+/**
+ * @return bool
+ */
+function is_phar()
+{
+    return class_exists(\Phar::class, false) && Phar::running();
 }
 
 /**
