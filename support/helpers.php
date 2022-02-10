@@ -25,8 +25,14 @@ use Webman\App;
 use Webman\Config;
 use Webman\Route;
 
-define('BASE_PATH', realpath(__DIR__ . '/../'));
+// Phar support.
+if (class_exists(Phar::class, false) && Phar::running()) {
+    define('BASE_PATH', dirname(__DIR__));
+} else {
+    define('BASE_PATH', realpath(__DIR__ . '/../'));
+}
 define('WEBMAN_VERSION', '1.2.4');
+
 
 /**
  * @return string
@@ -61,11 +67,34 @@ function config_path()
 }
 
 /**
+ * Phar support.
+ * Compatible with the 'realpath' function in the phar file.
+ * 
  * @return string
  */
 function runtime_path()
 {
-    return BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
+    if (class_exists(\Phar::class, false) && Phar::running()) {
+        return getcwd() . DIRECTORY_SEPARATOR . 'runtime';
+    } else {
+        return BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
+    }
+}
+
+/**
+ * Phar support.
+ * Compatible with the 'realpath' function in the phar file.
+ *
+ * @param string $file_path
+ * @return string
+ */
+function get_realpath(string $file_path): string
+{
+    if (class_exists(\Phar::class, false) && Phar::running()) {
+        return $file_path;
+    } else {
+        return realpath($file_path);
+    }
 }
 
 /**

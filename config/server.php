@@ -22,6 +22,7 @@ return [
     'group'                => '',
     'reusePort'            => false,
     'pid_file'             => runtime_path() . '/webman.pid',
+    'statistics_file_prefix' => runtime_path() . '/workerman-',
     'stdout_file'          => runtime_path() . '/logs/stdout.log',
     'log_file'             => runtime_path() . '/logs/workerman.log',
     'max_package_size'     => 10*1024*1024
