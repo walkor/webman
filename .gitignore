@@ -1,7 +1,5 @@
-/.idea
-/.vscode
-/vendor
-*.log
-.env
-/tests/tmp
-/tests/.phpunit.result.cache
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
