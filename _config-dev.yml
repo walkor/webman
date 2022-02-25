@@ -4,7 +4,7 @@ description: >-
   webman is a high-performance HTTP service framework developed based on workerman.
   Webman is used to replace the traditional php-fpm architecture and provide ultra-high performance
   and scalable HTTP services. You can use webman to develop websites, you can also develop HTTP interfaces or microservices.
-baseurl: "/docs"
+baseurl: "/"
 url: ""
 twitter_username: panggilmeiam
 github_username:  darkterminal
