@@ -1,4 +1,5 @@
 <?php
+
 namespace support;
 
 use Symfony\Component\Cache\Adapter\RedisAdapter;

@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\view;
 
 use Twig\Loader\FilesystemLoader;
@@ -46,10 +47,10 @@ class Twig implements View
     public static function render($template, $vars, $app = null)
     {
         static $views = [], $view_suffix;
-        $view_suffix = $view_suffix ? : \config('view.view_suffix', 'html');
+        $view_suffix = $view_suffix ?: \config('view.view_suffix', 'html');
         $app = $app === null ? \request()->app : $app;
         if (!isset($views[$app])) {
-            $view_path = $app === '' ? \app_path(). '/view/' : \app_path(). "/$app/view/";
+            $view_path = $app === '' ? \app_path() . '/view/' : \app_path() . "/$app/view/";
             $views[$app] = new Environment(new FilesystemLoader($view_path), \config('view.options', []));
         }
         $vars = \array_merge(static::$_vars, $vars);

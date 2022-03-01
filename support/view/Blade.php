@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\view;
 
 use Jenssegers\Blade\Blade as BladeView;
@@ -48,7 +49,7 @@ class Blade implements View
         static $views = [];
         $app = $app === null ? \request()->app : $app;
         if (!isset($views[$app])) {
-            $view_path = $app === '' ? \app_path(). '/view' : \app_path(). "/$app/view";
+            $view_path = $app === '' ? \app_path() . '/view' : \app_path() . "/$app/view";
             $views[$app] = new BladeView($view_path, \runtime_path() . '/views');
         }
         $vars = \array_merge(static::$_vars, $vars);

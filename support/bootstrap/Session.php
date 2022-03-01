@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\bootstrap;
 
 use Webman\Bootstrap;
@@ -22,7 +23,8 @@ use Workerman\Worker;
  * Class Session
  * @package support
  */
-class Session implements Bootstrap {
+class Session implements Bootstrap
+{
 
     /**
      * @param Worker $worker

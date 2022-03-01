@@ -19,7 +19,7 @@ class View
     public static function assign($name, $value = null)
     {
         static $handler;
-        $handler = $handler ? : config('view.handler');
+        $handler = $handler ?: config('view.handler');
         $handler::assign($name, $value);
     }
 }

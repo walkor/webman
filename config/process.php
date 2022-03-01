@@ -16,8 +16,8 @@
 return [
     // File update detection and automatic reload
     'monitor' => [
-        'handler'     => process\Monitor::class,
-        'reloadable'  => false,
+        'handler' => process\Monitor::class,
+        'reloadable' => false,
         'constructor' => [
             // Monitor these directories
             'monitor_dir' => [

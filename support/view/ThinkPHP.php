@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\view;
 
 use think\Template;
@@ -45,10 +46,10 @@ class ThinkPHP implements View
     public static function render($template, $vars, $app = null)
     {
         $app = $app == null ? \request()->app : $app;
-        $view_path = $app === '' ? \app_path() . '/view/' : \app_path(). "/$app/view/";
+        $view_path = $app === '' ? \app_path() . '/view/' : \app_path() . "/$app/view/";
         $default_options = [
-            'view_path'   => $view_path,
-            'cache_path'  => \runtime_path() . '/views/',
+            'view_path' => $view_path,
+            'cache_path' => \runtime_path() . '/views/',
             'view_suffix' => config('view.view_suffix', 'html')
         ];
         $options = $default_options + \config('view.options', []);

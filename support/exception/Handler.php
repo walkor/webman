@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\exception;
 
 use Webman\Http\Request;
@@ -33,7 +34,7 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    public function render(Request $request, Throwable $exception) : Response
+    public function render(Request $request, Throwable $exception): Response
     {
         return parent::render($request, $exception);
     }

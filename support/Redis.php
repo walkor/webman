@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support;
 
 use Illuminate\Redis\RedisManager;
@@ -221,7 +222,8 @@ class Redis
      * @param string $name
      * @return \Illuminate\Redis\Connections\Connection
      */
-    public static function connection($name = 'default') {
+    public static function connection($name = 'default')
+    {
         return static::instance()->connection($name);
     }
 

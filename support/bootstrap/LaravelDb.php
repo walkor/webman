@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\bootstrap;
 
 use Webman\Bootstrap;
@@ -47,7 +48,7 @@ class LaravelDb implements Bootstrap
         $capsule = new Capsule;
         $configs = config('database');
 
-        $capsule->getDatabaseManager()->extend('mongodb', function($config, $name) {
+        $capsule->getDatabaseManager()->extend('mongodb', function ($config, $name) {
             $config['name'] = $name;
 
             return new Connection($config);

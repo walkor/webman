@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support;
 
 use Symfony\Component\Translation\Translator;
@@ -58,8 +59,7 @@ class Translation
                 ]
             ];
 
-            foreach ($classes as $class => $opts)
-            {
+            foreach ($classes as $class => $opts) {
                 $translator->addLoader($opts['format'], new $class);
                 foreach (glob($translations_path . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . '*' . $opts['extension']) as $file) {
                     $domain = basename($file, $opts['extension']);

@@ -16,7 +16,7 @@ use support\Container;
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
-if (class_exists('Dotenv\Dotenv') && file_exists(base_path().'/.env')) {
+if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
     if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
         Dotenv::createUnsafeImmutable(base_path())->load();
     } else {
@@ -30,7 +30,7 @@ if ($timezone = config('app.default_timezone')) {
     date_default_timezone_set($timezone);
 }
 
-Worker::$onMasterReload = function (){
+Worker::$onMasterReload = function () {
     if (function_exists('opcache_get_status')) {
         if ($status = opcache_get_status()) {
             if (isset($status['scripts']) && $scripts = $status['scripts']) {
@@ -42,11 +42,11 @@ Worker::$onMasterReload = function (){
     }
 };
 
-$config                               = config('server');
-Worker::$pidFile                      = $config['pid_file'];
-Worker::$stdoutFile                   = $config['stdout_file'];
-Worker::$logFile                      = $config['log_file'];
-TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10*1024*1024;
+$config = config('server');
+Worker::$pidFile = $config['pid_file'];
+Worker::$stdoutFile = $config['stdout_file'];
+Worker::$logFile = $config['log_file'];
+TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10 * 1024 * 1024;
 if (property_exists(Worker::class, 'statusFile')) {
     Worker::$statusFile = $config['status_file'] ?? '';
 }

@@ -305,8 +305,9 @@ function copy_dir($source, $dest)
  * @param $dir
  * @return bool
  */
-function remove_dir($dir) {
-    $files = array_diff(scandir($dir), array('.','..'));
+function remove_dir($dir)
+{
+    $files = array_diff(scandir($dir), array('.', '..'));
     foreach ($files as $file) {
         (is_dir("$dir/$file") && !is_link($dir)) ? remove_dir("$dir/$file") : unlink("$dir/$file");
     }
@@ -317,7 +318,8 @@ function remove_dir($dir) {
  * @param $worker
  * @param $class
  */
-function worker_bind($worker, $class) {
+function worker_bind($worker, $class)
+{
     $callback_map = [
         'onConnect',
         'onMessage',
@@ -343,7 +345,8 @@ function worker_bind($worker, $class) {
  * @param $config
  * @return void
  */
-function worker_start($process_name, $config) {
+function worker_start($process_name, $config)
+{
     $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
     $property_map = [
         'count',
@@ -418,7 +421,8 @@ function is_phar()
 /**
  * @return int
  */
-function cpu_count() {
+function cpu_count()
+{
     // Windows does not support the number of processes setting.
     if (\DIRECTORY_SEPARATOR === '\\') {
         return 1;

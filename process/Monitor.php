@@ -48,7 +48,7 @@ class Monitor
         }
         $disable_functions = explode(',', ini_get('disable_functions'));
         if (in_array('exec', $disable_functions, true)) {
-            echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH ."/php.ini\n";
+            echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH . "/php.ini\n";
         } else {
             if (!Worker::$daemonize) {
                 Timer::add(1, function () {
@@ -99,7 +99,7 @@ class Monitor
                 $last_mtime = $file->getMTime();
                 echo $file . " update and reload\n";
                 // send SIGUSR1 signal to master process for reload
-                if(DIRECTORY_SEPARATOR === '/') {
+                if (DIRECTORY_SEPARATOR === '/') {
                     posix_kill(posix_getppid(), SIGUSR1);
                 } else {
                     return true;
@@ -143,7 +143,7 @@ class Monitor
             if (preg_match('/VmRSS\s*?:\s*?(\d+?)\s*?kB/', $status, $match)) {
                 $mem = $match[1];
             }
-            $mem = (int)($mem/1024);
+            $mem = (int)($mem / 1024);
             if ($mem >= $memory_limit) {
                 posix_kill($pid, SIGINT);
             }
@@ -168,15 +168,15 @@ class Monitor
         if ($memory_limit == -1) {
             return 0;
         }
-        $unit = $memory_limit[strlen($memory_limit)-1];
+        $unit = $memory_limit[strlen($memory_limit) - 1];
         if ($unit == 'G') {
-            $memory_limit = 1024*(int)$memory_limit;
+            $memory_limit = 1024 * (int)$memory_limit;
         } else if ($unit == 'M') {
             $memory_limit = (int)$memory_limit;
         } else if ($unit == 'K') {
-            $memory_limit = (int)($memory_limit/1024);
+            $memory_limit = (int)($memory_limit / 1024);
         } else {
-            $memory_limit = (int)($memory_limit/(1024*1024));
+            $memory_limit = (int)($memory_limit / (1024 * 1024));
         }
         if ($memory_limit < 30) {
             $memory_limit = 30;

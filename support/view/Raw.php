@@ -11,6 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace support\view;
 
 use Webman\View;
@@ -44,7 +45,7 @@ class Raw implements View
     public static function render($template, $vars, $app = null)
     {
         static $view_suffix;
-        $view_suffix = $view_suffix ? : \config('view.view_suffix', 'html');
+        $view_suffix = $view_suffix ?: \config('view.view_suffix', 'html');
         $app = $app === null ? \request()->app : $app;
         if ($app === '') {
             $view_path = \app_path() . "/view/$template.$view_suffix";

@@ -1,4 +1,5 @@
 <?php
+
 namespace app\model;
 
 use support\Model;
