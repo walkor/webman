@@ -47,6 +47,7 @@ $config = config('server');
 Worker::$pidFile = $config['pid_file'];
 Worker::$stdoutFile = $config['stdout_file'];
 Worker::$logFile = $config['log_file'];
+Worker::$eventLoopClass = $config['event_loop'] ?? '';
 TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10 * 1024 * 1024;
 if (property_exists(Worker::class, 'statusFile')) {
     Worker::$statusFile = $config['status_file'] ?? '';
@@ -70,7 +71,7 @@ foreach ($property_map as $property) {
 $worker->onWorkerStart = function ($worker) {
     require_once base_path() . '/support/bootstrap.php';
     $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
-    Http::requestClass(Request::class);
+    Http::requestClass(config('server.request_class') ?? Request::class);
     $worker->onMessage = [$app, 'onMessage'];
 };
 

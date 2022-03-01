@@ -12,6 +12,8 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+use support\Request;
+
 return [
     'listen' => 'http://0.0.0.0:8787',
     'transport' => 'tcp',
@@ -21,6 +23,8 @@ return [
     'user' => '',
     'group' => '',
     'reusePort' => false,
+    'event_loop' => '',
+    'request_class' => Request::class,
     'pid_file' => runtime_path() . '/webman.pid',
     'status_file' => runtime_path() . '/webman.status',
     'stdout_file' => runtime_path() . '/logs/stdout.log',
