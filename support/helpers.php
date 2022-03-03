@@ -35,11 +35,16 @@ define('WEBMAN_VERSION', '1.2.5');
 
 
 /**
- * @return string
+ * @param $return_phar
+ * @return false|string
  */
-function base_path()
+function base_path($return_phar = true)
 {
-    return BASE_PATH;
+    static $real_path = '';
+    if (!$real_path) {
+        $real_path = is_phar() ? dirname(Phar::running(false)) : BASE_PATH;
+    }
+    return $return_phar ? BASE_PATH : $real_path;
 }
 
 /**
@@ -55,7 +60,11 @@ function app_path()
  */
 function public_path()
 {
-    return BASE_PATH . DIRECTORY_SEPARATOR . 'public';
+    static $path = '';
+    if (!$path) {
+        $path = get_realpath(config('app.public_path', BASE_PATH . DIRECTORY_SEPARATOR . 'public'));
+    }
+    return $path;
 }
 
 /**
@@ -74,12 +83,11 @@ function config_path()
  */
 function runtime_path()
 {
-    static $runtime_path;
-    if (!$runtime_path) {
-        $runtime_path = is_phar() ? dirname(Phar::running(false)) . DIRECTORY_SEPARATOR . 'runtime'
-            : $runtime_path = BASE_PATH . DIRECTORY_SEPARATOR . 'runtime';
+    static $path = '';
+    if (!$path) {
+        $path = get_realpath(config('app.runtime_path', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime'));
     }
-    return $runtime_path;
+    return $path;
 }
 
 /**
@@ -308,6 +316,9 @@ function copy_dir($source, $dest, $overwrite = false)
  */
 function remove_dir($dir)
 {
+    if (is_link($dir) || is_file($dir)) {
+        return unlink($dir);
+    }
     $files = array_diff(scandir($dir), array('.', '..'));
     foreach ($files as $file) {
         (is_dir("$dir/$file") && !is_link($dir)) ? remove_dir("$dir/$file") : unlink("$dir/$file");
