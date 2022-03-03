@@ -14,6 +14,9 @@
 
 namespace support;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Handler\FormattableHandlerInterface;
+use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 
 /**
@@ -46,21 +49,66 @@ class Log
         if (!static::$_instance) {
             $configs = config('log', []);
             foreach ($configs as $channel => $config) {
-                $logger = static::$_instance[$channel] = new Logger($channel);
-                foreach ($config['handlers'] as $handler_config) {
-                    $handler = new $handler_config['class'](... \array_values($handler_config['constructor']));
-                    if (isset($handler_config['formatter'])) {
-                        $formatter = new $handler_config['formatter']['class'](... \array_values($handler_config['formatter']['constructor']));
-                        $handler->setFormatter($formatter);
-                    }
-                    $logger->pushHandler($handler);
-                }
+                $handlers = self::handlers($config);
+                $processors = self::processors($config);
+                static::$_instance[$channel] = new Logger($channel,$handlers,$processors);
             }
         }
         return static::$_instance[$name];
     }
 
 
+    protected  static function handlers(array $config): array
+    {
+        $handlerConfigs = $config['handlers'] ?? [[]];
+        $handlers = [];
+        foreach ($handlerConfigs as $value) {
+            $class = $value['class'] ?? [];
+            $constructor = $value['constructor'] ?? [];
+
+            $formatterConfig = $value['formatter'] ?? [];
+
+            $class && $handlers[] = self::handler($class, $constructor, $formatterConfig);
+        }
+
+        return $handlers;
+    }
+
+    protected static function handler($class, $constructor, $formatterConfig): HandlerInterface
+    {
+        /** @var HandlerInterface $handler */
+        $handler = new $class(... \array_values($constructor));
+
+        if ($handler instanceof FormattableHandlerInterface) {
+            $formatterClass = $formatterConfig['class'];
+            $formatterConstructor = $formatterConfig['constructor'];
+
+            /** @var FormatterInterface $formatter */
+            $formatter = new $formatterClass(... \array_values($formatterConstructor));
+
+            $handler->setFormatter($formatter);
+        }
+
+        return $handler;
+    }
+
+    protected static function processors(array $config): array
+    {
+        $result = [];
+        if (! isset($config['processors']) && isset($config['processor'])) {
+            $config['processors'] = [$config['processor']];
+        }
+
+        foreach ($config['processors'] ?? [] as $value) {
+            if (is_array($value) && isset($value['class'])) {
+                $value = new $value['class'](... \array_values($value['constructor'] ?? []));;
+            }
+
+            $result[] = $value;
+        }
+
+        return $result;
+    }
     /**
      * @param $name
      * @param $arguments
