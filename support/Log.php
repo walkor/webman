@@ -79,7 +79,7 @@ class Log
         /** @var HandlerInterface $handler */
         $handler = new $class(... \array_values($constructor));
 
-        if ($handler instanceof FormattableHandlerInterface && $formatterConfig !=[]) {
+        if ($handler instanceof FormattableHandlerInterface && $formatterConfig) {
             $formatterClass = $formatterConfig['class'];
             $formatterConstructor = $formatterConfig['constructor'];
 
