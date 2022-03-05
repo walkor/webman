@@ -20,7 +20,7 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 
 /**
- * Class Redis
+ * Class Log
  * @package support
  *
  * @method static void log($level, $message, array $context = [])
