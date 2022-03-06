@@ -286,6 +286,16 @@ function locale(string $locale = null)
 }
 
 /**
+ * 404 not found
+ *
+ * @return Response
+ */
+function not_found()
+{
+    return new Response(404, [], file_get_contents(public_path() . '/404.html'));
+}
+
+/**
  * Copy dir.
  * @param $source
  * @param $dest
