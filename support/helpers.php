@@ -31,8 +31,7 @@ if (is_phar()) {
 } else {
     define('BASE_PATH', realpath(__DIR__ . '/../'));
 }
-define('WEBMAN_VERSION', '1.2.5');
-
+define('WEBMAN_VERSION', '1.3.x');
 
 /**
  * @param $return_phar

@@ -17,4 +17,5 @@ return [
     'default_timezone' => 'Asia/Shanghai',
     'public_path' => base_path() . DIRECTORY_SEPARATOR . 'public',
     'runtime_path' => base_path(false) . DIRECTORY_SEPARATOR . 'runtime',
+    'controller_suffix' => '',
 ];

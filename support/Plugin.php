@@ -6,9 +6,7 @@ class Plugin
 {
     public static function install($event)
     {
-        if (!static::requireAutoloadFile()) {
-            return;
-        }
+        static::findHepler();
         $autoload = $event->getOperation()->getPackage()->getAutoload();
         if (!isset($autoload['psr-4'])) {
             return;
@@ -23,9 +21,7 @@ class Plugin
 
     public static function uninstall($event)
     {
-        if (!static::requireAutoloadFile()) {
-            return;
-        }
+        static::findHepler();
         $autoload = $event->getOperation()->getPackage()->getAutoload();
         if (!isset($autoload['psr-4'])) {
             return;
@@ -38,12 +34,16 @@ class Plugin
         }
     }
 
-    protected static function requireAutoloadFile()
+    protected static function findHepler()
     {
-        if (!is_file($autoload_file = __DIR__ . '/../vendor/autoload.php')) {
-            return false;
+        // Plugin.php in vendor
+        $file = __DIR__ . '/../../../../../support/helpers.php';
+        if (is_file($file)) {
+            require_once $file;
+            return;
         }
-        require_once __DIR__ . '/../vendor/autoload.php';
-        return true;
+        // Plugin.php in webman
+        require_once __DIR__ . '/helpers.php';
     }
+
 }
