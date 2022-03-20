@@ -72,7 +72,7 @@ if ($config['listen']) {
     $worker->onWorkerStart = function ($worker) {
         require_once base_path() . '/support/bootstrap.php';
         $app = new App($worker, Container::instance(), Log::channel('default'), app_path(), public_path());
-        Http::requestClass(config('server.request_class') ?? Request::class);
+        Http::requestClass(config('app.request_class', config('server.request_class', Request::class)));
         $worker->onMessage = [$app, 'onMessage'];
     };
 }
