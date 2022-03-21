@@ -45,7 +45,7 @@
       "support\\Plugin::install"
     ],
     "post-package-update": [
-      "support\\Plugin::update"
+      "support\\Plugin::install"
     ],
     "pre-package-uninstall": [
       "support\\Plugin::uninstall"
