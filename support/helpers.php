@@ -424,7 +424,7 @@ function worker_start($process_name, $config)
  */
 function get_realpath(string $file_path): string
 {
-    if (is_phar()) {
+    if (strpos($file_path, 'phar://') === 0) {
         return $file_path;
     } else {
         return realpath($file_path);
