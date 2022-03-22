@@ -48,6 +48,14 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
 
 Config::reload(config_path(), ['route', 'container']);
 
+foreach (config('plugin', []) as $firm => $projects) {
+    foreach ($projects as $name => $project) {
+        foreach ($project['autoload']['files'] ?? [] as $file) {
+            include_once $file;
+        }
+    }
+}
+
 foreach (config('autoload.files', []) as $file) {
     include_once $file;
 }
