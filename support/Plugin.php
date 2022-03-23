@@ -7,7 +7,8 @@ class Plugin
     public static function install($event)
     {
         static::findHepler();
-        $autoload = $event->getOperation()->getPackage()->getAutoload();
+        $operation = $event->getOperation();
+        $autoload = method_exists($operation, 'getPackage') ? $operation->getPackage()->getAutoload() : $operation->getTargetPackage()->getAutoload();
         if (!isset($autoload['psr-4'])) {
             return;
         }
@@ -17,6 +18,11 @@ class Plugin
         if (defined($plugin_const) && is_callable($install_function)) {
             $install_function();
         }
+    }
+
+    public static function update($event)
+    {
+        static::install($event);
     }
 
     public static function uninstall($event)
