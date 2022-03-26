@@ -31,7 +31,7 @@ if (is_phar()) {
 } else {
     define('BASE_PATH', realpath(__DIR__ . '/../'));
 }
-define('WEBMAN_VERSION', '1.3.x');
+define('WEBMAN_VERSION', '1.3.0');
 
 /**
  * @param $return_phar
@@ -448,11 +448,13 @@ function cpu_count()
     if (\DIRECTORY_SEPARATOR === '\\') {
         return 1;
     }
-    if (strtolower(PHP_OS) === 'darwin') {
-        $count = shell_exec('sysctl -n machdep.cpu.core_count');
-    } else {
-        $count = shell_exec('nproc');
+    $count = 4;
+    if (is_callable('shell_exec')) {
+        if (strtolower(PHP_OS) === 'darwin') {
+            $count = (int)shell_exec('sysctl -n machdep.cpu.core_count');
+        } else {
+            $count = (int)shell_exec('nproc');
+        }
     }
-    $count = (int)$count > 0 ? (int)$count : 4;
-    return $count;
+    return $count > 0 ? $count : 4;
 }
