@@ -31,6 +31,10 @@ use Webman\Config;
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
+if (is_callable('opcache_reset')) {
+    opcache_reset();
+}
+    
 Config::load(config_path(), ['route', 'container']);
 
 worker_start('$process_name', config('process')['$process_name']);
@@ -55,6 +59,10 @@ use Webman\Config;
 
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
+
+if (is_callable('opcache_reset')) {
+    opcache_reset();
+}
 
 Config::load(config_path(), ['route', 'container']);
 
