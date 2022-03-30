@@ -229,15 +229,24 @@ function config($key = null, $default = null)
 
 /**
  * @param $name
- * @param array $parameters
+ * @param ...$parameters
  * @return string
  */
-function route($name, $parameters = [])
+function route($name, ...$parameters)
 {
     $route = Route::getByName($name);
     if (!$route) {
         return '';
     }
+
+    if (!$parameters) {
+        return $route->url();
+    }
+
+    if (is_array(current($parameters))) {
+        $parameters = current($parameters);
+    }
+
     return $route->url($parameters);
 }
 
