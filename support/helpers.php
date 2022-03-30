@@ -251,8 +251,8 @@ function route($name, ...$parameters)
 }
 
 /**
- * @param null $key
- * @param null $default
+ * @param mixed $key
+ * @param mixed $default
  * @return mixed
  */
 function session($key = null, $default = null)
@@ -264,6 +264,17 @@ function session($key = null, $default = null)
     if (\is_array($key)) {
         $session->put($key);
         return null;
+    }
+    if (\strpos($key, '.')) {
+        $key_array = \explode('.', $key);
+        $value = $session->all();
+        foreach ($key_array as $index) {
+            if (!isset($value[$index])) {
+                return $default;
+            }
+            $value = $value[$index];
+        }
+        return $value;
     }
     return $session->get($key, $default);
 }
