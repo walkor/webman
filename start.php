@@ -31,6 +31,20 @@ if ($timezone = config('app.default_timezone')) {
     date_default_timezone_set($timezone);
 }
 
+$runtime_logs_path = runtime_path() . DIRECTORY_SEPARATOR . 'logs';
+if ( !file_exists($runtime_logs_path) || !is_dir($runtime_logs_path) ) {
+    if (!mkdir($runtime_logs_path,0777,true)) {
+        throw new \RuntimeException("Failed to create runtime logs directory. Please check the permission.");
+    }
+}
+
+$runtime_views_path = runtime_path() . DIRECTORY_SEPARATOR . 'views';
+if ( !file_exists($runtime_views_path) || !is_dir($runtime_views_path) ) {
+    if (!mkdir($runtime_views_path,0777,true)) {
+        throw new \RuntimeException("Failed to create runtime views directory. Please check the permission.");
+    }
+}
+
 Worker::$onMasterReload = function () {
     if (function_exists('opcache_get_status')) {
         if ($status = opcache_get_status()) {
@@ -51,6 +65,9 @@ Worker::$eventLoopClass = $config['event_loop'] ?? '';
 TcpConnection::$defaultMaxPackageSize = $config['max_package_size'] ?? 10 * 1024 * 1024;
 if (property_exists(Worker::class, 'statusFile')) {
     Worker::$statusFile = $config['status_file'] ?? '';
+}
+if (property_exists(Worker::class, 'stopTimeout')) {
+    Worker::$stopTimeout = $config['stop_timeout'] ?? '';
 }
 
 if ($config['listen']) {
