@@ -46,13 +46,14 @@ return [
 
     'cookie_path' => '/',
 
+    'domain' => '',
+    
     'http_only' => true,
 
-    'domain' => '',
-
     'secure' => false,
+    
+    'same_site' => '',
 
     'gc_probability' => [1, 1000],
 
-    'same_site' => '',
 ];
