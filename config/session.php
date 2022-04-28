@@ -39,4 +39,20 @@ return [
     ],
 
     'session_name' => 'PHPSID',
+
+    'lifetime' => 7*24*60*60,
+
+    'cookie_lifetime' => 7*24*60*60,
+
+    'cookie_path' => '/',
+
+    'http_only' => true,
+
+    'domain' => '',
+
+    'secure' => false,
+
+    'gc_probability' => [1, 1000],
+
+    'same_site' => '',
 ];
