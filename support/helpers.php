@@ -61,7 +61,7 @@ function public_path()
 {
     static $path = '';
     if (!$path) {
-        $path = get_realpath(config('app.public_path', BASE_PATH . DIRECTORY_SEPARATOR . 'public'));
+        $path = config('app.public_path', BASE_PATH . DIRECTORY_SEPARATOR . 'public');
     }
     return $path;
 }
@@ -84,7 +84,7 @@ function runtime_path()
 {
     static $path = '';
     if (!$path) {
-        $path = get_realpath(config('app.runtime_path', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime'));
+        $path = config('app.runtime_path', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime');
     }
     return $path;
 }
