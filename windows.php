@@ -38,6 +38,11 @@ if (is_callable('opcache_reset')) {
 Config::load(config_path(), ['route', 'container']);
 
 worker_start('$process_name', config('process')['$process_name']);
+
+if (DIRECTORY_SEPARATOR != "/") {
+    Worker::\$logFile = config('server')['log_file'] ?? Worker::\$logFile;
+}
+
 Worker::runAll();
 
 EOF;
@@ -67,6 +72,11 @@ if (is_callable('opcache_reset')) {
 Config::load(config_path(), ['route', 'container']);
 
 worker_start("plugin.$firm.$name.$process_name", config("plugin.$firm.$name.process")['$process_name']);
+
+if (DIRECTORY_SEPARATOR != "/") {
+    Worker::\$logFile = config('server')['log_file'] ?? Worker::\$logFile;
+}
+
 Worker::runAll();
 
 EOF;
