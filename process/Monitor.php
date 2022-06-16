@@ -93,7 +93,7 @@ class Monitor
             // check mtime
             if ($last_mtime < $file->getMTime() && in_array($file->getExtension(), $this->_extensions, true)) {
                 $var = 0;
-                exec(PHP_BINARY . " -l " . $file, $out, $var);
+                exec('"'.PHP_BINARY . '" -l ' . $file, $out, $var);
                 if ($var) {
                     $last_mtime = $file->getMTime();
                     continue;
