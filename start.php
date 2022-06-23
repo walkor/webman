@@ -27,6 +27,11 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
 
 Config::load(config_path(), ['route', 'container']);
 
+$error_reporting = config('app.error_reporting');
+if (isset($error_reporting)) {
+    error_reporting($error_reporting);
+}
+
 if ($timezone = config('app.default_timezone')) {
     date_default_timezone_set($timezone);
 }
