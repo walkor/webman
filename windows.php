@@ -22,6 +22,11 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
 
 Config::load(config_path(), ['route', 'container']);
 
+$error_reporting = config('app.error_reporting');
+if (isset($error_reporting)) {
+    error_reporting($error_reporting);
+}
+
 $runtime_process_path = runtime_path() . DIRECTORY_SEPARATOR . '/windows';
 if (!is_dir($runtime_process_path)) {
     mkdir($runtime_process_path);
@@ -43,7 +48,7 @@ error_reporting(E_ALL);
 if (is_callable('opcache_reset')) {
     opcache_reset();
 }
-    
+
 Config::load(config_path(), ['route', 'container']);
 
 worker_start('$process_name', config('process')['$process_name']);
