@@ -27,6 +27,7 @@ return [
                 base_path() . '/support',
                 base_path() . '/resource',
                 base_path() . '/.env',
+                base_path() . '/vendor/autoload.php',
             ],
             // Files with these suffixes will be monitored
             'monitor_extensions' => [
