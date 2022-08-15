@@ -4,10 +4,10 @@
  */
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Dotenv\Dotenv;
 use process\Monitor;
+use support\App;
+use Dotenv\Dotenv;
 use Workerman\Worker;
-use Webman\Config;
 
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
@@ -20,7 +20,7 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
     }
 }
 
-Config::load(config_path(), ['route', 'container']);
+App::loadAllConfig(['route']);
 
 $error_reporting = config('app.error_reporting');
 if (isset($error_reporting)) {
@@ -35,12 +35,34 @@ $process_files = [
     __DIR__ . DIRECTORY_SEPARATOR . 'start.php'
 ];
 foreach (config('process', []) as $process_name => $config) {
+    $process_files[] = write_process_file($runtime_process_path, $process_name, '');
+}
+
+foreach (config('plugin', []) as $firm => $projects) {
+    foreach ($projects as $name => $project) {
+        if (!is_array($project)) {
+            continue;
+        }
+        foreach ($project['process'] ?? [] as $process_name => $config) {
+            $process_files[] = write_process_file($runtime_process_path, $process_name, "$firm.$name");
+        }
+    }
+    foreach ($projects['process'] ?? [] as $process_name => $config) {
+        $process_files[] = write_process_file($runtime_process_path, $process_name, $firm);
+    }
+}
+
+function write_process_file($runtime_process_path, $process_name, $firm)
+{
+    $process_param = $firm ? "plugin.$firm.$process_name" : $process_name;
+    $config_param = $firm ? "config('plugin.$firm.process')['$process_name']" : "config('process')['$process_name']";
     $file_content = <<<EOF
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Workerman\Worker;
 use Webman\Config;
+use support\App;
 
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
@@ -49,9 +71,9 @@ if (is_callable('opcache_reset')) {
     opcache_reset();
 }
 
-Config::load(config_path(), ['route', 'container']);
+App::loadAllConfig(['route']);
 
-worker_start('$process_name', config('process')['$process_name']);
+worker_start('$process_param', $config_param);
 
 if (DIRECTORY_SEPARATOR != "/") {
     Worker::\$logFile = config('server')['log_file'] ?? Worker::\$logFile;
@@ -60,48 +82,14 @@ if (DIRECTORY_SEPARATOR != "/") {
 Worker::runAll();
 
 EOF;
-
-    $process_file = $runtime_process_path . DIRECTORY_SEPARATOR . "start_$process_name.php";
-    $process_files[] = $process_file;
+    $process_file = $runtime_process_path . DIRECTORY_SEPARATOR . "start_$process_param.php";
     file_put_contents($process_file, $file_content);
+    return $process_file;
 }
 
-foreach (config('plugin', []) as $firm => $projects) {
-    foreach ($projects as $name => $project) {
-        foreach ($project['process'] ?? [] as $process_name => $config) {
-            $file_content = <<<EOF
-<?php
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-use Workerman\Worker;
-use Webman\Config;
-
-ini_set('display_errors', 'on');
-error_reporting(E_ALL);
-
-if (is_callable('opcache_reset')) {
-    opcache_reset();
+if ($monitor_config = config('process.monitor.constructor')) {
+    $monitor = new Monitor(...array_values($monitor_config));
 }
-
-Config::load(config_path(), ['route', 'container']);
-
-worker_start("plugin.$firm.$name.$process_name", config("plugin.$firm.$name.process")['$process_name']);
-
-if (DIRECTORY_SEPARATOR != "/") {
-    Worker::\$logFile = config('server')['log_file'] ?? Worker::\$logFile;
-}
-
-Worker::runAll();
-
-EOF;
-            $process_file = $runtime_process_path . DIRECTORY_SEPARATOR . "start_$process_name.php";
-            $process_files[] = $process_file;
-            file_put_contents($process_file, $file_content);
-        }
-    }
-}
-
-$monitor = new Monitor(...array_values(config('process.monitor.constructor')));
 
 function popen_processes($process_files)
 {
@@ -118,7 +106,7 @@ $resource = popen_processes($process_files);
 echo "\r\n";
 while (1) {
     sleep(1);
-    if ($monitor->checkAllFilesChange()) {
+    if (!empty($monitor) && $monitor->checkAllFilesChange()) {
         $status = proc_get_status($resource);
         $pid = $status['pid'];
         shell_exec("taskkill /F /T /PID $pid");
