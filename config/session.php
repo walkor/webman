@@ -12,11 +12,15 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+use Webman\Session\FileSessionHandler;
+use Webman\Session\RedisSessionHandler;
+use Webman\Session\RedisClusterSessionHandler;
+
 return [
 
     'type' => 'file', // or redis or redis_cluster
 
-    'handler' => Webman\FileSessionHandler::class,
+    'handler' => FileSessionHandler::class,
 
     'config' => [
         'file' => [
