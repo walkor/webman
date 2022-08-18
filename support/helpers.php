@@ -210,7 +210,7 @@ function twig_view(string $template, array $vars = [], string $app = null)
 }
 
 /**
- * @return Request
+ * @return \Webman\Http\Request|null
  */
 function request()
 {
@@ -379,7 +379,7 @@ function worker_bind($worker, $class)
         }
     }
     if (\method_exists($class, 'onWorkerStart')) {
-        [$class, 'onWorkerStart']($worker);
+        \call_user_func([$class, 'onWorkerStart'], $worker);
     }
 }
 
