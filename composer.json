@@ -5,22 +5,22 @@
     "high performance",
     "http service"
   ],
-  "homepage": "http://www.workerman.net",
+  "homepage": "https://www.workerman.net",
   "license": "MIT",
   "description": "High performance HTTP Service Framework.",
   "authors": [
     {
       "name": "walkor",
       "email": "walkor@workerman.net",
-      "homepage": "http://www.workerman.net",
+      "homepage": "https://www.workerman.net",
       "role": "Developer"
     }
   ],
   "support": {
     "email": "walkor@workerman.net",
     "issues": "https://github.com/walkor/webman/issues",
-    "forum": "http://wenda.workerman.net/",
-    "wiki": "http://workerman.net/doc/webman",
+    "forum": "https://wenda.workerman.net/",
+    "wiki": "https://workerman.net/doc/webman",
     "source": "https://github.com/walkor/webman"
   },
   "require": {
