@@ -22,5 +22,5 @@ return [
     'public_path' => base_path() . DIRECTORY_SEPARATOR . 'public',
     'runtime_path' => base_path(false) . DIRECTORY_SEPARATOR . 'runtime',
     'controller_suffix' => '',
-    'controller_reuse' => true,
+    'controller_reuse' => false,
 ];
