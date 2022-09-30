@@ -36,4 +36,14 @@ class DirFilter extends \RecursiveFilterIterator
                 $this->exclude
             );
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return \RecursiveFilterIterator|null
+     */
+    public function getChildren(): ?\RecursiveFilterIterator
+    {
+        return new self($this->getInnerIterator()->getChildren(), $this->exclude);
+    }
 }
