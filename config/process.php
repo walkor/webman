@@ -31,7 +31,10 @@ return [
             // Files with these suffixes will be monitored
             'monitor_extensions' => [
                 'php', 'html', 'htm', 'env'
-            ]
+            ],
+            'memory_limit' => null,
+            // Exclude directory or file, by default [.git/.svn/.vscode] was excluded
+            'exclude' => ['uploads', 'upload', 'assets', 'static', 'css', 'js', 'images', 'fonts', 'font', 'img', 'lib', 'node_modules', 'components', 'dist', 'release', 'cache', 'runtime']
         ]
     ]
 ];

@@ -16,6 +16,7 @@ namespace process;
 
 use Workerman\Timer;
 use Workerman\Worker;
+use app\library\DirFilter;
 
 /**
  * Class FileMonitor
@@ -34,15 +35,21 @@ class Monitor
     protected $_extensions = [];
 
     /**
+     * @var array
+     */
+    protected $_exclude = [];
+
+    /**
      * FileMonitor constructor.
      * @param $monitor_dir
      * @param $monitor_extensions
      * @param $memory_limit
      */
-    public function __construct($monitor_dir, $monitor_extensions, $memory_limit = null)
+    public function __construct($monitor_dir, $monitor_extensions, $memory_limit = null, $_exclude = [])
     {
         $this->_paths = (array)$monitor_dir;
         $this->_extensions = $monitor_extensions;
+        $this->_exclude = $_exclude;
         if (!Worker::getAllWorkers()) {
             return;
         }
@@ -81,7 +88,9 @@ class Monitor
         } else {
             // recursive traversal directory
             $dir_iterator = new \RecursiveDirectoryIterator($monitor_dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS);
-            $iterator = new \RecursiveIteratorIterator($dir_iterator);
+            // exclude directory or file
+            $filter_iterator = new DirFilter($dir_iterator, $this->_exclude);
+            $iterator = new \RecursiveIteratorIterator($filter_iterator);
         }
         $count = 0;
         foreach ($iterator as $file) {
