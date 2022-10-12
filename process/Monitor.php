@@ -87,7 +87,7 @@ class Monitor
         foreach ($iterator as $file) {
             $count ++;
             /** var SplFileInfo $file */
-            if (is_dir($file)) {
+            if (is_dir($file->getRealPath())) {
                 continue;
             }
             // check mtime
