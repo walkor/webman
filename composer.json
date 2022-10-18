@@ -36,9 +36,7 @@
       "": "./",
       "App\\": "./app"
     },
-    "files": [
-      "./support/helpers.php"
-    ]
+    "files": []
   },
   "scripts": {
     "post-package-install": [
