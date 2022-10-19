@@ -4,7 +4,7 @@ namespace app\controller;
 
 use support\Request;
 
-class Index
+class IndexController
 {
     public function index(Request $request)
     {
