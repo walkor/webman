@@ -93,7 +93,7 @@ if ($monitor_config = config('process.monitor.constructor')) {
 
 function popen_processes($process_files)
 {
-    $cmd = "php " . implode(' ', $process_files);
+    $cmd = '"' . PHP_BINARY . '" ' . implode(' ', $process_files);
     $descriptorspec = [STDIN, STDOUT, STDOUT];
     $resource = proc_open($cmd, $descriptorspec, $pipes);
     if (!$resource) {
