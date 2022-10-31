@@ -27,7 +27,7 @@ return [
                 base_path() . '/support',
                 base_path() . '/resource',
                 base_path() . '/.env',
-            ], glob(base_path() . '/plugin/*/{app,process,config,resource,support}', GLOB_BRACE)),
+            ], glob(base_path() . '/plugin/*/app'), glob(base_path() . '/plugin/*/config')),
             // Files with these suffixes will be monitored
             'monitor_extensions' => [
                 'php', 'html', 'htm', 'env'
