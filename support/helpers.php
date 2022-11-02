@@ -95,7 +95,7 @@ function runtime_path()
  * @param string $body
  * @return Response
  */
-function response($body = '', $status = 200, $headers = [])
+function response($body = '', int $status = 200, $headers = [])
 {
     return new Response($status, $headers, $body);
 }
@@ -105,21 +105,21 @@ function response($body = '', $status = 200, $headers = [])
  * @param int $options
  * @return Response
  */
-function json($data, $options = JSON_UNESCAPED_UNICODE)
+function json($data, $options = JSON_UNESCAPED_UNICODE, int $status = 200)
 {
-    return new Response(200, ['Content-Type' => 'application/json'], \json_encode($data, $options));
+    return new Response($status, ['Content-Type' => 'application/json'], \json_encode($data, $options));
 }
 
 /**
  * @param $xml
  * @return Response
  */
-function xml($xml)
+function xml($xml, int $status = 200)
 {
     if ($xml instanceof SimpleXMLElement) {
         $xml = $xml->asXML();
     }
-    return new Response(200, ['Content-Type' => 'text/xml'], $xml);
+    return new Response($status, ['Content-Type' => 'text/xml'], $xml);
 }
 
 /**
@@ -127,12 +127,12 @@ function xml($xml)
  * @param string $callback_name
  * @return Response
  */
-function jsonp($data, $callback_name = 'callback')
+function jsonp($data, $callback_name = 'callback', int $status = 200)
 {
     if (!\is_scalar($data) && null !== $data) {
         $data = \json_encode($data);
     }
-    return new Response(200, [], "$callback_name($data)");
+    return new Response($status, [], "$callback_name($data)");
 }
 
 /**
@@ -156,12 +156,12 @@ function redirect(string $location, int $status = 302, array $headers = [])
  * @param null $app
  * @return Response
  */
-function view(string $template, array $vars = [], string $app = null)
+function view(string $template, array $vars = [], string $app = null, int $status = 200)
 {
     $request = \request();
     $plugin =  $request->plugin ?? '';
     $handler = \config($plugin ? "plugin.$plugin.view.handler" : 'view.handler');
-    return new Response(200, [], $handler::render($template, $vars, $app));
+    return new Response($status, [], $handler::render($template, $vars, $app));
 }
 
 /**
@@ -171,9 +171,9 @@ function view(string $template, array $vars = [], string $app = null)
  * @return Response
  * @throws Throwable
  */
-function raw_view(string $template, array $vars = [], string $app = null)
+function raw_view(string $template, array $vars = [], string $app = null, int $status = 200)
 {
-    return new Response(200, [], Raw::render($template, $vars, $app));
+    return new Response($status, [], Raw::render($template, $vars, $app));
 }
 
 /**
@@ -182,9 +182,9 @@ function raw_view(string $template, array $vars = [], string $app = null)
  * @param string|null $app
  * @return Response
  */
-function blade_view(string $template, array $vars = [], string $app = null)
+function blade_view(string $template, array $vars = [], string $app = null, int $status = 200)
 {
-    return new Response(200, [], Blade::render($template, $vars, $app));
+    return new Response($status, [], Blade::render($template, $vars, $app));
 }
 
 /**
@@ -193,9 +193,9 @@ function blade_view(string $template, array $vars = [], string $app = null)
  * @param string|null $app
  * @return Response
  */
-function think_view(string $template, array $vars = [], string $app = null)
+function think_view(string $template, array $vars = [], string $app = null, int $status = 200)
 {
-    return new Response(200, [], ThinkPHP::render($template, $vars, $app));
+    return new Response($status, [], ThinkPHP::render($template, $vars, $app));
 }
 
 /**
@@ -204,9 +204,9 @@ function think_view(string $template, array $vars = [], string $app = null)
  * @param string|null $app
  * @return Response
  */
-function twig_view(string $template, array $vars = [], string $app = null)
+function twig_view(string $template, array $vars = [], string $app = null, int $status = 200)
 {
-    return new Response(200, [], Twig::render($template, $vars, $app));
+    return new Response($status, [], Twig::render($template, $vars, $app));
 }
 
 /**
