@@ -34,13 +34,50 @@ class Monitor
     protected $_extensions = [];
 
     /**
+     * @var string
+     */
+    public static $lockFile = __DIR__ . '/../runtime/monitor.lock';
+
+    /**
+     * Pause monitor
+     * @return void
+     */
+    public static function pause()
+    {
+        file_put_contents(static::$lockFile, time());
+    }
+
+    /**
+     * Resume monitor
+     * @return void
+     */
+    public static function resume()
+    {
+        clearstatcache();
+        if (is_file(static::$lockFile)) {
+            unlink(static::$lockFile);
+        }
+    }
+
+    /**
+     * Whether monitor is paused
+     * @return bool
+     */
+    public static function isPaused(): bool
+    {
+        clearstatcache();
+        return file_exists(static::$lockFile);
+    }
+
+    /**
      * FileMonitor constructor.
      * @param $monitor_dir
      * @param $monitor_extensions
-     * @param $memory_limit
+     * @param array $options
      */
-    public function __construct($monitor_dir, $monitor_extensions, $memory_limit = null)
+    public function __construct($monitor_dir, $monitor_extensions, array $options = [])
     {
+        static::resume();
         $this->_paths = (array)$monitor_dir;
         $this->_extensions = $monitor_extensions;
         if (!Worker::getAllWorkers()) {
@@ -50,23 +87,24 @@ class Monitor
         if (in_array('exec', $disable_functions, true)) {
             echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH . "/php.ini\n";
         } else {
-            if (!Worker::$daemonize && DIRECTORY_SEPARATOR === '/') {
+            if ($options['enable_file_monitor'] ?? true) {
                 Timer::add(1, function () {
                     $this->checkAllFilesChange();
                 });
             }
         }
 
-        $memory_limit = $this->getMemoryLimit($memory_limit);
-        if ($memory_limit && DIRECTORY_SEPARATOR === '/') {
+        $memory_limit = $this->getMemoryLimit($options['memory_limit'] ?? null);
+        if ($options['enable_memory_monitor'] ?? $memory_limit) {
             Timer::add(60, [$this, 'checkMemory'], [$memory_limit]);
         }
     }
 
     /**
      * @param $monitor_dir
+     * @return bool
      */
-    public function checkFilesChange($monitor_dir)
+    public function checkFilesChange($monitor_dir): bool
     {
         static $last_mtime, $too_many_files_check;
         if (!$last_mtime) {
@@ -75,7 +113,7 @@ class Monitor
         clearstatcache();
         if (!is_dir($monitor_dir)) {
             if (!is_file($monitor_dir)) {
-                return;
+                return false;
             }
             $iterator = [new \SplFileInfo($monitor_dir)];
         } else {
@@ -113,13 +151,17 @@ class Monitor
             echo "Monitor: There are too many files ($count files) in $monitor_dir which makes file monitoring very slow\n";
             $too_many_files_check = 1;
         }
+        return false;
     }
 
     /**
      * @return bool
      */
-    public function checkAllFilesChange()
+    public function checkAllFilesChange(): bool
     {
+        if (static::isPaused()) {
+            return false;
+        }
         foreach ($this->_paths as $path) {
             if ($this->checkFilesChange($path)) {
                 return true;
@@ -134,6 +176,9 @@ class Monitor
      */
     public function checkMemory($memory_limit)
     {
+        if (static::isPaused()) {
+            return;
+        }
         $ppid = posix_getppid();
         $children_file = "/proc/$ppid/task/$ppid/children";
         if (!is_file($children_file) || !($children = file_get_contents($children_file))) {
