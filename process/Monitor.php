@@ -176,7 +176,7 @@ class Monitor
      */
     public function checkMemory($memory_limit)
     {
-        if (static::isPaused()) {
+        if (static::isPaused() || $memory_limit <= 0) {
             return;
         }
         $ppid = posix_getppid();
