@@ -219,15 +219,15 @@ class Monitor
         if ($memory_limit == -1) {
             return 0;
         }
-        $unit = $memory_limit[strlen($memory_limit) - 1];
-        if ($unit == 'G') {
+        $unit = strtolower($memory_limit[strlen($memory_limit) - 1]);
+        if ($unit == 'g') {
             $memory_limit = 1024 * (int)$memory_limit;
-        } else if ($unit == 'M') {
+        } else if ($unit == 'm') {
             $memory_limit = (int)$memory_limit;
-        } else if ($unit == 'K') {
-            $memory_limit = (int)($memory_limit / 1024);
+        } else if ($unit == 'k') {
+            $memory_limit = ((int)$memory_limit / 1024);
         } else {
-            $memory_limit = (int)($memory_limit / (1024 * 1024));
+            $memory_limit = ((int)$memory_limit / (1024 * 1024));
         }
         if ($memory_limit < 30) {
             $memory_limit = 30;
