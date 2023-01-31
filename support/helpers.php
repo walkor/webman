@@ -339,14 +339,15 @@ function trans(string $id, array $parameters = [], string $domain = null, string
 /**
  * Locale
  * @param string|null $locale
- * @return void
+ * @return string
  */
-function locale(string $locale = null)
+function locale(string $locale = null): string
 {
     if (!$locale) {
         return Translation::getLocale();
     }
     Translation::setLocale($locale);
+    return $locale;
 }
 
 /**
