@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of webman.
  *
@@ -12,10 +13,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+use support\Container;
 use support\Request;
 use support\Response;
 use support\Translation;
-use support\Container;
 use support\view\Raw;
 use support\view\Blade;
 use support\view\ThinkPHP;
@@ -25,96 +26,127 @@ use Webman\App;
 use Webman\Config;
 use Webman\Route;
 
-// Phar support.
-if (\is_phar()) {
-    \define('BASE_PATH', dirname(__DIR__));
-} else {
-    \define('BASE_PATH', realpath(__DIR__ . '/../'));
-}
-\define('WEBMAN_VERSION', '1.4');
+// Webman version
+const WEBMAN_VERSION = '1.4';
+
+// Project base path
+define('BASE_PATH', dirname(__DIR__));
 
 /**
- * @param $return_phar
- * @return false|string
+ * return the program execute directory
+ * @param string $path
+ * @return string
  */
-function base_path(bool $return_phar = true)
+function run_path(string $path = ''): string
 {
-    static $real_path = '';
-    if (!$real_path) {
-        $real_path = \is_phar() ? \dirname(Phar::running(false)) : BASE_PATH;
+    static $runPath = '';
+    if (!$runPath) {
+        $runPath = \is_phar() ? \dirname(\Phar::running(false)) : BASE_PATH;
     }
-    return $return_phar ? BASE_PATH : $real_path;
+    return \path_combine($runPath, $path);
 }
 
 /**
+ * if the param $path equal false,will return this program current execute directory
+ * @param string|false $path
  * @return string
  */
-function app_path()
+function base_path($path = ''): string
 {
-    return BASE_PATH . DIRECTORY_SEPARATOR . 'app';
-}
-
-/**
- * @return string
- */
-function public_path()
-{
-    static $path = '';
-    if (!$path) {
-        $path = \config('app.public_path', BASE_PATH . DIRECTORY_SEPARATOR . 'public');
+    if (false === $path) {
+        return \run_path();
     }
-    return $path;
+    return \path_combine(BASE_PATH, $path);
 }
 
 /**
+ * App path
+ * @param string $path
  * @return string
  */
-function config_path()
+function app_path(string $path = ''): string
 {
-    return BASE_PATH . DIRECTORY_SEPARATOR . 'config';
+    return \path_combine(BASE_PATH . DIRECTORY_SEPARATOR . 'app', $path);
 }
 
 /**
- * Phar support.
- * Compatible with the 'realpath' function in the phar file.
- *
+ * Public path
+ * @param string $path
  * @return string
  */
-function runtime_path()
+function public_path(string $path = ''): string
 {
-    static $path = '';
-    if (!$path) {
-        $path = \config('app.runtime_path', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime');
+    static $publicPath = '';
+    if (!$publicPath) {
+        $publicPath = \config('app.public_path') ? : \run_path('public');
     }
-    return $path;
+    return \path_combine($publicPath, $path);
 }
 
 /**
+ * Config path
+ * @param string $path
+ * @return string
+ */
+function config_path(string $path = ''): string
+{
+    return \path_combine(BASE_PATH . DIRECTORY_SEPARATOR . 'config', $path);
+}
+
+/**
+ * Runtime path
+ * @param string $path
+ * @return string
+ */
+function runtime_path(string $path = ''): string
+{
+    static $runtimePath = '';
+    if (!$runtimePath) {
+        $runtimePath = \config('app.runtime_path') ? : \run_path('runtime');
+    }
+    return \path_combine($runtimePath, $path);
+}
+
+/**
+ * Generate paths based on given information
+ * @param string $front
+ * @param string $back
+ * @return string
+ */
+function path_combine(string $front, string $back): string
+{
+    return $front . ($back ? (DIRECTORY_SEPARATOR . ltrim($back, DIRECTORY_SEPARATOR)) : $back);
+}
+
+/**
+ * Response
  * @param int $status
  * @param array $headers
  * @param string $body
  * @return Response
  */
-function response($body = '', $status = 200, $headers = [])
+function response(string $body = '', int $status = 200, array $headers = []): Response
 {
     return new Response($status, $headers, $body);
 }
 
 /**
+ * Json response
  * @param $data
  * @param int $options
  * @return Response
  */
-function json($data, $options = JSON_UNESCAPED_UNICODE)
+function json($data, int $options = JSON_UNESCAPED_UNICODE): Response
 {
     return new Response(200, ['Content-Type' => 'application/json'], \json_encode($data, $options));
 }
 
 /**
+ * Xml response
  * @param $xml
  * @return Response
  */
-function xml($xml)
+function xml($xml): Response
 {
     if ($xml instanceof SimpleXMLElement) {
         $xml = $xml->asXML();
@@ -123,25 +155,27 @@ function xml($xml)
 }
 
 /**
+ * Jsonp response
  * @param $data
- * @param string $callback_name
+ * @param string $callbackName
  * @return Response
  */
-function jsonp($data, $callback_name = 'callback')
+function jsonp($data, string $callbackName = 'callback'): Response
 {
     if (!\is_scalar($data) && null !== $data) {
         $data = \json_encode($data);
     }
-    return new Response(200, [], "$callback_name($data)");
+    return new Response(200, [], "$callbackName($data)");
 }
 
 /**
+ * Redirect response
  * @param string $location
  * @param int $status
  * @param array $headers
  * @return Response
  */
-function redirect(string $location, int $status = 302, array $headers = [])
+function redirect(string $location, int $status = 302, array $headers = []): Response
 {
     $response = new Response($status, ['Location' => $location]);
     if (!empty($headers)) {
@@ -151,12 +185,13 @@ function redirect(string $location, int $status = 302, array $headers = [])
 }
 
 /**
- * @param $template
+ * View response
+ * @param string $template
  * @param array $vars
- * @param null $app
+ * @param string|null $app
  * @return Response
  */
-function view(string $template, array $vars = [], string $app = null)
+function view(string $template, array $vars = [], string $app = null): Response
 {
     $request = \request();
     $plugin =  $request->plugin ?? '';
@@ -165,52 +200,57 @@ function view(string $template, array $vars = [], string $app = null)
 }
 
 /**
+ * Raw view response
  * @param string $template
  * @param array $vars
  * @param string|null $app
  * @return Response
  * @throws Throwable
  */
-function raw_view(string $template, array $vars = [], string $app = null)
+function raw_view(string $template, array $vars = [], string $app = null): Response
 {
     return new Response(200, [], Raw::render($template, $vars, $app));
 }
 
 /**
+ * Blade view response
  * @param string $template
  * @param array $vars
  * @param string|null $app
  * @return Response
  */
-function blade_view(string $template, array $vars = [], string $app = null)
+function blade_view(string $template, array $vars = [], string $app = null): Response
 {
     return new Response(200, [], Blade::render($template, $vars, $app));
 }
 
 /**
+ * Think view response
  * @param string $template
  * @param array $vars
  * @param string|null $app
  * @return Response
  */
-function think_view(string $template, array $vars = [], string $app = null)
+function think_view(string $template, array $vars = [], string $app = null): Response
 {
     return new Response(200, [], ThinkPHP::render($template, $vars, $app));
 }
 
 /**
+ * Twig view response
  * @param string $template
  * @param array $vars
  * @param string|null $app
  * @return Response
  */
-function twig_view(string $template, array $vars = [], string $app = null)
+function twig_view(string $template, array $vars = [], string $app = null): Response
 {
     return new Response(200, [], Twig::render($template, $vars, $app));
 }
 
 /**
- * @return \Webman\Http\Request|null
+ * Get request
+ * @return \Webman\Http\Request|Request|null
  */
 function request()
 {
@@ -218,6 +258,7 @@ function request()
 }
 
 /**
+ * Get config
  * @param string|null $key
  * @param $default
  * @return array|mixed|null
@@ -228,11 +269,12 @@ function config(string $key = null, $default = null)
 }
 
 /**
+ * Create url
  * @param string $name
  * @param ...$parameters
  * @return string
  */
-function route(string $name, ...$parameters)
+function route(string $name, ...$parameters): string
 {
     $route = Route::getByName($name);
     if (!$route) {
@@ -251,6 +293,7 @@ function route(string $name, ...$parameters)
 }
 
 /**
+ * Session
  * @param mixed $key
  * @param mixed $default
  * @return mixed
@@ -266,9 +309,9 @@ function session($key = null, $default = null)
         return null;
     }
     if (\strpos($key, '.')) {
-        $key_array = \explode('.', $key);
+        $keyArray = \explode('.', $key);
         $value = $session->all();
-        foreach ($key_array as $index) {
+        foreach ($keyArray as $index) {
             if (!isset($value[$index])) {
                 return $default;
             }
@@ -280,43 +323,44 @@ function session($key = null, $default = null)
 }
 
 /**
+ * Translation
  * @param string $id
  * @param array $parameters
  * @param string|null $domain
  * @param string|null $locale
  * @return string
  */
-function trans(string $id, array $parameters = [], string $domain = null, string $locale = null)
+function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
 {
     $res = Translation::trans($id, $parameters, $domain, $locale);
     return $res === '' ? $id : $res;
 }
 
 /**
- * @param null|string $locale
+ * Locale
+ * @param string|null $locale
  * @return string
  */
-function locale(string $locale = null)
+function locale(string $locale = null): string
 {
     if (!$locale) {
         return Translation::getLocale();
     }
     Translation::setLocale($locale);
+    return $locale;
 }
 
 /**
  * 404 not found
- *
  * @return Response
  */
-function not_found()
+function not_found(): Response
 {
     return new Response(404, [], \file_get_contents(public_path() . '/404.html'));
 }
 
 /**
- * Copy dir.
- *
+ * Copy dir
  * @param string $source
  * @param string $dest
  * @param bool $overwrite
@@ -340,12 +384,11 @@ function copy_dir(string $source, string $dest, bool $overwrite = false)
 }
 
 /**
- * Remove dir.
- *
+ * Remove dir
  * @param string $dir
  * @return bool
  */
-function remove_dir(string $dir)
+function remove_dir(string $dir): bool
 {
     if (\is_link($dir) || \is_file($dir)) {
         return \unlink($dir);
@@ -358,12 +401,13 @@ function remove_dir(string $dir)
 }
 
 /**
+ * Bind worker
  * @param $worker
  * @param $class
  */
 function worker_bind($worker, $class)
 {
-    $callback_map = [
+    $callbackMap = [
         'onConnect',
         'onMessage',
         'onClose',
@@ -373,7 +417,7 @@ function worker_bind($worker, $class)
         'onWorkerStop',
         'onWebSocketConnect'
     ];
-    foreach ($callback_map as $name) {
+    foreach ($callbackMap as $name) {
         if (\method_exists($class, $name)) {
             $worker->$name = [$class, $name];
         }
@@ -384,14 +428,15 @@ function worker_bind($worker, $class)
 }
 
 /**
- * @param $process_name
+ * Start worker
+ * @param $processName
  * @param $config
  * @return void
  */
-function worker_start($process_name, $config)
+function worker_start($processName, $config)
 {
     $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
-    $property_map = [
+    $propertyMap = [
         'count',
         'user',
         'group',
@@ -400,8 +445,8 @@ function worker_start($process_name, $config)
         'transport',
         'protocol',
     ];
-    $worker->name = $process_name;
-    foreach ($property_map as $property) {
+    $worker->name = $processName;
+    foreach ($propertyMap as $property) {
         if (isset($config[$property])) {
             $worker->$property = $config[$property];
         }
@@ -433,38 +478,37 @@ function worker_start($process_name, $config)
             $instance = Container::make($config['handler'], $config['constructor'] ?? []);
             \worker_bind($worker, $instance);
         }
-
     };
 }
 
 /**
- * Phar support.
- * Compatible with the 'realpath' function in the phar file.
- *
- * @param string $file_path
+ * Get realpath
+ * @param string $filePath
  * @return string
  */
-function get_realpath(string $file_path): string
+function get_realpath(string $filePath): string
 {
-    if (\strpos($file_path, 'phar://') === 0) {
-        return $file_path;
+    if (\strpos($filePath, 'phar://') === 0) {
+        return $filePath;
     } else {
-        return \realpath($file_path);
+        return \realpath($filePath);
     }
 }
 
 /**
+ * Is phar
  * @return bool
  */
-function is_phar()
+function is_phar(): bool
 {
     return \class_exists(\Phar::class, false) && Phar::running();
 }
 
 /**
+ * Get cpu count
  * @return int
  */
-function cpu_count()
+function cpu_count(): int
 {
     // Windows does not support the number of processes setting.
     if (\DIRECTORY_SEPARATOR === '\\') {

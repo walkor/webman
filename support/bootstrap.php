@@ -22,10 +22,6 @@ use Webman\Util;
 
 $worker = $worker ?? null;
 
-if ($timezone = config('app.default_timezone')) {
-    date_default_timezone_set($timezone);
-}
-
 set_error_handler(function ($level, $message, $file = '', $line = 0) {
     if (error_reporting() & $level) {
         throw new ErrorException($message, 0, $level, $file, $line);
@@ -33,8 +29,8 @@ set_error_handler(function ($level, $message, $file = '', $line = 0) {
 });
 
 if ($worker) {
-    register_shutdown_function(function ($start_time) {
-        if (time() - $start_time <= 1) {
+    register_shutdown_function(function ($startTime) {
+        if (time() - $startTime <= 1) {
             sleep(1);
         }
     }, time());
@@ -48,7 +44,11 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
     }
 }
 
+Config::clear();
 support\App::loadAllConfig(['route']);
+if ($timezone = config('app.default_timezone')) {
+    date_default_timezone_set($timezone);
+}
 
 foreach (config('autoload.files', []) as $file) {
     include_once $file;
@@ -76,21 +76,21 @@ foreach (config('plugin', []) as $firm => $projects) {
         Middleware::load($project['middleware'] ?? [], '');
     }
     Middleware::load($projects['middleware'] ?? [], $firm);
-    if ($static_middlewares = config("plugin.$firm.static.middleware")) {
-        Middleware::load(['__static__' => $static_middlewares], $firm);
+    if ($staticMiddlewares = config("plugin.$firm.static.middleware")) {
+        Middleware::load(['__static__' => $staticMiddlewares], $firm);
     }
 }
 Middleware::load(['__static__' => config('static.middleware', [])], '');
 
-foreach (config('bootstrap', []) as $class_name) {
-    if (!class_exists($class_name)) {
-        $log = "Warning: Class $class_name setting in config/bootstrap.php not found\r\n";
+foreach (config('bootstrap', []) as $className) {
+    if (!class_exists($className)) {
+        $log = "Warning: Class $className setting in config/bootstrap.php not found\r\n";
         echo $log;
         Log::error($log);
         continue;
     }
-    /** @var Bootstrap $class_name */
-    $class_name::start($worker);
+    /** @var Bootstrap $className */
+    $className::start($worker);
 }
 
 foreach (config('plugin', []) as $firm => $projects) {
@@ -98,26 +98,26 @@ foreach (config('plugin', []) as $firm => $projects) {
         if (!is_array($project)) {
             continue;
         }
-        foreach ($project['bootstrap'] ?? [] as $class_name) {
-            if (!class_exists($class_name)) {
-                $log = "Warning: Class $class_name setting in config/plugin/$firm/$name/bootstrap.php not found\r\n";
+        foreach ($project['bootstrap'] ?? [] as $className) {
+            if (!class_exists($className)) {
+                $log = "Warning: Class $className setting in config/plugin/$firm/$name/bootstrap.php not found\r\n";
                 echo $log;
                 Log::error($log);
                 continue;
             }
-            /** @var Bootstrap $class_name */
-            $class_name::start($worker);
+            /** @var Bootstrap $className */
+            $className::start($worker);
         }
     }
-    foreach ($projects['bootstrap'] ?? [] as $class_name) {
-        if (!class_exists($class_name)) {
-            $log = "Warning: Class $class_name setting in plugin/$firm/config/bootstrap.php not found\r\n";
+    foreach ($projects['bootstrap'] ?? [] as $className) {
+        if (!class_exists($className)) {
+            $log = "Warning: Class $className setting in plugin/$firm/config/bootstrap.php not found\r\n";
             echo $log;
             Log::error($log);
             continue;
         }
-        /** @var Bootstrap $class_name */
-        $class_name::start($worker);
+        /** @var Bootstrap $className */
+        $className::start($worker);
     }
 }
 
