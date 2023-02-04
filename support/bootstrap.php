@@ -22,14 +22,14 @@ use Webman\Util;
 
 $worker = $worker ?? null;
 
-set_error_handler(function ($level, $message, $file = '', $line = 0) {
+set_error_handler(static function ($level, $message, $file = '', $line = 0) {
     if (error_reporting() & $level) {
         throw new ErrorException($message, 0, $level, $file, $line);
     }
 });
 
 if ($worker) {
-    register_shutdown_function(function ($startTime) {
+    register_shutdown_function(static function ($startTime) {
         if (time() - $startTime <= 1) {
             sleep(1);
         }

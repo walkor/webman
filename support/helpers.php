@@ -490,9 +490,9 @@ function get_realpath(string $filePath): string
 {
     if (\strpos($filePath, 'phar://') === 0) {
         return $filePath;
-    } else {
-        return \realpath($filePath);
     }
+
+    return \realpath($filePath);
 }
 
 /**
