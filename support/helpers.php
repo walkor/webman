@@ -27,7 +27,7 @@ use Webman\Config;
 use Webman\Route;
 
 // Webman version
-const WEBMAN_VERSION = '1.4';
+const WEBMAN_VERSION = '1.5';
 
 // Project base path
 define('BASE_PATH', dirname(__DIR__));
