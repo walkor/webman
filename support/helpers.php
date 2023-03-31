@@ -451,6 +451,14 @@ function worker_start($processName, $config)
             $worker->$property = $config[$property];
         }
     }
+    if (isset($config['handler']) && $config['handler'] == App::class) {
+        if (empty($worker->user)) {
+            $worker->user  = config('server.user', '');
+        }
+        if (empty($worker->group)) {
+            $worker->group  = config('server.group', '');
+        }
+    }
 
     $worker->onWorkerStart = function ($worker) use ($config) {
         require_once \base_path() . '/support/bootstrap.php';
