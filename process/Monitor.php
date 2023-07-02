@@ -133,14 +133,13 @@ class Monitor
                 continue;
             }
             // check mtime
-            if ($lastMtime < $file->getMTime() && in_array($file->getExtension(), $this->extensions, true)) {
+            if (in_array($file->getExtension(), $this->extensions, true) && $lastMtime < $file->getMTime()) {
                 $var = 0;
                 exec('"'.PHP_BINARY . '" -l ' . $file, $out, $var);
+                $lastMtime = $file->getMTime();
                 if ($var) {
-                    $lastMtime = $file->getMTime();
                     continue;
                 }
-                $lastMtime = $file->getMTime();
                 echo $file . " update and reload\n";
                 // send SIGUSR1 signal to master process for reload
                 if (DIRECTORY_SEPARATOR === '/') {
