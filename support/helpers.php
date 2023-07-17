@@ -533,3 +533,14 @@ function cpu_count(): int
     }
     return $count > 0 ? $count : 4;
 }
+
+/**
+ * get GET or POST request parameters, if no parameter name is passed, an array of all values is returned, default values is supported
+ * @param string|null $param param's name
+ * @param string|null $default default value
+ * @return mixed|null
+ */
+function input(string $param = null, string $default = null)
+{
+    return is_null($param) ? request()->all() : request()->input($param, $default);
+}
