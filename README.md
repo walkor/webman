@@ -48,6 +48,6 @@
 </div>
 
 
-<h1>LICENSE</h1>
+<h1>许可证 / LICENSE</h1>
    
 The webman is open-sourced software licensed under the [MIT](./LICENSE)
