@@ -4,7 +4,7 @@
 基于<a href="https://www.workerman.net" target="__blank">workerman</a>开发的超高性能PHP框架
 
 
-<h1>Learning / 学习</h1>
+<h1>学习</h1>
 
 <ul>
   <li>
@@ -32,27 +32,28 @@
 
 <div style="float:left;padding-bottom:30px;">
 
-  <h1>赞助商 / Sponsors</h1>
+  <h1>赞助商</h1>
 
-  <h4>特别赞助 / Special</h4>
-  <a href="https://www.crmeb.com/?form=workerman">
+  <h4>特别赞助</h4>
+  <a href="https://www.crmeb.com/?form=workerman" target="__blank">
     <img src="https://www.workerman.net/img/sponsors/6429/20230719111500.svg" width="200">
   </a>
 
-  <h4>铂金赞助 / Platinum</h4>
-  <a href="https://www.fadetask.com/?from=workerman">
-     <img src="https://www.workerman.net/img/sponsors/1/20230719084316.png" width="200">
-  </a>
+  <h4>铂金赞助</h4>
+  <a href="https://www.fadetask.com/?from=workerman" target="__blank"><img src="https://www.workerman.net/img/sponsors/1/20230719084316.png" width="200"></a>
+  <a href="https://www.yilianyun.net/?from=workerman" target="__blank" style="margin-left:20px;"><img src="https://www.workerman.net/img/sponsors/6218/20230720114049.png" width="200"></a>
 
-  <h4>金牌赞助 / Gold</h4>
+  <h4>金牌赞助</h4>
 
 
 </div>
 
 
 <div style="clear: both">
-<h1>许可证 / LICENSE</h1>
+<h1>LICENSE</h1>
 The webman is open-sourced software licensed under the MIT.
 </div>
 
 </div>
+
+
