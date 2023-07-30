@@ -91,7 +91,7 @@ class Monitor
         if (in_array('exec', $disableFunctions, true)) {
             echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH . "/php.ini\n";
         } else {
-            if ($options['enable_file_monitor'] ?? true) {
+            if (!Worker::$daemonize) {
                 Timer::add(1, function () {
                     $this->checkAllFilesChange();
                 });
