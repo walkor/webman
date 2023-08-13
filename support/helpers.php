@@ -22,6 +22,7 @@ use support\view\Raw;
 use support\view\Blade;
 use support\view\ThinkPHP;
 use support\view\Twig;
+use Workerman\Protocols\Http\Session;
 use Workerman\Worker;
 use Webman\App;
 use Webman\Config;
@@ -297,7 +298,7 @@ function route(string $name, ...$parameters): string
  * Session
  * @param mixed $key
  * @param mixed $default
- * @return mixed
+ * @return mixed|bool|Session
  */
 function session($key = null, $default = null)
 {
