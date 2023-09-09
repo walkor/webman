@@ -20,5 +20,21 @@ namespace support;
  */
 class Request extends \Webman\Http\Request
 {
-
+    //重写获取path用于多路由
+    public function path()
+    {
+        if (!isset($this->_data['path'])) {
+            if(config('domain.enable', false)){
+                //如果开启了域名路由
+                $uri = $this->uri();
+                $bind = config('domain.bind', []);
+                $domain = $this->host(true);
+                if(isset($bind[$domain])) {
+                    $uri = '/' . $bind[$domain] . $uri;
+                }
+            }
+            $this->_data['path'] = (string)\parse_url($uri, PHP_URL_PATH);
+        }
+        return $this->_data['path'];
+    }
 }
