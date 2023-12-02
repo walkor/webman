@@ -135,12 +135,13 @@ function response(string $body = '', int $status = 200, array $headers = []): Re
 /**
  * Json response
  * @param $data
+ * @param int $code
  * @param int $options
  * @return Response
  */
-function json($data, int $options = JSON_UNESCAPED_UNICODE): Response
+function json($data, int $code = 200, int $options = JSON_UNESCAPED_UNICODE): Response
 {
-    return new Response(200, ['Content-Type' => 'application/json'], \json_encode($data, $options));
+    return new Response($code, ['Content-Type' => 'application/json'], \json_encode($data, $options));
 }
 
 /**
