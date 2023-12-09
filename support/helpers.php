@@ -465,6 +465,11 @@ function worker_start($processName, $config)
     $worker->onWorkerStart = function ($worker) use ($config) {
         require_once \base_path() . '/support/bootstrap.php';
 
+        if (isset($config['broadcastAddr'])) {
+            $socket = \socket_import_stream($worker->getMainSocket());
+            socket_set_option($socket, IPPROTO_IP, MCAST_JOIN_GROUP, array('group' => $config['broadcastAddr']));
+        }
+
         foreach ($config['services'] ?? [] as $server) {
             if (!\class_exists($server['handler'])) {
                 echo "process error: class {$server['handler']} not exists\r\n";
