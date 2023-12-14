@@ -377,7 +377,7 @@ function copy_dir(string $source, string $dest, bool $overwrite = false)
         $files = \scandir($source);
         foreach ($files as $file) {
             if ($file !== "." && $file !== "..") {
-                \copy_dir("$source/$file", "$dest/$file");
+                \copy_dir("$source/$file", "$dest/$file", $overwrite);
             }
         }
     } else if (\file_exists($source) && ($overwrite || !\file_exists($dest))) {
