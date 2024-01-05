@@ -545,3 +545,22 @@ function input(string $param = null, string $default = null)
 {
     return is_null($param) ? request()->all() : request()->input($param, $default);
 }
+
+/**
+ * Check if the plugin is installed
+ * <p>Verify that the config/app.php file exists in the plugin directory</p>
+ * @param string $pluginName Plugin name(case-sensitive)
+ * @return bool
+ */
+function is_plugin_installed(string $pluginName): bool
+{
+    $pathList    = [
+        base_path(),
+        'plugin',
+        $pluginName,
+        'config',
+        'app.php'
+    ];
+    $pluginFile = implode(DIRECTORY_SEPARATOR, $pathList);
+    return is_file($pluginFile);
+}
