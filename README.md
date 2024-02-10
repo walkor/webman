@@ -11,7 +11,7 @@
     <a href="https://www.workerman.net/webman" target="__blank">主页 / Home page</a>
   </li>
   <li>
-    <a href="https://www.workerman.net/doc/webman" target="__blank">文档 / Document</a>
+    <a href="https://webman.workerman.net" target="__blank">文档 / Document</a>
   </li>
   <li>
     <a href="https://www.workerman.net/doc/webman/install.html" target="__blank">安装 / Install</a>
