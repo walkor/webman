@@ -562,5 +562,5 @@ function ini(string $param = null, string $default = null)
     }
     @[$one,$two] = explode('.', $param);
     @[$one=>$item] = $config;
-    return ($two === null ? $item : $item[$two]) ?? $default;
+    return $two === null ? ($item  ?? $default) : ($item[$two] ?? $default);
 }
