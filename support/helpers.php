@@ -53,7 +53,7 @@ function run_path(string $path = ''): string
  * @param string|false $path
  * @return string
  */
-function base_path($path = ''): string
+function base_path(false|string $path = ''): string
 {
     if (false === $path) {
         return \run_path();
