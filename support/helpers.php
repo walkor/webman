@@ -50,12 +50,12 @@ function run_path(string $path = ''): string
 
 /**
  * if the param $path equal false,will return this program current execute directory
- * @param string|false $path
+ * @param string $path
  * @return string
  */
-function base_path($path = ''): string
+function base_path(string $path = ''): string
 {
-    if (false === $path) {
+    if (empty($path)) {
         return \run_path();
     }
     return \path_combine(BASE_PATH, $path);
