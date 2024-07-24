@@ -38,6 +38,11 @@ class Monitor
     protected $extensions = [];
 
     /**
+     * @var array
+     */
+    protected $loadedFiles = [];
+
+    /**
      * @var string
      */
     public static $lockFile = __DIR__ . '/../runtime/monitor.lock';
@@ -84,6 +89,7 @@ class Monitor
         static::resume();
         $this->paths = (array)$monitorDir;
         $this->extensions = $monitorExtensions;
+        $this->loadedFiles = array_flip(get_included_files());
         if (!Worker::getAllWorkers()) {
             return;
         }
@@ -134,13 +140,17 @@ class Monitor
             }
             // check mtime
             if (in_array($file->getExtension(), $this->extensions, true) && $lastMtime < $file->getMTime()) {
+                $lastMtime = $file->getMTime();
+                if (DIRECTORY_SEPARATOR === '/' && isset($this->loadedFiles[$file->getRealPath()])) {
+                    echo "$file updated but cannot be reloaded because only auto-loaded files support reload.\n";
+                    continue;
+                }
                 $var = 0;
                 exec('"'.PHP_BINARY . '" -l ' . $file, $out, $var);
-                $lastMtime = $file->getMTime();
                 if ($var) {
                     continue;
                 }
-                echo $file . " update and reload\n";
+                echo $file . " updated and reload\n";
                 // send SIGUSR1 signal to master process for reload
                 if (DIRECTORY_SEPARATOR === '/') {
                     posix_kill(posix_getppid(), SIGUSR1);
