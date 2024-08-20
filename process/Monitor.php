@@ -89,7 +89,12 @@ class Monitor
         static::resume();
         $this->paths = (array)$monitorDir;
         $this->extensions = $monitorExtensions;
-        $this->loadedFiles = array_flip(get_included_files());
+        foreach (get_included_files() as $index => $file) {
+            $this->loadedFiles[$file] = $index;
+            if (strpos($file, 'webman-framework/src/support/App.php')) {
+                break;
+            }
+        }
         if (!Worker::getAllWorkers()) {
             return;
         }
