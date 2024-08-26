@@ -529,7 +529,11 @@ function cpu_count(): int
         if (\strtolower(PHP_OS) === 'darwin') {
             $count = (int)\shell_exec('sysctl -n machdep.cpu.core_count');
         } else {
-            $count = (int)\shell_exec('nproc');
+            try {
+                $count = (int)shell_exec('nproc');
+            } catch (\Throwable $ex) {
+
+            }
         }
     }
     return $count > 0 ? $count : 4;
