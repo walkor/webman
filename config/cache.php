@@ -25,10 +25,6 @@ return [
         ],
         'array' => [
             'driver' => 'array'
-        ],
-        'database' => [
-            'driver' => 'database',
-            'connection' => 'default'
-        ],
+        ]
     ]
 ];
