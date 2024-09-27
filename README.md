@@ -47,6 +47,19 @@
 </div>
 
 
+<div style="float:left;padding-bottom:30px;clear:both">
+
+  <h1>请作者喝咖啡</h1>
+
+<img src="https://www.workerman.net/img/wx_donate.png" width="200">
+<img src="https://www.workerman.net/img/ali_donate.png" width="200">
+<br>
+<b>如果您觉得webman对您有所帮助，欢迎捐赠。</b>
+
+
+</div>
+
+
 <div style="clear: both">
 <h1>LICENSE</h1>
 The webman is open-sourced software licensed under the MIT.
