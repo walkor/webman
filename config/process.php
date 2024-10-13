@@ -12,12 +12,31 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+use support\Log;
+use support\Request;
+use app\process\Http;
+
 global $argv;
 
 return [
+    'webman' => [
+        'handler' => Http::class,
+        'listen' => 'http://0.0.0.0:8787',
+        'count' => cpu_count() * 4, // 进程数
+        'user' => '',
+        'group' => '',
+        'reusePort' => false,
+        'context' => [],
+        'constructor' => [
+            'requestClass' => Request::class, // request类设置
+            'logger' => Log::channel('default'), // 日志实例
+            'appPath' => app_path(), // app目录位置
+            'publicPath' => public_path() // public目录位置
+        ]
+    ],
     // File update detection and automatic reload
     'monitor' => [
-        'handler' => process\Monitor::class,
+        'handler' => app\process\Monitor::class,
         'reloadable' => false,
         'constructor' => [
             // Monitor these directories
