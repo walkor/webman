@@ -22,16 +22,17 @@ return [
     'webman' => [
         'handler' => Http::class,
         'listen' => 'http://0.0.0.0:8787',
-        'count' => cpu_count() * 4, // 进程数
+        'count' => cpu_count() * 4,
         'user' => '',
         'group' => '',
         'reusePort' => false,
+        'eventLoop' => '',
         'context' => [],
         'constructor' => [
-            'requestClass' => Request::class, // request类设置
-            'logger' => Log::channel('default'), // 日志实例
-            'appPath' => app_path(), // app目录位置
-            'publicPath' => public_path() // public目录位置
+            'requestClass' => Request::class,
+            'logger' => Log::channel('default'),
+            'appPath' => app_path(),
+            'publicPath' => public_path()
         ]
     ],
     // File update detection and automatic reload
