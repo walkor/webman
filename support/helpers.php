@@ -91,7 +91,7 @@ function public_path(string $path = '', string $plugin = null): string
         }
         $publicPaths[$plugin] = $publicPath;
     }
-    return path_combine($publicPath, $path);
+    return $path === '' ? $publicPath : path_combine($publicPath, $path);
 }
 
 /**
@@ -205,9 +205,7 @@ function redirect(string $location, int $status = 302, array $headers = []): Res
  */
 function view($template = null, array $vars = [], string $app = null, string $plugin = null): Response
 {
-    [$template, $vars] = get_template_vars($template, $vars);
-    $request = request();
-    $plugin = $plugin === null ? ($request->plugin ?? '') : $plugin;
+    [$template, $vars, $app, $plugin] = template_inputs($template, $vars, $app, $plugin);
     $handler = \config($plugin ? "plugin.$plugin.view.handler" : 'view.handler');
     return new Response(200, [], $handler::render($template, $vars, $app, $plugin));
 }
@@ -223,8 +221,7 @@ function view($template = null, array $vars = [], string $app = null, string $pl
  */
 function raw_view($template = null, array $vars = [], string $app = null, string $plugin = null): Response
 {
-    [$template, $vars] = get_template_vars($template, $vars);
-    return new Response(200, [], Raw::render($template, $vars, $app, $plugin));
+    return new Response(200, [], Raw::render(...template_inputs($template, $vars, $app, $plugin)));
 }
 
 /**
@@ -237,8 +234,7 @@ function raw_view($template = null, array $vars = [], string $app = null, string
  */
 function blade_view($template = null, array $vars = [], string $app = null, string $plugin = null): Response
 {
-    [$template, $vars] = get_template_vars($template, $vars);
-    return new Response(200, [], Blade::render($template, $vars, $app, $plugin));
+    return new Response(200, [], Blade::render(...template_inputs($template, $vars, $app, $plugin)));
 }
 
 /**
@@ -251,8 +247,7 @@ function blade_view($template = null, array $vars = [], string $app = null, stri
  */
 function think_view($template = null, array $vars = [], string $app = null, string $plugin = null): Response
 {
-    [$template, $vars] = get_template_vars($template, $vars);
-    return new Response(200, [], ThinkPHP::render($template, $vars, $app, $plugin));
+    return new Response(200, [], ThinkPHP::render(...template_inputs($template, $vars, $app, $plugin)));
 }
 
 /**
@@ -265,8 +260,7 @@ function think_view($template = null, array $vars = [], string $app = null, stri
  */
 function twig_view($template = null, array $vars = [], string $app = null, string $plugin = null): Response
 {
-    [$template, $vars] = get_template_vars($template, $vars);
-    return new Response(200, [], Twig::render($template, $vars, $app, $plugin));
+    return new Response(200, [], Twig::render(...template_inputs($template, $vars, $app, $plugin)));
 }
 
 /**
@@ -318,6 +312,7 @@ function route(string $name, ...$parameters): string
  * @param mixed $key
  * @param mixed $default
  * @return mixed|bool|Session
+ * @throws Exception
  */
 function session($key = null, $default = null)
 {
@@ -457,8 +452,13 @@ function worker_bind($worker, $class)
  */
 function worker_start($processName, $config)
 {
-    $worker = new Worker($config['listen'] ?? null, $config['context'] ?? []);
-    $propertyMap = [
+    if (isset($config['enable']) && !$config['enable']) {
+        return;
+    }
+    // feat：custom worker class [default: Workerman\Worker]
+    $class = is_a($class = $config['workerClass'] ?? '' , Worker::class, true) ? $class : Worker::class;
+    $worker = new $class($config['listen'] ?? null, $config['context'] ?? []);
+    $properties = [
         'count',
         'user',
         'group',
@@ -466,9 +466,10 @@ function worker_start($processName, $config)
         'reusePort',
         'transport',
         'protocol',
+        'eventLoop',
     ];
     $worker->name = $processName;
-    foreach ($propertyMap as $property) {
+    foreach ($properties as $property) {
         if (isset($config[$property])) {
             $worker->$property = $config[$property];
         }
@@ -515,21 +516,26 @@ function is_phar(): bool
  * Get template vars
  * @param mixed $template
  * @param array $vars
+ * @param string|null $app
+ * @param string|null $plugin
  * @return array
  */
-function get_template_vars($template = null, array $vars = []): array
+function template_inputs($template, array $vars, ?string $app, ?string $plugin): array
 {
+    $request = \request();
+    $plugin = $plugin === null ? ($request->plugin ?? '') : $plugin;
     if (is_array($template)) {
         $vars = $template;
         $template = null;
     }
-    $request = \request();
     if ($template === null && $controller = $request->controller) {
-        $controllerName = substr($controller, 0, -strlen(config('app.controller_suffix', '')));
+        $controllerSuffix = config($plugin ? "plugin.$plugin.app.controller_suffix" : "app.controller_suffix", '');
+        $controllerName = $controllerSuffix !== '' ? substr($controller, 0, -strlen($controllerSuffix)) : $controller;
         $path = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', substr(strrchr($controllerName, '\\'), 1)));
-        $template = "$path/" . strtolower($request->action);
+        $actionFileBaseName = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $request->action));
+        $template = "$path/$actionFileBaseName";
     }
-    return [$template, $vars];
+    return [$template, $vars, $app, $plugin];
 }
 
 /**
