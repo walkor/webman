@@ -43,17 +43,12 @@ class Monitor
     protected $loadedFiles = [];
 
     /**
-     * @var string
-     */
-    public static $lockFile = __DIR__ . '/../../runtime/monitor.lock';
-
-    /**
      * Pause monitor
      * @return void
      */
     public static function pause()
     {
-        file_put_contents(static::$lockFile, time());
+        file_put_contents(static::lockFile(), time());
     }
 
     /**
@@ -63,8 +58,8 @@ class Monitor
     public static function resume(): void
     {
         clearstatcache();
-        if (is_file(static::$lockFile)) {
-            unlink(static::$lockFile);
+        if (is_file(static::lockFile())) {
+            unlink(static::lockFile());
         }
     }
 
@@ -75,7 +70,16 @@ class Monitor
     public static function isPaused(): bool
     {
         clearstatcache();
-        return file_exists(static::$lockFile);
+        return file_exists(static::lockFile());
+    }
+
+    /**
+     * Lock file
+     * @return string
+     */
+    protected static function lockFile(): string
+    {
+        return runtime_path('monitor.lock');
     }
 
     /**
