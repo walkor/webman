@@ -574,3 +574,22 @@ function input(string $param = null, $default = null)
 {
     return is_null($param) ? request()->all() : request()->input($param, $default);
 }
+/**
+ * Globally available read .env configuration file returns configuration items/groups
+ * @param string|null $param path name
+ * @param void $default default value
+ * @return void
+ */
+function ini(string $param = null, string $default = null)
+{
+    static $config = [];
+    if (!$config) {
+      $config = @parse_ini_file(base_path().'/.env',true) ?? [];
+    }
+    if($param === null){
+        return $config;
+    }
+    @[$one,$two] = explode('.', $param);
+    @[$one=>$item] = $config;
+    return $two === null ? ($item  ?? $default) : ($item[$two] ?? $default);
+}
