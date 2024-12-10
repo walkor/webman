@@ -37,10 +37,7 @@
       "app\\": "./app",
       "App\\": "./app",
       "app\\View\\Components\\": "./app/view/components"
-    },
-    "files": [
-      "./support/helpers.php"
-    ]
+    }
   },
   "scripts": {
     "post-package-install": [
