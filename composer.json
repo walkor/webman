@@ -24,8 +24,8 @@
     "source": "https://github.com/walkor/webman"
   },
   "require": {
-    "php": ">=8.0",
-    "workerman/webman-framework": "^1.6.8",
+    "php": ">=8.1",
+    "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0"
   },
   "suggest": {
