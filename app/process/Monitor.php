@@ -30,23 +30,28 @@ class Monitor
     /**
      * @var array
      */
-    protected $paths = [];
+    protected array $paths = [];
 
     /**
      * @var array
      */
-    protected $extensions = [];
+    protected array $extensions = [];
 
     /**
      * @var array
      */
-    protected $loadedFiles = [];
+    protected array $loadedFiles = [];
+
+    /**
+     * @var int
+     */
+    protected int $ppid = 0;
 
     /**
      * Pause monitor
      * @return void
      */
-    public static function pause()
+    public static function pause(): void
     {
         file_put_contents(static::lockFile(), time());
     }
@@ -90,6 +95,7 @@ class Monitor
      */
     public function __construct($monitorDir, $monitorExtensions, array $options = [])
     {
+        $this->ppid = function_exists('posix_getppid') ? posix_getppid() : 0;
         static::resume();
         $this->paths = (array)$monitorDir;
         $this->extensions = $monitorExtensions;
@@ -161,8 +167,8 @@ class Monitor
                 }
                 echo $file . " updated and reload\n";
                 // send SIGUSR1 signal to master process for reload
-                if (DIRECTORY_SEPARATOR === '/') {
-                    posix_kill(posix_getppid(), SIGUSR1);
+                if (DIRECTORY_SEPARATOR === '/' &&  $this->ppid > 1) {
+                    posix_kill($this->ppid, SIGUSR1);
                 } else {
                     return true;
                 }
@@ -196,12 +202,21 @@ class Monitor
      * @param $memoryLimit
      * @return void
      */
-    public function checkMemory($memoryLimit)
+    public function checkMemory($memoryLimit): void
     {
         if (static::isPaused() || $memoryLimit <= 0) {
             return;
         }
-        $ppid = posix_getppid();
+        $ppid = $this->ppid;
+        if ($ppid <= 1) {
+            return;
+        }
+        $processPath = "/proc/$ppid";
+        if (!is_dir($processPath)) {
+            // Process not exist
+            $this->ppid = 0;
+            return;
+        }
         $childrenFile = "/proc/$ppid/task/$ppid/children";
         if (!is_file($childrenFile) || !($children = file_get_contents($childrenFile))) {
             return;
@@ -225,9 +240,10 @@ class Monitor
 
     /**
      * Get memory limit
-     * @return float
+     * @param $memoryLimit
+     * @return int
      */
-    protected function getMemoryLimit($memoryLimit)
+    protected function getMemoryLimit($memoryLimit): int
     {
         if ($memoryLimit === 0) {
             return 0;
@@ -242,21 +258,25 @@ class Monitor
             return 0;
         }
         $unit = strtolower($memoryLimit[strlen($memoryLimit) - 1]);
+        $memoryLimit = (int)$memoryLimit;
         if ($unit === 'g') {
-            $memoryLimit = 1024 * (int)$memoryLimit;
-        } else if ($unit === 'm') {
-            $memoryLimit = (int)$memoryLimit;
+            $memoryLimit = 1024 * $memoryLimit;
         } else if ($unit === 'k') {
-            $memoryLimit = ((int)$memoryLimit / 1024);
+            $memoryLimit = ($memoryLimit / 1024);
+        } else if ($unit === 'm') {
+            $memoryLimit = (int)($memoryLimit);
+        } else if ($unit === 't') {
+            $memoryLimit = (1024 * 1024 * $memoryLimit);
         } else {
-            $memoryLimit = ((int)$memoryLimit / (1024 * 1024));
+            $memoryLimit = ($memoryLimit / (1024 * 1024));
         }
-        if ($memoryLimit < 30) {
-            $memoryLimit = 30;
+        if ($memoryLimit < 50) {
+            $memoryLimit = 50;
         }
         if ($usePhpIni) {
-            $memoryLimit = (int)(0.8 * $memoryLimit);
+            $memoryLimit = (0.8 * $memoryLimit);
         }
-        return $memoryLimit;
+        return (int)$memoryLimit;
     }
+
 }
