@@ -87,6 +87,17 @@ class Monitor
         return runtime_path('monitor.lock');
     }
 
+    protected function getMasterPid(): int
+    {
+        $config = config('server');
+        $pidFile = $config['pid_file'] ?? runtime_path() . '/webman.pid';
+        if (is_readable($pidFile)) {
+            $pid = trim(file_get_contents($pidFile));
+            return is_numeric($pid) ? (int)$pid : 0;
+        }
+        return 0;
+    }
+
     /**
      * FileMonitor constructor.
      * @param $monitorDir
@@ -167,8 +178,13 @@ class Monitor
                 }
                 echo $file . " updated and reload\n";
                 // send SIGUSR1 signal to master process for reload
-                if (DIRECTORY_SEPARATOR === '/' &&  $this->ppid > 1) {
-                    posix_kill($this->ppid, SIGUSR1);
+                if (DIRECTORY_SEPARATOR === '/') {
+                    $masterPid = $this->getMasterPid();
+                    if ($masterPid > 0 && posix_getppid() === $masterPid) {
+                        posix_kill($masterPid, SIGUSR1);
+                    } else {
+                        echo "Monitor: skip reload, parent pid mismatch or invalid\n";
+                    }
                 } else {
                     return true;
                 }
