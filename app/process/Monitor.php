@@ -147,6 +147,7 @@ class Monitor
             $iterator = new RecursiveIteratorIterator($dirIterator);
         }
         $count = 0;
+        $masterPid = $this->getMasterPid();
         foreach ($iterator as $file) {
             $count ++;
             /** var SplFileInfo $file */
@@ -165,11 +166,12 @@ class Monitor
                 if ($var) {
                     continue;
                 }
-                echo $file . " updated and reload\n";
                 // send SIGUSR1 signal to master process for reload
-                if (DIRECTORY_SEPARATOR === '/' &&  $this->ppid > 1) {
-                    posix_kill($this->ppid, SIGUSR1);
+                if (DIRECTORY_SEPARATOR === '/' && $masterPid) {
+                    echo $file . " updated and reload\n";
+                    posix_kill($masterPid, SIGUSR1);
                 } else {
+                    echo $file . " updated and reload\n";
                     return true;
                 }
                 break;
@@ -180,6 +182,22 @@ class Monitor
             $tooManyFilesCheck = 1;
         }
         return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMasterPid(): int
+    {
+        if ($this->ppid === 0) {
+            return 0;
+        }
+        $cmdline = "/proc/$this->ppid/cmdline";
+        if (!is_readable($cmdline) || !($content = file_get_contents($cmdline)) || (!str_contains($content, 'WorkerMan') && !str_contains($content, 'php'))) {
+            // Process not exist
+            $this->ppid = 0;
+        }
+        return $this->ppid;
     }
 
     /**
@@ -207,17 +225,12 @@ class Monitor
         if (static::isPaused() || $memoryLimit <= 0) {
             return;
         }
-        $ppid = $this->ppid;
-        if ($ppid <= 1) {
+        $masterPid = $this->getMasterPid();
+        if ($masterPid <= 0) {
             return;
         }
-        $processPath = "/proc/$ppid";
-        if (!is_dir($processPath)) {
-            // Process not exist
-            $this->ppid = 0;
-            return;
-        }
-        $childrenFile = "/proc/$ppid/task/$ppid/children";
+
+        $childrenFile = "/proc/$masterPid/task/$masterPid/children";
         if (!is_file($childrenFile) || !($children = file_get_contents($childrenFile))) {
             return;
         }
