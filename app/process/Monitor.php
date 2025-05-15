@@ -147,7 +147,6 @@ class Monitor
             $iterator = new RecursiveIteratorIterator($dirIterator);
         }
         $count = 0;
-        $masterPid = $this->getMasterPid();
         foreach ($iterator as $file) {
             $count ++;
             /** var SplFileInfo $file */
@@ -167,14 +166,17 @@ class Monitor
                     continue;
                 }
                 // send SIGUSR1 signal to master process for reload
-                if (DIRECTORY_SEPARATOR === '/' && $masterPid) {
-                    echo $file . " updated and reload\n";
-                    posix_kill($masterPid, SIGUSR1);
-                } else {
-                    echo $file . " updated and reload\n";
+                if (DIRECTORY_SEPARATOR === '/') {
+                    if ($masterPid = $this->getMasterPid()) {
+                        echo $file . " updated and reload\n";
+                        posix_kill($masterPid, SIGUSR1);
+                    } else {
+                        echo "Master process has gone away and can not reload\n";
+                    }
                     return true;
                 }
-                break;
+                echo $file . " updated and reload\n";
+                return true;
             }
         }
         if (!$tooManyFilesCheck && $count > 1000) {
@@ -191,6 +193,13 @@ class Monitor
     {
         if ($this->ppid === 0) {
             return 0;
+        }
+        if (function_exists('posix_kill') && !posix_kill($this->ppid, 0)) {
+            echo "Master process has gone away\n";
+            return $this->ppid = 0;
+        }
+        if (PHP_OS_FAMILY !== 'Linux') {
+            return $this->ppid;
         }
         $cmdline = "/proc/$this->ppid/cmdline";
         if (!is_readable($cmdline) || !($content = file_get_contents($cmdline)) || (!str_contains($content, 'WorkerMan') && !str_contains($content, 'php'))) {
@@ -227,6 +236,7 @@ class Monitor
         }
         $masterPid = $this->getMasterPid();
         if ($masterPid <= 0) {
+            echo "Master process has gone away\n";
             return;
         }
 
