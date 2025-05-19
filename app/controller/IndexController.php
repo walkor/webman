@@ -8,11 +8,25 @@ class IndexController
 {
     public function index(Request $request)
     {
-        static $readme;
-        if (!$readme) {
-            $readme = file_get_contents(base_path('README.md'));
-        }
-        return $readme;
+        return <<<EOF
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+  }
+  iframe {
+    border: none;
+    overflow: scroll;
+  }
+</style>
+<iframe
+  src="https://www.workerman.net/wellcome"
+  width="100%"
+  height="100%"
+  allow="*"
+  sandbox="allow-scripts allow-same-origin"
+></iframe>
+EOF;
     }
 
     public function view(Request $request)
