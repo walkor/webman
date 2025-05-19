@@ -23,8 +23,8 @@ class IndexController
   src="https://www.workerman.net/wellcome"
   width="100%"
   height="100%"
-  allow="*"
-  sandbox="allow-scripts allow-same-origin"
+  allow="clipboard-write"
+  sandbox="allow-scripts allow-same-origin allow-popups"
 ></iframe>
 EOF;
     }
