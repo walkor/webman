@@ -24,7 +24,7 @@ class IndexController
   width="100%"
   height="100%"
   allow="clipboard-write"
-  sandbox="allow-scripts allow-same-origin allow-popups"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"
 ></iframe>
 EOF;
     }
