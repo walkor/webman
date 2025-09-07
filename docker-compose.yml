@@ -1,0 +1,11 @@
+version: "3"
+services:
+  webman:
+    build: .
+    container_name: docker-webman
+    restart: unless-stopped
+    volumes:
+      - "./:/app"
+    ports:
+      - "8787:8787"
+    command: ["php", "start.php", "start" ]
