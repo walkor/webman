@@ -44,9 +44,7 @@ if (config('server.listen')) {
     $processFiles[] = __DIR__ . DIRECTORY_SEPARATOR . 'start.php';
 }
 foreach (config('process', []) as $processName => $config) {
-    if ($config['enable'] ?? true) {
-        $processFiles[] = write_process_file($runtimeProcessPath, $processName, '');
-    }
+    $processFiles[] = write_process_file($runtimeProcessPath, $processName, '');
 }
 
 foreach (config('plugin', []) as $firm => $projects) {
@@ -55,15 +53,11 @@ foreach (config('plugin', []) as $firm => $projects) {
             continue;
         }
         foreach ($project['process'] ?? [] as $processName => $config) {
-            if ($config['enable'] ?? true) {
-                $processFiles[] = write_process_file($runtimeProcessPath, $processName, "$firm.$name");
-            }
+            $processFiles[] = write_process_file($runtimeProcessPath, $processName, "$firm.$name");
         }
     }
     foreach ($projects['process'] ?? [] as $processName => $config) {
-        if ($config['enable'] ?? true) {
-            $processFiles[] = write_process_file($runtimeProcessPath, $processName, $firm);
-        }
+        $processFiles[] = write_process_file($runtimeProcessPath, $processName, $firm);
     }
 }
 
