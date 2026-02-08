@@ -26,7 +26,8 @@
   "require": {
     "php": ">=8.1",
     "workerman/webman-framework": "^2.1",
-    "monolog/monolog": "^2.0"
+    "monolog/monolog": "^2.0",
+    "webman/console": "^2.1"
   },
   "suggest": {
     "ext-event": "For better performance. "
@@ -48,6 +49,12 @@
     ],
     "pre-package-uninstall": [
       "support\\Plugin::uninstall"
+    ],
+    "post-create-project-cmd": [
+      "support\\InstallWizard::run"
+    ],
+    "install-wizard": [
+      "support\\InstallWizard::run"
     ]
   },
   "minimum-stability": "dev",
