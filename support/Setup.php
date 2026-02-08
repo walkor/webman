@@ -11,11 +11,11 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Terminal;
 
 /**
- * create-project 安装向导：交互选择语言、时区与可选组件，并执行 composer require
+ * create-project setup wizard: interactively choose language, timezone and optional components, then run composer require
  */
-class InstallWizard
+class Setup
 {
-    // ─── 可选组件包名 ───────────────────────────────────────────
+    // Optional component package names
 
     private const PACKAGE_CONSOLE           = 'webman/console';
     private const PACKAGE_DATABASE          = 'webman/database';
@@ -23,7 +23,7 @@ class InstallWizard
     private const PACKAGE_REDIS             = 'webman/redis';
     private const PACKAGE_ILLUMINATE_EVENTS = 'illuminate/events';
 
-    // ─── 时区区域 ───────────────────────────────────────────────
+    // Timezone regions
 
     private const TIMEZONE_REGIONS = [
         'Asia'       => \DateTimeZone::ASIA,
@@ -39,7 +39,7 @@ class InstallWizard
         'UTC'        => \DateTimeZone::UTC,
     ];
 
-    // ─── 语言 → 推荐默认时区 ────────────────────────────────────
+    // Locale → default recommended timezone
 
     private const LOCALE_DEFAULT_TIMEZONES = [
         'zh_CN' => 'Asia/Shanghai',
@@ -58,7 +58,7 @@ class InstallWizard
         'th'    => 'Asia/Bangkok',
     ];
 
-    // ─── 语言选项（本地化显示名） ───────────────────────────────
+    // Locale options (localized display names)
 
     private const LOCALE_LABELS = [
         'zh_CN' => '简体中文',
@@ -77,7 +77,7 @@ class InstallWizard
         'th'    => 'ไทย',
     ];
 
-    // ─── 多语言消息（%s 为动态占位符） ──────────────────────────
+    // Multilingual messages (%s is dynamic placeholder)
 
     private const MESSAGES = [
         'zh_CN' => [
@@ -376,15 +376,13 @@ class InstallWizard
         ],
     ];
 
-    // ═══════════════════════════════════════════════════════════════
-    // 入口
-    // ═══════════════════════════════════════════════════════════════
+    // Entry point
 
     public static function run(Event $event): void
     {
         $io = $event->getIO();
 
-        // 非交互模式：此时尚未选择语言，统一使用英文提示
+        // Non-interactive mode: language not yet chosen, use English prompt
         if (!$io->isInteractive()) {
             $io->write('<comment>' . self::MESSAGES['en']['skip'] . '</comment>');
             return;
@@ -392,13 +390,13 @@ class InstallWizard
 
         $io->write('');
 
-        // 1. 语言选择
+        // 1. Locale selection
         $locale = self::askLocale($io);
         $defaultTimezone = self::LOCALE_DEFAULT_TIMEZONES[$locale] ?? 'UTC';
         $msg = fn(string $key, string ...$args): string =>
             empty($args) ? self::MESSAGES[$locale][$key] : sprintf(self::MESSAGES[$locale][$key], ...$args);
 
-        // 写入语言配置（非默认语言时更新）
+        // Write locale config (update when not default locale)
         if ($locale !== 'zh_CN') {
             self::updateConfig($event, 'config/translation.php', "'locale'", $locale);
         }
@@ -407,16 +405,16 @@ class InstallWizard
         $io->write('<info>' . $msg('title') . '</info>');
         $io->write('');
 
-        // 2. 时区选择（根据语言推荐默认时区）
+        // 2. Timezone selection (default by locale)
         $timezone = self::askTimezone($io, $msg, $defaultTimezone);
         if ($timezone !== 'Asia/Shanghai') {
             self::updateConfig($event, 'config/app.php', "'default_timezone'", $timezone);
         }
 
-        // 3. 可选组件
+        // 3. Optional components
         $packages = self::askComponents($io, $msg);
 
-        // 4. 摘要
+        // 4. Summary
         $io->write('');
         $io->write('─────────────────────────────────────');
         $io->write('<info>' . $msg('summary_locale', self::LOCALE_LABELS[$locale]) . '</info>');
@@ -433,7 +431,7 @@ class InstallWizard
         self::runComposerRequire($packages, $io, $msg);
     }
 
-    // ─── 语言选择 ────────────────────────────────────────────────
+    // Locale selection
 
     private static function askLocale(IOInterface $io): string
     {
@@ -448,14 +446,14 @@ class InstallWizard
             $choices,
             '0',
             false,
-            'Invalid selection / 无效选择',
+            'Invalid selection',
             false
         );
 
         return $locales[(int) $selected];
     }
 
-    // ─── 时区选择 ────────────────────────────────────────────────
+    // Timezone selection
 
     private static function askTimezone(IOInterface $io, callable $msg, string $default): string
     {
@@ -467,12 +465,12 @@ class InstallWizard
     }
 
     /**
-     * 方案 A：有 stty 时，自定义逐字符联想（不区分大小写、支持任意子串匹配）
+     * Option A: when stty is available, custom character-by-character autocomplete (case-insensitive, substring match).
      *
-     * 交互方式：
-     *   - 输入任意字符实时过滤，光标右侧显示最佳匹配（黄色提示）
-     *   - ↑↓ 切换候选  Tab 接受当前候选  Enter 确认
-     *   - 直接回车 = 使用默认值
+     * Interaction:
+     *   - Type to filter in real time; best match shown on the right (yellow hint)
+     *   - ↑↓ change candidate, Tab accept current, Enter confirm
+     *   - Enter alone = use default value
      */
     private static function askTimezoneAutocomplete(callable $msg, string $default): string
     {
@@ -550,10 +548,10 @@ class InstallWizard
                     $ofs = 0;
                 }
 
-                // ── 更新匹配列表 ──
+                // Update match list
                 $matches = self::filterTimezones($allTimezones, $input);
 
-                // ── 显示联想提示 ──
+                // Show autocomplete hint
                 $cursor->clearLineAfter();
                 if (!empty($matches)) {
                     $hint = $matches[$ofs % count($matches)];
@@ -580,7 +578,7 @@ class InstallWizard
     }
 
     /**
-     * 清除已输入文字并替换为新文字
+     * Clear current input and replace with new text
      */
     private static function replaceInput(ConsoleOutput $output, Cursor $cursor, string $oldInput, string $newInput): void
     {
@@ -592,7 +590,7 @@ class InstallWizard
     }
 
     /**
-     * 不区分大小写的子串匹配
+     * Case-insensitive substring match
      */
     private static function filterTimezones(array $timezones, string $input): array
     {
@@ -607,11 +605,11 @@ class InstallWizard
     }
 
     /**
-     * 方案 B：无 stty 时（Windows 原生终端），两步 select：区域 → 城市
+     * Option B: when stty is not available (e.g. Windows native terminal), two-step select: region then city
      */
     private static function askTimezoneSelect(IOInterface $io, callable $msg, string $default): string
     {
-        // Step 1: 选区域
+        // Step 1: select region
         $regionNames = array_keys(self::TIMEZONE_REGIONS);
         $defaultRegion = explode('/', $default)[0];
 
@@ -636,7 +634,7 @@ class InstallWizard
         $selectedRegion = $regionNames[(int) $regionIndex];
         $regionConst = self::TIMEZONE_REGIONS[$selectedRegion];
 
-        // Step 2: 选具体时区
+        // Step 2: select specific timezone
         $timezones = \DateTimeZone::listIdentifiers($regionConst);
 
         $tzChoices = [];
@@ -660,7 +658,7 @@ class InstallWizard
         return $timezones[(int) $tzIndex];
     }
 
-    // ─── 可选组件选择 ────────────────────────────────────────────
+    // Optional component selection
 
     private static function askComponents(IOInterface $io, callable $msg): array
     {
@@ -696,10 +694,10 @@ class InstallWizard
         return $packages;
     }
 
-    // ─── 配置文件修改 ────────────────────────────────────────────
+    // Config file update
 
     /**
-     * 修改配置文件中形如 'key' => 'old_value' 的值
+     * Update config file value in form 'key' => 'old_value'
      */
     private static function updateConfig(Event $event, string $relativePath, string $key, string $newValue): void
     {
@@ -720,7 +718,7 @@ class InstallWizard
         }
     }
 
-    // ─── Composer require ────────────────────────────────────────
+    // Composer require
 
     private static function runComposerRequire(array $packages, IOInterface $io, callable $msg): void
     {

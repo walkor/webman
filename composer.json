@@ -51,10 +51,10 @@
       "support\\Plugin::uninstall"
     ],
     "post-create-project-cmd": [
-      "support\\InstallWizard::run"
+      "support\\Setup::run"
     ],
-    "install-wizard": [
-      "support\\InstallWizard::run"
+    "setup-webman": [
+      "support\\Setup::run"
     ]
   },
   "minimum-stability": "dev",
