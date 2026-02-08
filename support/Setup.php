@@ -446,7 +446,7 @@ class Setup
             $choices,
             '0',
             false,
-            'Invalid selection',
+            'Invalid selection / 无效选择',
             false
         );
 
