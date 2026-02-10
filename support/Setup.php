@@ -91,6 +91,10 @@ class Setup
             'timezone_region'  => '选择时区区域',
             'timezone_city'    => '选择时区',
             'timezone_invalid' => '无效的时区，已使用默认值 %s',
+            'timezone_input_prompt'  => '输入时区或关键字:',
+            'timezone_pick_prompt'   => '请输入数字编号或关键字:',
+            'timezone_no_match'      => '未找到匹配的时区，请重试。',
+            'timezone_invalid_index' => '无效的编号，请重新输入。',
             'console_question' => '安装命令行组件 webman/console',
             'db_question'      => '数据库组件',
             'db_none'          => '不安装',
@@ -114,6 +118,10 @@ class Setup
             'timezone_region'  => '選擇時區區域',
             'timezone_city'    => '選擇時區',
             'timezone_invalid' => '無效的時區，已使用預設值 %s',
+            'timezone_input_prompt'  => '輸入時區或關鍵字:',
+            'timezone_pick_prompt'   => '請輸入數字編號或關鍵字:',
+            'timezone_no_match'      => '未找到匹配的時區，請重試。',
+            'timezone_invalid_index' => '無效的編號，請重新輸入。',
             'console_question' => '安裝命令列組件 webman/console',
             'db_question'      => '資料庫組件',
             'db_none'          => '不安裝',
@@ -137,6 +145,10 @@ class Setup
             'timezone_region'  => 'Select timezone region',
             'timezone_city'    => 'Select timezone',
             'timezone_invalid' => 'Invalid timezone, using default %s',
+            'timezone_input_prompt'  => 'Enter timezone or keyword:',
+            'timezone_pick_prompt'   => 'Enter number or keyword:',
+            'timezone_no_match'      => 'No matching timezone found, please try again.',
+            'timezone_invalid_index' => 'Invalid number, please try again.',
             'console_question' => 'Install console component webman/console',
             'db_question'      => 'Database component',
             'db_none'          => 'None',
@@ -160,6 +172,10 @@ class Setup
             'timezone_region'  => 'タイムゾーンの地域を選択',
             'timezone_city'    => 'タイムゾーンを選択',
             'timezone_invalid' => '無効なタイムゾーンです。デフォルト %s を使用します',
+            'timezone_input_prompt'  => 'タイムゾーンまたはキーワードを入力:',
+            'timezone_pick_prompt'   => '番号またはキーワードを入力:',
+            'timezone_no_match'      => '一致するタイムゾーンが見つかりません。再試行してください。',
+            'timezone_invalid_index' => '無効な番号です。もう一度入力してください。',
             'console_question' => 'コンソールコンポーネント webman/console をインストール',
             'db_question'      => 'データベースコンポーネント',
             'db_none'          => 'インストールしない',
@@ -183,6 +199,10 @@ class Setup
             'timezone_region'  => '시간대 지역 선택',
             'timezone_city'    => '시간대 선택',
             'timezone_invalid' => '잘못된 시간대입니다. 기본값 %s 을(를) 사용합니다',
+            'timezone_input_prompt'  => '시간대 또는 키워드 입력:',
+            'timezone_pick_prompt'   => '번호 또는 키워드 입력:',
+            'timezone_no_match'      => '일치하는 시간대를 찾을 수 없습니다. 다시 시도하세요.',
+            'timezone_invalid_index' => '잘못된 번호입니다. 다시 입력하세요.',
             'console_question' => '콘솔 컴포넌트 webman/console 설치',
             'db_question'      => '데이터베이스 컴포넌트',
             'db_none'          => '설치 안 함',
@@ -206,6 +226,10 @@ class Setup
             'timezone_region'  => 'Sélectionnez la région du fuseau horaire',
             'timezone_city'    => 'Sélectionnez le fuseau horaire',
             'timezone_invalid' => 'Fuseau horaire invalide, utilisation de %s par défaut',
+            'timezone_input_prompt'  => 'Entrez un fuseau horaire ou un mot-clé :',
+            'timezone_pick_prompt'   => 'Entrez un numéro ou un mot-clé :',
+            'timezone_no_match'      => 'Aucun fuseau horaire correspondant, veuillez réessayer.',
+            'timezone_invalid_index' => 'Numéro invalide, veuillez réessayer.',
             'console_question' => 'Installer le composant console webman/console',
             'db_question'      => 'Composant base de données',
             'db_none'          => 'Aucun',
@@ -229,6 +253,10 @@ class Setup
             'timezone_region'  => 'Zeitzone Region auswählen',
             'timezone_city'    => 'Zeitzone auswählen',
             'timezone_invalid' => 'Ungültige Zeitzone, Standardwert %s wird verwendet',
+            'timezone_input_prompt'  => 'Zeitzone oder Stichwort eingeben:',
+            'timezone_pick_prompt'   => 'Nummer oder Stichwort eingeben:',
+            'timezone_no_match'      => 'Keine passende Zeitzone gefunden, bitte erneut versuchen.',
+            'timezone_invalid_index' => 'Ungültige Nummer, bitte erneut eingeben.',
             'console_question' => 'Konsolen-Komponente webman/console installieren',
             'db_question'      => 'Datenbank-Komponente',
             'db_none'          => 'Keine',
@@ -252,6 +280,10 @@ class Setup
             'timezone_region'  => 'Seleccione la región de zona horaria',
             'timezone_city'    => 'Seleccione la zona horaria',
             'timezone_invalid' => 'Zona horaria inválida, usando valor predeterminado %s',
+            'timezone_input_prompt'  => 'Ingrese zona horaria o palabra clave:',
+            'timezone_pick_prompt'   => 'Ingrese número o palabra clave:',
+            'timezone_no_match'      => 'No se encontró zona horaria coincidente, intente de nuevo.',
+            'timezone_invalid_index' => 'Número inválido, intente de nuevo.',
             'console_question' => 'Instalar componente de consola webman/console',
             'db_question'      => 'Componente de base de datos',
             'db_none'          => 'Ninguno',
@@ -275,6 +307,10 @@ class Setup
             'timezone_region'  => 'Selecione a região do fuso horário',
             'timezone_city'    => 'Selecione o fuso horário',
             'timezone_invalid' => 'Fuso horário inválido, usando padrão %s',
+            'timezone_input_prompt'  => 'Digite fuso horário ou palavra-chave:',
+            'timezone_pick_prompt'   => 'Digite número ou palavra-chave:',
+            'timezone_no_match'      => 'Nenhum fuso horário encontrado, tente novamente.',
+            'timezone_invalid_index' => 'Número inválido, tente novamente.',
             'console_question' => 'Instalar componente de console webman/console',
             'db_question'      => 'Componente de banco de dados',
             'db_none'          => 'Nenhum',
@@ -298,6 +334,10 @@ class Setup
             'timezone_region'  => 'Выберите регион часового пояса',
             'timezone_city'    => 'Выберите часовой пояс',
             'timezone_invalid' => 'Неверный часовой пояс, используется значение по умолчанию %s',
+            'timezone_input_prompt'  => 'Введите часовой пояс или ключевое слово:',
+            'timezone_pick_prompt'   => 'Введите номер или ключевое слово:',
+            'timezone_no_match'      => 'Совпадающий часовой пояс не найден, попробуйте снова.',
+            'timezone_invalid_index' => 'Неверный номер, попробуйте снова.',
             'console_question' => 'Установить консольный компонент webman/console',
             'db_question'      => 'Компонент базы данных',
             'db_none'          => 'Не устанавливать',
@@ -321,6 +361,10 @@ class Setup
             'timezone_region'  => 'Chọn khu vực múi giờ',
             'timezone_city'    => 'Chọn múi giờ',
             'timezone_invalid' => 'Múi giờ không hợp lệ, sử dụng mặc định %s',
+            'timezone_input_prompt'  => 'Nhập múi giờ hoặc từ khóa:',
+            'timezone_pick_prompt'   => 'Nhập số thứ tự hoặc từ khóa:',
+            'timezone_no_match'      => 'Không tìm thấy múi giờ phù hợp, vui lòng thử lại.',
+            'timezone_invalid_index' => 'Số không hợp lệ, vui lòng thử lại.',
             'console_question' => 'Cài đặt thành phần console webman/console',
             'db_question'      => 'Thành phần cơ sở dữ liệu',
             'db_none'          => 'Không cài đặt',
@@ -344,6 +388,10 @@ class Setup
             'timezone_region'  => 'Saat dilimi bölgesini seçin',
             'timezone_city'    => 'Saat dilimini seçin',
             'timezone_invalid' => 'Geçersiz saat dilimi, varsayılan %s kullanılıyor',
+            'timezone_input_prompt'  => 'Saat dilimi veya anahtar kelime girin:',
+            'timezone_pick_prompt'   => 'Numara veya anahtar kelime girin:',
+            'timezone_no_match'      => 'Eşleşen saat dilimi bulunamadı, tekrar deneyin.',
+            'timezone_invalid_index' => 'Geçersiz numara, tekrar deneyin.',
             'console_question' => 'Konsol bileşeni webman/console yüklensin mi',
             'db_question'      => 'Veritabanı bileşeni',
             'db_none'          => 'Yok',
@@ -367,6 +415,10 @@ class Setup
             'timezone_region'  => 'Pilih wilayah zona waktu',
             'timezone_city'    => 'Pilih zona waktu',
             'timezone_invalid' => 'Zona waktu tidak valid, menggunakan default %s',
+            'timezone_input_prompt'  => 'Masukkan zona waktu atau kata kunci:',
+            'timezone_pick_prompt'   => 'Masukkan nomor atau kata kunci:',
+            'timezone_no_match'      => 'Zona waktu tidak ditemukan, silakan coba lagi.',
+            'timezone_invalid_index' => 'Nomor tidak valid, silakan coba lagi.',
             'console_question' => 'Instal komponen konsol webman/console',
             'db_question'      => 'Komponen database',
             'db_none'          => 'Tidak ada',
@@ -390,6 +442,10 @@ class Setup
             'timezone_region'  => 'เลือกภูมิภาคเขตเวลา',
             'timezone_city'    => 'เลือกเขตเวลา',
             'timezone_invalid' => 'เขตเวลาไม่ถูกต้อง ใช้ค่าเริ่มต้น %s',
+            'timezone_input_prompt'  => 'ป้อนเขตเวลาหรือคำค้น:',
+            'timezone_pick_prompt'   => 'ป้อนหมายเลขหรือคำค้น:',
+            'timezone_no_match'      => 'ไม่พบเขตเวลาที่ตรงกัน กรุณาลองอีกครั้ง',
+            'timezone_invalid_index' => 'หมายเลขไม่ถูกต้อง กรุณาลองอีกครั้ง',
             'console_question' => 'ติดตั้งคอมโพเนนต์คอนโซล webman/console',
             'db_question'      => 'คอมโพเนนต์ฐานข้อมูล',
             'db_none'          => 'ไม่ติดตั้ง',
@@ -1006,43 +1062,140 @@ class Setup
     }
 
     /**
-     * Option B: when stty is not available (e.g. Windows), two-step select: region then city.
+     * Find an exact timezone match (case-insensitive).
+     * Returns the correctly-cased system timezone name, or null if not found.
+     */
+    private static function findExactTimezone(array $allTimezones, string $input): ?string
+    {
+        $lower = mb_strtolower($input);
+        foreach ($allTimezones as $tz) {
+            if (mb_strtolower($tz) === $lower) {
+                return $tz;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search timezones by keyword (substring) and similarity.
+     * Returns combined results: substring matches first, then similarity matches (>=50%).
+     *
+     * @param string[] $allTimezones All valid timezone identifiers
+     * @param string   $keyword      User input to search for
+     * @param int      $limit        Maximum number of results
+     * @return string[] Matched timezone identifiers
+     */
+    private static function searchTimezones(array $allTimezones, string $keyword, int $limit = 15): array
+    {
+        // 1. Substring matches (higher priority)
+        $substringMatches = self::filterTimezones($allTimezones, $keyword);
+        if (count($substringMatches) >= $limit) {
+            return array_slice($substringMatches, 0, $limit);
+        }
+
+        // 2. Similarity matches for remaining slots (normalized: strip _ and /)
+        $substringSet = array_flip($substringMatches);
+        $normalizedKeyword = str_replace(['_', '/'], ' ', mb_strtolower($keyword));
+        $similarityMatches = [];
+
+        foreach ($allTimezones as $tz) {
+            if (isset($substringSet[$tz])) {
+                continue;
+            }
+            $parts = explode('/', $tz);
+            $city = str_replace('_', ' ', mb_strtolower(end($parts)));
+            $normalizedTz = str_replace(['_', '/'], ' ', mb_strtolower($tz));
+
+            similar_text($normalizedKeyword, $city, $cityPercent);
+            similar_text($normalizedKeyword, $normalizedTz, $fullPercent);
+
+            $bestPercent = max($cityPercent, $fullPercent);
+            if ($bestPercent >= 50.0) {
+                $similarityMatches[] = ['tz' => $tz, 'score' => $bestPercent];
+            }
+        }
+
+        usort($similarityMatches, fn(array $a, array $b) => $b['score'] <=> $a['score']);
+
+        $results = $substringMatches;
+        foreach ($similarityMatches as $item) {
+            $results[] = $item['tz'];
+            if (count($results) >= $limit) {
+                break;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Option B: when stty is not available (e.g. Windows), keyword search with numbered list.
+     * Flow: enter timezone/keyword → exact match uses it directly; otherwise show
+     * numbered results (substring + similarity) → pick by number or refine keyword.
      */
     private static function askTimezoneSelect(IOInterface $io, callable $msg, string $default): string
     {
-        // Step 1: Select region
-        $regionNames = array_keys(self::TIMEZONE_REGIONS);
-        $defaultRegion = explode('/', $default)[0];
+        $allTimezones = \DateTimeZone::listIdentifiers();
 
-        $regionItems = [];
-        $defaultRegionIndex = 0;
-        foreach ($regionNames as $i => $name) {
-            $regionItems[] = ['tag' => (string) $i, 'label' => $name];
-            if ($name === $defaultRegion) {
-                $defaultRegionIndex = $i;
+        $io->write('');
+        $io->write('<fg=bright-blue>' . $msg('timezone_title', $default) . '</>');
+        $io->write($msg('timezone_input_prompt'));
+
+        /** @var string[]|null Currently displayed search result list */
+        $currentList = null;
+
+        while (true) {
+            $io->write('> ', false);
+            $line = fgets(STDIN);
+            if ($line === false) {
+                return $default;
             }
-        }
+            $answer = trim($line);
 
-        $regionIndex = self::selectMenu($io, $msg('timezone_region'), $regionItems, $defaultRegionIndex);
-
-        $selectedRegion = $regionNames[$regionIndex];
-        $regionConst = self::TIMEZONE_REGIONS[$selectedRegion];
-
-        // Step 2: Select timezone
-        $timezones = \DateTimeZone::listIdentifiers($regionConst);
-
-        $tzItems = [];
-        $defaultTzIndex = 0;
-        foreach ($timezones as $i => $tz) {
-            $tzItems[] = ['tag' => (string) $i, 'label' => $tz];
-            if ($tz === $default) {
-                $defaultTzIndex = $i;
+            // Empty input → use default
+            if ($answer === '') {
+                return $default;
             }
+
+            // If a numbered list is displayed and input is a pure number
+            if ($currentList !== null && ctype_digit($answer)) {
+                $idx = (int) $answer;
+                if (isset($currentList[$idx])) {
+                    return $currentList[$idx];
+                }
+                $io->write('<comment>' . $msg('timezone_invalid_index') . '</comment>');
+                continue;
+            }
+
+            // Exact case-insensitive match → return the correctly-cased system value
+            $exact = self::findExactTimezone($allTimezones, $answer);
+            if ($exact !== null) {
+                return $exact;
+            }
+
+            // Keyword + similarity search
+            $results = self::searchTimezones($allTimezones, $answer);
+
+            if (empty($results)) {
+                $io->write('<comment>' . $msg('timezone_no_match') . '</comment>');
+                $currentList = null;
+                continue;
+            }
+
+            // Single result → use it directly
+            if (count($results) === 1) {
+                $io->write('<info>' . $results[0] . '</info>');
+                return $results[0];
+            }
+
+            // Display numbered list
+            $currentList = $results;
+            $padWidth = strlen((string) (count($results) - 1));
+            foreach ($results as $i => $tz) {
+                $io->write('  [' . str_pad((string) $i, $padWidth) . '] ' . $tz);
+            }
+            $io->write($msg('timezone_pick_prompt'));
         }
-
-        $tzIndex = self::selectMenu($io, $msg('timezone_city'), $tzItems, $defaultTzIndex);
-
-        return $timezones[$tzIndex];
     }
 
     // ═══════════════════════════════════════════════════════════════
