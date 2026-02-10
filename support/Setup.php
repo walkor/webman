@@ -84,8 +84,9 @@ class Setup
     private const MESSAGES = [
         'zh_CN' => [
             'skip'             => '非交互模式，跳过安装向导。',
-            'timezone_prompt'  => '时区 (回车=%s，输入可联想补全): ',
-            'timezone_title'   => '时区设置 (回车=%s)',
+            'default_choice'   => ' (默认 %s)',
+            'timezone_prompt'  => '时区 (默认 %s，输入可联想补全): ',
+            'timezone_title'   => '时区设置 (默认 %s)',
             'timezone_help'    => '输入关键字Tab自动补全，可↑↓下选择:',
             'timezone_region'  => '选择时区区域',
             'timezone_city'    => '选择时区',
@@ -106,8 +107,9 @@ class Setup
         ],
         'zh_TW' => [
             'skip'             => '非交互模式，跳過安裝嚮導。',
-            'timezone_prompt'  => '時區 (回車=%s，輸入可聯想補全): ',
-            'timezone_title'   => '時區設定 (回車=%s)',
+            'default_choice'   => ' (預設 %s)',
+            'timezone_prompt'  => '時區 (預設 %s，輸入可聯想補全): ',
+            'timezone_title'   => '時區設定 (預設 %s)',
             'timezone_help'    => '輸入關鍵字Tab自動補全，可↑↓上下選擇:',
             'timezone_region'  => '選擇時區區域',
             'timezone_city'    => '選擇時區',
@@ -128,8 +130,9 @@ class Setup
         ],
         'en' => [
             'skip'             => 'Non-interactive mode, skipping setup wizard.',
+            'default_choice'   => ' (default %s)',
             'timezone_prompt'  => 'Timezone (default=%s, type to autocomplete): ',
-            'timezone_title'   => 'Timezone (Enter=%s)',
+            'timezone_title'   => 'Timezone (default=%s)',
             'timezone_help'    => 'Type keyword then press Tab to autocomplete, use ↑↓ to choose:',
             'timezone_region'  => 'Select timezone region',
             'timezone_city'    => 'Select timezone',
@@ -150,8 +153,9 @@ class Setup
         ],
         'ja' => [
             'skip'             => '非対話モードのため、セットアップウィザードをスキップします。',
+            'default_choice'   => ' (デフォルト %s)',
             'timezone_prompt'  => 'タイムゾーン (デフォルト=%s、入力で補完): ',
-            'timezone_title'   => 'タイムゾーン (Enter=%s)',
+            'timezone_title'   => 'タイムゾーン (デフォルト=%s)',
             'timezone_help'    => 'キーワード入力→Tabで補完、↑↓で選択:',
             'timezone_region'  => 'タイムゾーンの地域を選択',
             'timezone_city'    => 'タイムゾーンを選択',
@@ -172,8 +176,9 @@ class Setup
         ],
         'ko' => [
             'skip'             => '비대화형 모드입니다. 설치 마법사를 건너뜁니다.',
+            'default_choice'   => ' (기본값 %s)',
             'timezone_prompt'  => '시간대 (기본값=%s, 입력하여 자동완성): ',
-            'timezone_title'   => '시간대 (Enter=%s)',
+            'timezone_title'   => '시간대 (기본값=%s)',
             'timezone_help'    => '키워드 입력 후 Tab 자동완성, ↑↓로 선택:',
             'timezone_region'  => '시간대 지역 선택',
             'timezone_city'    => '시간대 선택',
@@ -194,8 +199,9 @@ class Setup
         ],
         'fr' => [
             'skip'             => 'Mode non interactif, assistant d\'installation ignoré.',
+            'default_choice'   => ' (défaut %s)',
             'timezone_prompt'  => 'Fuseau horaire (défaut=%s, tapez pour compléter) : ',
-            'timezone_title'   => 'Fuseau horaire (Entrée=%s)',
+            'timezone_title'   => 'Fuseau horaire (défaut=%s)',
             'timezone_help'    => 'Tapez un mot-clé, Tab pour compléter, ↑↓ pour choisir :',
             'timezone_region'  => 'Sélectionnez la région du fuseau horaire',
             'timezone_city'    => 'Sélectionnez le fuseau horaire',
@@ -216,8 +222,9 @@ class Setup
         ],
         'de' => [
             'skip'             => 'Nicht-interaktiver Modus, Einrichtungsassistent übersprungen.',
+            'default_choice'   => ' (Standard %s)',
             'timezone_prompt'  => 'Zeitzone (Standard=%s, Eingabe zur Vervollständigung): ',
-            'timezone_title'   => 'Zeitzone (Enter=%s)',
+            'timezone_title'   => 'Zeitzone (Standard=%s)',
             'timezone_help'    => 'Stichwort tippen, Tab ergänzt, ↑↓ auswählen:',
             'timezone_region'  => 'Zeitzone Region auswählen',
             'timezone_city'    => 'Zeitzone auswählen',
@@ -238,8 +245,9 @@ class Setup
         ],
         'es' => [
             'skip'             => 'Modo no interactivo, asistente de instalación omitido.',
+            'default_choice'   => ' (predeterminado %s)',
             'timezone_prompt'  => 'Zona horaria (predeterminado=%s, escriba para autocompletar): ',
-            'timezone_title'   => 'Zona horaria (Enter=%s)',
+            'timezone_title'   => 'Zona horaria (predeterminado=%s)',
             'timezone_help'    => 'Escriba una palabra clave, Tab autocompleta, use ↑↓ para elegir:',
             'timezone_region'  => 'Seleccione la región de zona horaria',
             'timezone_city'    => 'Seleccione la zona horaria',
@@ -260,8 +268,9 @@ class Setup
         ],
         'pt_BR' => [
             'skip'             => 'Modo não interativo, assistente de instalação ignorado.',
+            'default_choice'   => ' (padrão %s)',
             'timezone_prompt'  => 'Fuso horário (padrão=%s, digite para autocompletar): ',
-            'timezone_title'   => 'Fuso horário (Enter=%s)',
+            'timezone_title'   => 'Fuso horário (padrão=%s)',
             'timezone_help'    => 'Digite uma palavra-chave, Tab autocompleta, use ↑↓ para escolher:',
             'timezone_region'  => 'Selecione a região do fuso horário',
             'timezone_city'    => 'Selecione o fuso horário',
@@ -282,8 +291,9 @@ class Setup
         ],
         'ru' => [
             'skip'             => 'Неинтерактивный режим, мастер установки пропущен.',
+            'default_choice'   => ' (по умолчанию %s)',
             'timezone_prompt'  => 'Часовой пояс (по умолчанию=%s, введите для автодополнения): ',
-            'timezone_title'   => 'Часовой пояс (Enter=%s)',
+            'timezone_title'   => 'Часовой пояс (по умолчанию=%s)',
             'timezone_help'    => 'Введите ключевое слово, Tab для автодополнения, ↑↓ для выбора:',
             'timezone_region'  => 'Выберите регион часового пояса',
             'timezone_city'    => 'Выберите часовой пояс',
@@ -304,8 +314,9 @@ class Setup
         ],
         'vi' => [
             'skip'             => 'Chế độ không tương tác, bỏ qua trình hướng dẫn cài đặt.',
+            'default_choice'   => ' (mặc định %s)',
             'timezone_prompt'  => 'Múi giờ (mặc định=%s, nhập để tự động hoàn thành): ',
-            'timezone_title'   => 'Múi giờ (Enter=%s)',
+            'timezone_title'   => 'Múi giờ (mặc định=%s)',
             'timezone_help'    => 'Nhập từ khóa, Tab để tự hoàn thành, dùng ↑↓ để chọn:',
             'timezone_region'  => 'Chọn khu vực múi giờ',
             'timezone_city'    => 'Chọn múi giờ',
@@ -326,8 +337,9 @@ class Setup
         ],
         'tr' => [
             'skip'             => 'Etkileşimsiz mod, kurulum sihirbazı atlanıyor.',
+            'default_choice'   => ' (varsayılan %s)',
             'timezone_prompt'  => 'Saat dilimi (varsayılan=%s, otomatik tamamlama için yazın): ',
-            'timezone_title'   => 'Saat dilimi (Enter=%s)',
+            'timezone_title'   => 'Saat dilimi (varsayılan=%s)',
             'timezone_help'    => 'Anahtar kelime yazın, Tab tamamlar, ↑↓ ile seçin:',
             'timezone_region'  => 'Saat dilimi bölgesini seçin',
             'timezone_city'    => 'Saat dilimini seçin',
@@ -348,8 +360,9 @@ class Setup
         ],
         'id' => [
             'skip'             => 'Mode non-interaktif, melewati wizard instalasi.',
+            'default_choice'   => ' (default %s)',
             'timezone_prompt'  => 'Zona waktu (default=%s, ketik untuk melengkapi): ',
-            'timezone_title'   => 'Zona waktu (Enter=%s)',
+            'timezone_title'   => 'Zona waktu (default=%s)',
             'timezone_help'    => 'Ketik kata kunci, Tab untuk melengkapi, gunakan ↑↓ untuk memilih:',
             'timezone_region'  => 'Pilih wilayah zona waktu',
             'timezone_city'    => 'Pilih zona waktu',
@@ -370,8 +383,9 @@ class Setup
         ],
         'th' => [
             'skip'             => 'โหมดไม่โต้ตอบ ข้ามตัวช่วยติดตั้ง',
+            'default_choice'   => ' (ค่าเริ่มต้น %s)',
             'timezone_prompt'  => 'เขตเวลา (ค่าเริ่มต้น=%s พิมพ์เพื่อเติมอัตโนมัติ): ',
-            'timezone_title'   => 'เขตเวลา (Enter=%s)',
+            'timezone_title'   => 'เขตเวลา (ค่าเริ่มต้น=%s)',
             'timezone_help'    => 'พิมพ์คีย์เวิร์ดแล้วกด Tab เพื่อเติมอัตโนมัติ ใช้ ↑↓ เพื่อเลือก:',
             'timezone_region'  => 'เลือกภูมิภาคเขตเวลา',
             'timezone_city'    => 'เลือกเขตเวลา',
@@ -578,6 +592,21 @@ class Setup
      */
     private static function selectMenu(IOInterface $io, string $title, array $items, int $default = 0): int
     {
+        // Append localized "default" hint to avoid ambiguity
+        // (Template should contain a single %s placeholder for the default tag.)
+        $defaultHintTemplate = null;
+        if (isset(self::MESSAGES[self::$interruptLocale]['default_choice'])) {
+            $defaultHintTemplate = self::MESSAGES[self::$interruptLocale]['default_choice'];
+        }
+
+        $defaultTag = $items[$default]['tag'] ?? '';
+        if ($defaultHintTemplate && $defaultTag !== '') {
+            $title .= sprintf($defaultHintTemplate, $defaultTag);
+        } elseif ($defaultTag !== '') {
+            // Fallback for early menus (e.g. locale selection) before locale is chosen.
+            $title .= sprintf(' (default %s)', $defaultTag);
+        }
+
         if (self::supportsInteractive()) {
             return self::arrowKeySelect($title, $items, $default);
         }
@@ -620,7 +649,7 @@ class Setup
 
         // Print title and initial options
         $output->writeln('');
-        $output->writeln('<fg=bright-blue>' . $title . ' (Enter = ' . $defaultTag . ')</>');
+        $output->writeln('<fg=bright-blue>' . $title . '</>');
         self::drawMenuItems($output, $items, $selected, $maxTagWidth);
         $output->write('> ' . $input);
 
@@ -716,7 +745,7 @@ class Setup
         $defaultTag = $items[$default]['tag'];
 
         $io->write('');
-        $io->write('<fg=bright-blue>' . $title . ' (Enter = ' . $defaultTag . ')</>');
+        $io->write('<fg=bright-blue>' . $title . '</>');
         foreach ($items as $item) {
             $tag = str_pad($item['tag'], $maxTagWidth);
             $io->write("  [$tag] " . $item['label']);
@@ -815,7 +844,7 @@ class Setup
     /**
      * Option A: when stty is available, custom character-by-character autocomplete
      * (case-insensitive, substring match). Interaction: type to filter, hint on right;
-     * ↑↓ change candidate, Tab accept, Enter confirm; plain Enter = use default.
+     * ↑↓ change candidate, Tab accept, Enter confirm; empty input = use default.
      */
     private static function askTimezoneAutocomplete(callable $msg, string $default): string
     {
@@ -831,9 +860,25 @@ class Setup
         self::$sttyMode = shell_exec('stty -g');
         shell_exec('stty -icanon -echo');
 
-        $input   = '';
-        $ofs     = 0;
-        $matches = [];
+        // Auto-fill default timezone in the input area; user can edit it directly.
+        $input = $default;
+        $output->write($input);
+
+        $ofs = 0;
+        $matches = self::filterTimezones($allTimezones, $input);
+        if (!empty($matches)) {
+            $hint = $matches[$ofs % count($matches)];
+            // Avoid duplicating hint when input already fully matches the only candidate.
+            if (!(count($matches) === 1 && $hint === $input)) {
+                $cursor->clearLineAfter();
+                $cursor->savePosition();
+                $output->write('  <fg=bright-blue>' . $hint . '</>');
+                if (count($matches) > 1) {
+                    $output->write('  <info>(' . count($matches) . ' matches, ↑↓)</info>');
+                }
+                $cursor->restorePosition();
+            }
+        }
 
         try {
             while (!feof(STDIN)) {
@@ -846,8 +891,9 @@ class Setup
                 // ── Backspace ──
                 if ("\177" === $c || "\010" === $c) {
                     if ('' !== $input) {
+                        $lastChar = mb_substr($input, -1);
                         $input = mb_substr($input, 0, -1);
-                        $cursor->moveLeft(1);
+                        $cursor->moveLeft(max(1, mb_strwidth($lastChar)));
                     }
                     $ofs = 0;
 
