@@ -604,7 +604,8 @@ class Setup
     }
 
     /**
-     * Interactive select with arrow key navigation and ANSI reverse-video highlighting.
+     * Interactive select with arrow key navigation, manual input and ANSI reverse-video highlighting.
+     * Input area and option list highlighting are bidirectionally linked.
      * Requires stty (Unix-like terminals).
      */
     private static function arrowKeySelect(string $title, array $items, int $default): int
@@ -615,12 +616,13 @@ class Setup
 
         $maxTagWidth = max(array_map(fn(array $item) => mb_strlen($item['tag']), $items));
         $defaultTag = $items[$default]['tag'];
+        $input = $defaultTag;
 
         // Print title and initial options
         $output->writeln('');
         $output->writeln('<fg=bright-blue>' . $title . ' (Enter = ' . $defaultTag . ')</>');
         self::drawMenuItems($output, $items, $selected, $maxTagWidth);
-        $output->write('> ');
+        $output->write('> ' . $input);
 
         // Enter raw mode
         self::$sttyMode = shell_exec('stty -g');
@@ -634,39 +636,66 @@ class Setup
                     break;
                 }
 
-                // Escape sequences (arrow keys)
+                // ── Backspace ──
+                if ("\177" === $c || "\010" === $c) {
+                    if ('' !== $input) {
+                        $input = mb_substr($input, 0, -1);
+                    }
+                    $selected = self::findItemByTag($items, $input);
+                    $output->write("\033[{$count}A");
+                    self::drawMenuItems($output, $items, $selected, $maxTagWidth);
+                    $output->write("\033[2K\r> " . $input);
+                    continue;
+                }
+
+                // ── Escape sequences (arrow keys) ──
                 if ("\033" === $c) {
                     $seq = fread(STDIN, 2);
                     if (isset($seq[1])) {
                         $changed = false;
                         if ('A' === $seq[1]) { // Up
-                            $selected = ($selected - 1 + $count) % $count;
+                            $selected = ($selected <= 0 ? $count : $selected) - 1;
                             $changed = true;
                         } elseif ('B' === $seq[1]) { // Down
                             $selected = ($selected + 1) % $count;
                             $changed = true;
                         }
                         if ($changed) {
-                            // Move cursor up to first option line, then redraw
+                            // Sync input with selected item's tag
+                            $input = $items[$selected]['tag'];
                             $output->write("\033[{$count}A");
                             self::drawMenuItems($output, $items, $selected, $maxTagWidth);
-                            $output->write("\033[2K\r> ");
+                            $output->write("\033[2K\r> " . $input);
                         }
                     }
                     continue;
                 }
 
-                // Enter: confirm selection
+                // ── Enter: confirm selection ──
                 if ("\n" === $c || "\r" === $c) {
+                    if ($selected < 0) {
+                        $selected = $default;
+                    }
                     $output->write("\033[2K\r> <comment>" . $items[$selected]['tag'] . '</comment>');
                     $output->writeln('');
                     break;
                 }
 
-                // Ignore other control characters
+                // ── Ignore other control characters ──
                 if (ord($c) < 32) {
                     continue;
                 }
+
+                // ── Printable character (with UTF-8 multi-byte support) ──
+                if ("\x80" <= $c) {
+                    $extra = ["\xC0" => 1, "\xD0" => 1, "\xE0" => 2, "\xF0" => 3];
+                    $c .= fread(STDIN, $extra[$c & "\xF0"] ?? 0);
+                }
+                $input .= $c;
+                $selected = self::findItemByTag($items, $input);
+                $output->write("\033[{$count}A");
+                self::drawMenuItems($output, $items, $selected, $maxTagWidth);
+                $output->write("\033[2K\r> " . $input);
             }
         } finally {
             if (self::$sttyMode !== null) {
@@ -675,7 +704,7 @@ class Setup
             }
         }
 
-        return $selected;
+        return $selected < 0 ? $default : $selected;
     }
 
     /**
@@ -716,6 +745,7 @@ class Setup
 
     /**
      * Render menu items with optional ANSI reverse-video highlighting for the selected item.
+     * When $selected is -1, no item is highlighted.
      */
     private static function drawMenuItems(ConsoleOutput $output, array $items, int $selected, int $maxTagWidth): void
     {
@@ -728,6 +758,23 @@ class Setup
                 $output->writeln("\033[2K\r" . $line);
             }
         }
+    }
+
+    /**
+     * Find item index by tag (case-insensitive exact match).
+     * Returns -1 if no match found or input is empty.
+     */
+    private static function findItemByTag(array $items, string $input): int
+    {
+        if ($input === '') {
+            return -1;
+        }
+        foreach ($items as $i => $item) {
+            if (strcasecmp($item['tag'], $input) === 0) {
+                return $i;
+            }
+        }
+        return -1;
     }
 
     // ═══════════════════════════════════════════════════════════════
