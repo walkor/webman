@@ -22,6 +22,8 @@ class Setup
     private const PACKAGE_THINK_ORM         = 'webman/think-orm';
     private const PACKAGE_REDIS             = 'webman/redis';
     private const PACKAGE_ILLUMINATE_EVENTS = 'illuminate/events';
+    private const PACKAGE_ILLUMINATE_PAGINATION = 'illuminate/pagination';
+    private const PACKAGE_SYMFONY_VAR_DUMPER     = 'symfony/var-dumper';
 
     private const SETUP_TITLE = 'Webman Setup';
 
@@ -95,6 +97,9 @@ class Setup
             'timezone_pick_prompt'   => '请输入数字编号或关键字:',
             'timezone_no_match'      => '未找到匹配的时区，请重试。',
             'timezone_invalid_index' => '无效的编号，请重新输入。',
+            'yes'              => '是',
+            'no'               => '否',
+            'adding_package'   => '- 添加依赖 %s',
             'console_question' => '安装命令行组件 webman/console',
             'db_question'      => '数据库组件',
             'db_none'          => '不安装',
@@ -122,6 +127,9 @@ class Setup
             'timezone_pick_prompt'   => '請輸入數字編號或關鍵字:',
             'timezone_no_match'      => '未找到匹配的時區，請重試。',
             'timezone_invalid_index' => '無效的編號，請重新輸入。',
+            'yes'              => '是',
+            'no'               => '否',
+            'adding_package'   => '- 新增依賴 %s',
             'console_question' => '安裝命令列組件 webman/console',
             'db_question'      => '資料庫組件',
             'db_none'          => '不安裝',
@@ -149,6 +157,9 @@ class Setup
             'timezone_pick_prompt'   => 'Enter number or keyword:',
             'timezone_no_match'      => 'No matching timezone found, please try again.',
             'timezone_invalid_index' => 'Invalid number, please try again.',
+            'yes'              => 'yes',
+            'no'               => 'no',
+            'adding_package'   => '- Adding package %s',
             'console_question' => 'Install console component webman/console',
             'db_question'      => 'Database component',
             'db_none'          => 'None',
@@ -176,6 +187,9 @@ class Setup
             'timezone_pick_prompt'   => '番号またはキーワードを入力:',
             'timezone_no_match'      => '一致するタイムゾーンが見つかりません。再試行してください。',
             'timezone_invalid_index' => '無効な番号です。もう一度入力してください。',
+            'yes'              => 'はい',
+            'no'               => 'いいえ',
+            'adding_package'   => '- パッケージを追加 %s',
             'console_question' => 'コンソールコンポーネント webman/console をインストール',
             'db_question'      => 'データベースコンポーネント',
             'db_none'          => 'インストールしない',
@@ -203,6 +217,9 @@ class Setup
             'timezone_pick_prompt'   => '번호 또는 키워드 입력:',
             'timezone_no_match'      => '일치하는 시간대를 찾을 수 없습니다. 다시 시도하세요.',
             'timezone_invalid_index' => '잘못된 번호입니다. 다시 입력하세요.',
+            'yes'              => '예',
+            'no'               => '아니오',
+            'adding_package'   => '- 패키지 추가 %s',
             'console_question' => '콘솔 컴포넌트 webman/console 설치',
             'db_question'      => '데이터베이스 컴포넌트',
             'db_none'          => '설치 안 함',
@@ -230,6 +247,9 @@ class Setup
             'timezone_pick_prompt'   => 'Entrez un numéro ou un mot-clé :',
             'timezone_no_match'      => 'Aucun fuseau horaire correspondant, veuillez réessayer.',
             'timezone_invalid_index' => 'Numéro invalide, veuillez réessayer.',
+            'yes'              => 'oui',
+            'no'               => 'non',
+            'adding_package'   => '- Ajout du paquet %s',
             'console_question' => 'Installer le composant console webman/console',
             'db_question'      => 'Composant base de données',
             'db_none'          => 'Aucun',
@@ -257,6 +277,9 @@ class Setup
             'timezone_pick_prompt'   => 'Nummer oder Stichwort eingeben:',
             'timezone_no_match'      => 'Keine passende Zeitzone gefunden, bitte erneut versuchen.',
             'timezone_invalid_index' => 'Ungültige Nummer, bitte erneut eingeben.',
+            'yes'              => 'ja',
+            'no'               => 'nein',
+            'adding_package'   => '- Paket hinzufügen %s',
             'console_question' => 'Konsolen-Komponente webman/console installieren',
             'db_question'      => 'Datenbank-Komponente',
             'db_none'          => 'Keine',
@@ -284,6 +307,9 @@ class Setup
             'timezone_pick_prompt'   => 'Ingrese número o palabra clave:',
             'timezone_no_match'      => 'No se encontró zona horaria coincidente, intente de nuevo.',
             'timezone_invalid_index' => 'Número inválido, intente de nuevo.',
+            'yes'              => 'sí',
+            'no'               => 'no',
+            'adding_package'   => '- Agregando paquete %s',
             'console_question' => 'Instalar componente de consola webman/console',
             'db_question'      => 'Componente de base de datos',
             'db_none'          => 'Ninguno',
@@ -311,6 +337,9 @@ class Setup
             'timezone_pick_prompt'   => 'Digite número ou palavra-chave:',
             'timezone_no_match'      => 'Nenhum fuso horário encontrado, tente novamente.',
             'timezone_invalid_index' => 'Número inválido, tente novamente.',
+            'yes'              => 'sim',
+            'no'               => 'não',
+            'adding_package'   => '- Adicionando pacote %s',
             'console_question' => 'Instalar componente de console webman/console',
             'db_question'      => 'Componente de banco de dados',
             'db_none'          => 'Nenhum',
@@ -338,6 +367,9 @@ class Setup
             'timezone_pick_prompt'   => 'Введите номер или ключевое слово:',
             'timezone_no_match'      => 'Совпадающий часовой пояс не найден, попробуйте снова.',
             'timezone_invalid_index' => 'Неверный номер, попробуйте снова.',
+            'yes'              => 'да',
+            'no'               => 'нет',
+            'adding_package'   => '- Добавление пакета %s',
             'console_question' => 'Установить консольный компонент webman/console',
             'db_question'      => 'Компонент базы данных',
             'db_none'          => 'Не устанавливать',
@@ -365,6 +397,9 @@ class Setup
             'timezone_pick_prompt'   => 'Nhập số thứ tự hoặc từ khóa:',
             'timezone_no_match'      => 'Không tìm thấy múi giờ phù hợp, vui lòng thử lại.',
             'timezone_invalid_index' => 'Số không hợp lệ, vui lòng thử lại.',
+            'yes'              => 'có',
+            'no'               => 'không',
+            'adding_package'   => '- Thêm gói %s',
             'console_question' => 'Cài đặt thành phần console webman/console',
             'db_question'      => 'Thành phần cơ sở dữ liệu',
             'db_none'          => 'Không cài đặt',
@@ -392,6 +427,9 @@ class Setup
             'timezone_pick_prompt'   => 'Numara veya anahtar kelime girin:',
             'timezone_no_match'      => 'Eşleşen saat dilimi bulunamadı, tekrar deneyin.',
             'timezone_invalid_index' => 'Geçersiz numara, tekrar deneyin.',
+            'yes'              => 'evet',
+            'no'               => 'hayır',
+            'adding_package'   => '- Paket ekleniyor %s',
             'console_question' => 'Konsol bileşeni webman/console yüklensin mi',
             'db_question'      => 'Veritabanı bileşeni',
             'db_none'          => 'Yok',
@@ -419,6 +457,9 @@ class Setup
             'timezone_pick_prompt'   => 'Masukkan nomor atau kata kunci:',
             'timezone_no_match'      => 'Zona waktu tidak ditemukan, silakan coba lagi.',
             'timezone_invalid_index' => 'Nomor tidak valid, silakan coba lagi.',
+            'yes'              => 'ya',
+            'no'               => 'tidak',
+            'adding_package'   => '- Menambahkan paket %s',
             'console_question' => 'Instal komponen konsol webman/console',
             'db_question'      => 'Komponen database',
             'db_none'          => 'Tidak ada',
@@ -446,6 +487,9 @@ class Setup
             'timezone_pick_prompt'   => 'ป้อนหมายเลขหรือคำค้น:',
             'timezone_no_match'      => 'ไม่พบเขตเวลาที่ตรงกัน กรุณาลองอีกครั้ง',
             'timezone_invalid_index' => 'หมายเลขไม่ถูกต้อง กรุณาลองอีกครั้ง',
+            'yes'              => 'ใช่',
+            'no'               => 'ไม่',
+            'adding_package'   => '- เพิ่มแพ็กเกจ %s',
             'console_question' => 'ติดตั้งคอมโพเนนต์คอนโซล webman/console',
             'db_question'      => 'คอมโพเนนต์ฐานข้อมูล',
             'db_none'          => 'ไม่ติดตั้ง',
@@ -680,9 +724,12 @@ class Setup
      */
     private static function confirmMenu(IOInterface $io, string $title, bool $default = true): bool
     {
+        $locale = self::$interruptLocale;
+        $yes = self::MESSAGES[$locale]['yes'] ?? self::MESSAGES['en']['yes'] ?? 'yes';
+        $no = self::MESSAGES[$locale]['no'] ?? self::MESSAGES['en']['no'] ?? 'no';
         $items = $default
-            ? [['tag' => 'Y', 'label' => 'yes'], ['tag' => 'n', 'label' => 'no']]
-            : [['tag' => 'y', 'label' => 'yes'], ['tag' => 'N', 'label' => 'no']];
+            ? [['tag' => 'Y', 'label' => $yes], ['tag' => 'n', 'label' => $no]]
+            : [['tag' => 'y', 'label' => $yes], ['tag' => 'N', 'label' => $no]];
         $defaultIndex = $default ? 0 : 1;
 
         return self::selectMenu($io, $title, $items, $defaultIndex) === 0;
@@ -761,7 +808,7 @@ class Setup
                     if ($selected < 0) {
                         $selected = $default;
                     }
-                    $output->write("\033[2K\r> <comment>" . $items[$selected]['tag'] . '</comment>');
+                    $output->write("\033[2K\r> <info>" . $items[$selected]['tag'] . ' ' . $items[$selected]['label'] . '</info>');
                     $output->writeln('');
                     break;
                 }
@@ -816,12 +863,14 @@ class Setup
             $answer = trim($line);
 
             if ($answer === '') {
+                $io->write('> <info>' . $items[$default]['tag'] . ' ' . $items[$default]['label'] . '</info>');
                 return $default;
             }
 
             // Match by tag (case-insensitive)
             foreach ($items as $i => $item) {
                 if (strcasecmp($item['tag'], $answer) === 0) {
+                    $io->write('> <info>' . $items[$i]['tag'] . ' ' . $items[$i]['label'] . '</info>');
                     return $i;
                 }
             }
@@ -980,10 +1029,13 @@ class Setup
                         self::replaceInput($output, $cursor, $input, $matches[$ofs]);
                         $input = $matches[$ofs];
                     }
+                    if ($input === '') {
+                        $input = $default;
+                    }
                     // Re-render user input with <comment> style
                     $cursor->moveToColumn(1);
                     $cursor->clearLine();
-                    $output->write('> <comment>' . $input . '</comment>');
+                    $output->write('> <info>' . $input . '</info>');
                     $output->writeln('');
                     break;
 
@@ -1154,6 +1206,7 @@ class Setup
 
             // Empty input → use default
             if ($answer === '') {
+                $io->write('> <info>' . $default . '</info>');
                 return $default;
             }
 
@@ -1161,6 +1214,7 @@ class Setup
             if ($currentList !== null && ctype_digit($answer)) {
                 $idx = (int) $answer;
                 if (isset($currentList[$idx])) {
+                    $io->write('> <info>' . $currentList[$idx] . '</info>');
                     return $currentList[$idx];
                 }
                 $io->write('<comment>' . $msg('timezone_invalid_index') . '</comment>');
@@ -1170,6 +1224,7 @@ class Setup
             // Exact case-insensitive match → return the correctly-cased system value
             $exact = self::findExactTimezone($allTimezones, $answer);
             if ($exact !== null) {
+                $io->write('> <info>' . $exact . '</info>');
                 return $exact;
             }
 
@@ -1184,7 +1239,7 @@ class Setup
 
             // Single result → use it directly
             if (count($results) === 1) {
-                $io->write('<info>' . $results[0] . '</info>');
+                $io->write('> <info>' . $results[0] . '</info>');
                 return $results[0];
             }
 
@@ -1205,10 +1260,17 @@ class Setup
     private static function askComponents(IOInterface $io, callable $msg): array
     {
         $packages = [];
+        $addPackage = static function (string $package) use (&$packages, $io, $msg): void {
+            if (in_array($package, $packages, true)) {
+                return;
+            }
+            $packages[] = $package;
+            $io->write($msg('adding_package', '<info>' . $package . '</info>'));
+        };
 
         // Console (default: yes)
         if (self::confirmMenu($io, $msg('console_question'), true)) {
-            $packages[] = self::PACKAGE_CONSOLE;
+            $addPackage(self::PACKAGE_CONSOLE);
         }
 
         // Database
@@ -1216,19 +1278,29 @@ class Setup
             ['tag' => '0', 'label' => $msg('db_none')],
             ['tag' => '1', 'label' => 'webman/database'],
             ['tag' => '2', 'label' => 'webman/think-orm'],
+            ['tag' => '3', 'label' => 'webman/database && webman/think-orm'],
         ];
         $dbChoice = self::selectMenu($io, $msg('db_question'), $dbItems, 0);
         if ($dbChoice === 1) {
-            $packages[] = self::PACKAGE_DATABASE;
+            $addPackage(self::PACKAGE_DATABASE);
         } elseif ($dbChoice === 2) {
-            $packages[] = self::PACKAGE_THINK_ORM;
+            $addPackage(self::PACKAGE_THINK_ORM);
+        } elseif ($dbChoice === 3) {
+            $addPackage(self::PACKAGE_DATABASE);
+            $addPackage(self::PACKAGE_THINK_ORM);
+        }
+
+        // If webman/database is selected, add required dependencies automatically
+        if (in_array(self::PACKAGE_DATABASE, $packages, true)) {
+            $addPackage(self::PACKAGE_ILLUMINATE_PAGINATION);
+            $addPackage(self::PACKAGE_ILLUMINATE_EVENTS);
+            $addPackage(self::PACKAGE_SYMFONY_VAR_DUMPER);
         }
 
         // Redis (default: no)
         if (self::confirmMenu($io, $msg('redis_question'), false)) {
-            $packages[] = self::PACKAGE_REDIS;
-            $packages[] = self::PACKAGE_ILLUMINATE_EVENTS;
-            $io->write('<comment>' . $msg('events_note') . '</comment>');
+            $addPackage(self::PACKAGE_REDIS);
+            $addPackage(self::PACKAGE_ILLUMINATE_EVENTS);
         }
 
         return $packages;
