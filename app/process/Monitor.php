@@ -149,7 +149,7 @@ class Monitor
         $count = 0;
         foreach ($iterator as $file) {
             $count ++;
-            /** var SplFileInfo $file */
+            /** @var SplFileInfo $file */
             if (is_dir($file->getRealPath())) {
                 continue;
             }
