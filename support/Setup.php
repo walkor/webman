@@ -24,6 +24,10 @@ class Setup
     private const PACKAGE_ILLUMINATE_EVENTS = 'illuminate/events';
     private const PACKAGE_ILLUMINATE_PAGINATION = 'illuminate/pagination';
     private const PACKAGE_SYMFONY_VAR_DUMPER     = 'symfony/var-dumper';
+    private const PACKAGE_VALIDATION             = 'webman/validation';
+    private const PACKAGE_BLADE                  = 'webman/blade';
+    private const PACKAGE_TWIG                   = 'twig/twig';
+    private const PACKAGE_THINK_TEMPLATE         = 'topthink/think-template';
 
     private const SETUP_TITLE = 'Webman Setup';
 
@@ -85,7 +89,12 @@ class Setup
 
     private const MESSAGES = [
         'zh_CN' => [
-            'skip'             => '非交互模式，跳过安装向导。',
+            'remove_package_question' => '发现以下已安装组件本次未选择，是否将其卸载 ?%s',
+            'removing_package'   => '- 准备移除组件 %s',
+            'removing'           => '卸载：',
+            'error_remove'       => '卸载组件出错，请手动执行：composer remove %s',
+            'done_remove'        => '已卸载组件。',
+                        'skip'             => '非交互模式，跳过安装向导。',
             'default_choice'   => ' (默认 %s)',
             'timezone_prompt'  => '时区 (默认 %s，输入可联想补全): ',
             'timezone_title'   => '时区设置 (默认 %s)',
@@ -104,15 +113,18 @@ class Setup
             'db_question'      => '数据库组件',
             'db_none'          => '不安装',
             'db_invalid'       => '请输入有效选项',
-            'redis_question'   => '安装 Redis 组件 webman/redis',
-            'events_note'      => '  (Redis 依赖 illuminate/events，已自动包含)',
-            'no_components'    => '未选择额外组件。',
-            'installing'       => '即将安装：',
-            'running'          => '执行：',
-            'error_install'    => '安装可选组件时出错，请手动执行：composer require %s',
-            'done'             => '可选组件安装完成。',
-            'summary_locale'   => '语言：%s',
-            'summary_timezone' => '时区：%s',
+            'redis_question'       => '安装 Redis 组件 webman/redis',
+            'events_note'          => '  (Redis 依赖 illuminate/events，已自动包含)',
+            'validation_question'  => '安装验证器组件 webman/validation',
+            'template_question'    => '模板引擎',
+            'template_none'        => '不安装',
+            'no_components'        => '未选择额外组件。',
+            'installing'           => '即将安装：',
+            'running'              => '执行：',
+            'error_install'        => '安装可选组件时出错，请手动执行：composer require %s',
+            'done'                 => '可选组件安装完成。',
+            'summary_locale'       => '语言：%s',
+            'summary_timezone'     => '时区：%s',
         ],
         'zh_TW' => [
             'skip'             => '非交互模式，跳過安裝嚮導。',
@@ -134,15 +146,18 @@ class Setup
             'db_question'      => '資料庫組件',
             'db_none'          => '不安裝',
             'db_invalid'       => '請輸入有效選項',
-            'redis_question'   => '安裝 Redis 組件 webman/redis',
-            'events_note'      => '  (Redis 依賴 illuminate/events，已自動包含)',
-            'no_components'    => '未選擇額外組件。',
-            'installing'       => '即將安裝：',
-            'running'          => '執行：',
-            'error_install'    => '安裝可選組件時出錯，請手動執行：composer require %s',
-            'done'             => '可選組件安裝完成。',
-            'summary_locale'   => '語言：%s',
-            'summary_timezone' => '時區：%s',
+            'redis_question'       => '安裝 Redis 組件 webman/redis',
+            'events_note'          => '  (Redis 依賴 illuminate/events，已自動包含)',
+            'validation_question'  => '安裝驗證器組件 webman/validation',
+            'template_question'    => '模板引擎',
+            'template_none'        => '不安裝',
+            'no_components'        => '未選擇額外組件。',
+            'installing'           => '即將安裝：',
+            'running'              => '執行：',
+            'error_install'        => '安裝可選組件時出錯，請手動執行：composer require %s',
+            'done'                 => '可選組件安裝完成。',
+            'summary_locale'       => '語言：%s',
+            'summary_timezone'     => '時區：%s',
         ],
         'en' => [
             'skip'             => 'Non-interactive mode, skipping setup wizard.',
@@ -164,15 +179,18 @@ class Setup
             'db_question'      => 'Database component',
             'db_none'          => 'None',
             'db_invalid'       => 'Please enter a valid option',
-            'redis_question'   => 'Install Redis component webman/redis',
-            'events_note'      => '  (Redis requires illuminate/events, automatically included)',
-            'no_components'    => 'No optional components selected.',
-            'installing'       => 'Installing:',
-            'running'          => 'Running:',
-            'error_install'    => 'Failed to install. Try manually: composer require %s',
-            'done'             => 'Optional components installed.',
-            'summary_locale'   => 'Language: %s',
-            'summary_timezone' => 'Timezone: %s',
+            'redis_question'       => 'Install Redis component webman/redis',
+            'events_note'          => '  (Redis requires illuminate/events, automatically included)',
+            'validation_question'  => 'Install validator component webman/validation',
+            'template_question'    => 'Template engine',
+            'template_none'        => 'None',
+            'no_components'        => 'No optional components selected.',
+            'installing'           => 'Installing:',
+            'running'              => 'Running:',
+            'error_install'        => 'Failed to install. Try manually: composer require %s',
+            'done'                 => 'Optional components installed.',
+            'summary_locale'       => 'Language: %s',
+            'summary_timezone'     => 'Timezone: %s',
         ],
         'ja' => [
             'skip'             => '非対話モードのため、セットアップウィザードをスキップします。',
@@ -194,15 +212,18 @@ class Setup
             'db_question'      => 'データベースコンポーネント',
             'db_none'          => 'インストールしない',
             'db_invalid'       => '有効なオプションを入力してください',
-            'redis_question'   => 'Redis コンポーネント webman/redis をインストール',
-            'events_note'      => '  (Redis は illuminate/events が必要です。自動的に含まれます)',
-            'no_components'    => 'オプションコンポーネントが選択されていません。',
-            'installing'       => 'インストール中：',
-            'running'          => '実行中：',
-            'error_install'    => 'インストールに失敗しました。手動で実行してください：composer require %s',
-            'done'             => 'オプションコンポーネントのインストールが完了しました。',
-            'summary_locale'   => '言語：%s',
-            'summary_timezone' => 'タイムゾーン：%s',
+            'redis_question'       => 'Redis コンポーネント webman/redis をインストール',
+            'events_note'          => '  (Redis は illuminate/events が必要です。自動的に含まれます)',
+            'validation_question'  => 'バリデーションコンポーネント webman/validation をインストール',
+            'template_question'    => 'テンプレートエンジン',
+            'template_none'        => 'インストールしない',
+            'no_components'        => 'オプションコンポーネントが選択されていません。',
+            'installing'           => 'インストール中：',
+            'running'              => '実行中：',
+            'error_install'        => 'インストールに失敗しました。手動で実行してください：composer require %s',
+            'done'                 => 'オプションコンポーネントのインストールが完了しました。',
+            'summary_locale'       => '言語：%s',
+            'summary_timezone'     => 'タイムゾーン：%s',
         ],
         'ko' => [
             'skip'             => '비대화형 모드입니다. 설치 마법사를 건너뜁니다.',
@@ -224,15 +245,18 @@ class Setup
             'db_question'      => '데이터베이스 컴포넌트',
             'db_none'          => '설치 안 함',
             'db_invalid'       => '유효한 옵션을 입력하세요',
-            'redis_question'   => 'Redis 컴포넌트 webman/redis 설치',
-            'events_note'      => '  (Redis는 illuminate/events가 필요합니다. 자동으로 포함됩니다)',
-            'no_components'    => '선택된 추가 컴포넌트가 없습니다.',
-            'installing'       => '설치 예정：',
-            'running'          => '실행 중：',
-            'error_install'    => '설치에 실패했습니다. 수동으로 실행하세요: composer require %s',
-            'done'             => '선택 컴포넌트 설치가 완료되었습니다.',
-            'summary_locale'   => '언어: %s',
-            'summary_timezone' => '시간대: %s',
+            'redis_question'       => 'Redis 컴포넌트 webman/redis 설치',
+            'events_note'          => '  (Redis는 illuminate/events가 필요합니다. 자동으로 포함됩니다)',
+            'validation_question'  => '검증 컴포넌트 webman/validation 설치',
+            'template_question'    => '템플릿 엔진',
+            'template_none'        => '설치 안 함',
+            'no_components'        => '선택된 추가 컴포넌트가 없습니다.',
+            'installing'           => '설치 예정：',
+            'running'              => '실행 중：',
+            'error_install'        => '설치에 실패했습니다. 수동으로 실행하세요: composer require %s',
+            'done'                 => '선택 컴포넌트 설치가 완료되었습니다.',
+            'summary_locale'       => '언어: %s',
+            'summary_timezone'     => '시간대: %s',
         ],
         'fr' => [
             'skip'             => 'Mode non interactif, assistant d\'installation ignoré.',
@@ -254,15 +278,18 @@ class Setup
             'db_question'      => 'Composant base de données',
             'db_none'          => 'Aucun',
             'db_invalid'       => 'Veuillez entrer une option valide',
-            'redis_question'   => 'Installer le composant Redis webman/redis',
-            'events_note'      => '  (Redis nécessite illuminate/events, inclus automatiquement)',
-            'no_components'    => 'Aucun composant optionnel sélectionné.',
-            'installing'       => 'Installation en cours :',
-            'running'          => 'Exécution :',
-            'error_install'    => 'Échec de l\'installation. Essayez manuellement : composer require %s',
-            'done'             => 'Composants optionnels installés.',
-            'summary_locale'   => 'Langue : %s',
-            'summary_timezone' => 'Fuseau horaire : %s',
+            'redis_question'       => 'Installer le composant Redis webman/redis',
+            'events_note'          => '  (Redis nécessite illuminate/events, inclus automatiquement)',
+            'validation_question'  => 'Installer le composant de validation webman/validation',
+            'template_question'    => 'Moteur de templates',
+            'template_none'        => 'Aucun',
+            'no_components'        => 'Aucun composant optionnel sélectionné.',
+            'installing'           => 'Installation en cours :',
+            'running'              => 'Exécution :',
+            'error_install'        => 'Échec de l\'installation. Essayez manuellement : composer require %s',
+            'done'                 => 'Composants optionnels installés.',
+            'summary_locale'       => 'Langue : %s',
+            'summary_timezone'     => 'Fuseau horaire : %s',
         ],
         'de' => [
             'skip'             => 'Nicht-interaktiver Modus, Einrichtungsassistent übersprungen.',
@@ -284,15 +311,18 @@ class Setup
             'db_question'      => 'Datenbank-Komponente',
             'db_none'          => 'Keine',
             'db_invalid'       => 'Bitte geben Sie eine gültige Option ein',
-            'redis_question'   => 'Redis-Komponente webman/redis installieren',
-            'events_note'      => '  (Redis benötigt illuminate/events, automatisch eingeschlossen)',
-            'no_components'    => 'Keine optionalen Komponenten ausgewählt.',
-            'installing'       => 'Installation:',
-            'running'          => 'Ausführung:',
-            'error_install'    => 'Installation fehlgeschlagen. Manuell ausführen: composer require %s',
-            'done'             => 'Optionale Komponenten installiert.',
-            'summary_locale'   => 'Sprache: %s',
-            'summary_timezone' => 'Zeitzone: %s',
+            'redis_question'       => 'Redis-Komponente webman/redis installieren',
+            'events_note'          => '  (Redis benötigt illuminate/events, automatisch eingeschlossen)',
+            'validation_question'  => 'Validierungs-Komponente webman/validation installieren',
+            'template_question'    => 'Template-Engine',
+            'template_none'        => 'Keine',
+            'no_components'        => 'Keine optionalen Komponenten ausgewählt.',
+            'installing'           => 'Installation:',
+            'running'              => 'Ausführung:',
+            'error_install'        => 'Installation fehlgeschlagen. Manuell ausführen: composer require %s',
+            'done'                 => 'Optionale Komponenten installiert.',
+            'summary_locale'       => 'Sprache: %s',
+            'summary_timezone'     => 'Zeitzone: %s',
         ],
         'es' => [
             'skip'             => 'Modo no interactivo, asistente de instalación omitido.',
@@ -314,15 +344,18 @@ class Setup
             'db_question'      => 'Componente de base de datos',
             'db_none'          => 'Ninguno',
             'db_invalid'       => 'Por favor ingrese una opción válida',
-            'redis_question'   => 'Instalar componente Redis webman/redis',
-            'events_note'      => '  (Redis requiere illuminate/events, incluido automáticamente)',
-            'no_components'    => 'No se seleccionaron componentes opcionales.',
-            'installing'       => 'Instalando:',
-            'running'          => 'Ejecutando:',
-            'error_install'    => 'Error en la instalación. Intente manualmente: composer require %s',
-            'done'             => 'Componentes opcionales instalados.',
-            'summary_locale'   => 'Idioma: %s',
-            'summary_timezone' => 'Zona horaria: %s',
+            'redis_question'       => 'Instalar componente Redis webman/redis',
+            'events_note'          => '  (Redis requiere illuminate/events, incluido automáticamente)',
+            'validation_question'  => 'Instalar componente de validación webman/validation',
+            'template_question'    => 'Motor de plantillas',
+            'template_none'        => 'Ninguno',
+            'no_components'        => 'No se seleccionaron componentes opcionales.',
+            'installing'           => 'Instalando:',
+            'running'              => 'Ejecutando:',
+            'error_install'        => 'Error en la instalación. Intente manualmente: composer require %s',
+            'done'                 => 'Componentes opcionales instalados.',
+            'summary_locale'       => 'Idioma: %s',
+            'summary_timezone'     => 'Zona horaria: %s',
         ],
         'pt_BR' => [
             'skip'             => 'Modo não interativo, assistente de instalação ignorado.',
@@ -344,15 +377,18 @@ class Setup
             'db_question'      => 'Componente de banco de dados',
             'db_none'          => 'Nenhum',
             'db_invalid'       => 'Por favor, digite uma opção válida',
-            'redis_question'   => 'Instalar componente Redis webman/redis',
-            'events_note'      => '  (Redis requer illuminate/events, incluído automaticamente)',
-            'no_components'    => 'Nenhum componente opcional selecionado.',
-            'installing'       => 'Instalando:',
-            'running'          => 'Executando:',
-            'error_install'    => 'Falha na instalação. Tente manualmente: composer require %s',
-            'done'             => 'Componentes opcionais instalados.',
-            'summary_locale'   => 'Idioma: %s',
-            'summary_timezone' => 'Fuso horário: %s',
+            'redis_question'       => 'Instalar componente Redis webman/redis',
+            'events_note'          => '  (Redis requer illuminate/events, incluído automaticamente)',
+            'validation_question'  => 'Instalar componente de validação webman/validation',
+            'template_question'    => 'Motor de templates',
+            'template_none'        => 'Nenhum',
+            'no_components'        => 'Nenhum componente opcional selecionado.',
+            'installing'           => 'Instalando:',
+            'running'              => 'Executando:',
+            'error_install'        => 'Falha na instalação. Tente manualmente: composer require %s',
+            'done'                 => 'Componentes opcionais instalados.',
+            'summary_locale'       => 'Idioma: %s',
+            'summary_timezone'     => 'Fuso horário: %s',
         ],
         'ru' => [
             'skip'             => 'Неинтерактивный режим, мастер установки пропущен.',
@@ -374,15 +410,18 @@ class Setup
             'db_question'      => 'Компонент базы данных',
             'db_none'          => 'Не устанавливать',
             'db_invalid'       => 'Пожалуйста, введите допустимый вариант',
-            'redis_question'   => 'Установить компонент Redis webman/redis',
-            'events_note'      => '  (Redis требует illuminate/events, автоматически включён)',
-            'no_components'    => 'Дополнительные компоненты не выбраны.',
-            'installing'       => 'Установка:',
-            'running'          => 'Выполнение:',
-            'error_install'    => 'Ошибка установки. Выполните вручную: composer require %s',
-            'done'             => 'Дополнительные компоненты установлены.',
-            'summary_locale'   => 'Язык: %s',
-            'summary_timezone' => 'Часовой пояс: %s',
+            'redis_question'       => 'Установить компонент Redis webman/redis',
+            'events_note'          => '  (Redis требует illuminate/events, автоматически включён)',
+            'validation_question'  => 'Установить компонент валидации webman/validation',
+            'template_question'    => 'Шаблонизатор',
+            'template_none'        => 'Не устанавливать',
+            'no_components'        => 'Дополнительные компоненты не выбраны.',
+            'installing'           => 'Установка:',
+            'running'              => 'Выполнение:',
+            'error_install'        => 'Ошибка установки. Выполните вручную: composer require %s',
+            'done'                 => 'Дополнительные компоненты установлены.',
+            'summary_locale'       => 'Язык: %s',
+            'summary_timezone'     => 'Часовой пояс: %s',
         ],
         'vi' => [
             'skip'             => 'Chế độ không tương tác, bỏ qua trình hướng dẫn cài đặt.',
@@ -404,15 +443,18 @@ class Setup
             'db_question'      => 'Thành phần cơ sở dữ liệu',
             'db_none'          => 'Không cài đặt',
             'db_invalid'       => 'Vui lòng nhập tùy chọn hợp lệ',
-            'redis_question'   => 'Cài đặt thành phần Redis webman/redis',
-            'events_note'      => '  (Redis cần illuminate/events, đã tự động bao gồm)',
-            'no_components'    => 'Không có thành phần tùy chọn nào được chọn.',
-            'installing'       => 'Đang cài đặt:',
-            'running'          => 'Đang thực thi:',
-            'error_install'    => 'Cài đặt thất bại. Thử thủ công: composer require %s',
-            'done'             => 'Các thành phần tùy chọn đã được cài đặt.',
-            'summary_locale'   => 'Ngôn ngữ: %s',
-            'summary_timezone' => 'Múi giờ: %s',
+            'redis_question'       => 'Cài đặt thành phần Redis webman/redis',
+            'events_note'          => '  (Redis cần illuminate/events, đã tự động bao gồm)',
+            'validation_question'  => 'Cài đặt thành phần xác thực webman/validation',
+            'template_question'    => 'Công cụ mẫu',
+            'template_none'        => 'Không cài đặt',
+            'no_components'        => 'Không có thành phần tùy chọn nào được chọn.',
+            'installing'           => 'Đang cài đặt:',
+            'running'              => 'Đang thực thi:',
+            'error_install'        => 'Cài đặt thất bại. Thử thủ công: composer require %s',
+            'done'                 => 'Các thành phần tùy chọn đã được cài đặt.',
+            'summary_locale'       => 'Ngôn ngữ: %s',
+            'summary_timezone'     => 'Múi giờ: %s',
         ],
         'tr' => [
             'skip'             => 'Etkileşimsiz mod, kurulum sihirbazı atlanıyor.',
@@ -434,15 +476,18 @@ class Setup
             'db_question'      => 'Veritabanı bileşeni',
             'db_none'          => 'Yok',
             'db_invalid'       => 'Lütfen geçerli bir seçenek girin',
-            'redis_question'   => 'Redis bileşeni webman/redis yüklensin mi',
-            'events_note'      => '  (Redis, illuminate/events gerektirir, otomatik olarak dahil edildi)',
-            'no_components'    => 'İsteğe bağlı bileşen seçilmedi.',
-            'installing'       => 'Yükleniyor:',
-            'running'          => 'Çalıştırılıyor:',
-            'error_install'    => 'Yükleme başarısız. Manuel olarak deneyin: composer require %s',
-            'done'             => 'İsteğe bağlı bileşenler yüklendi.',
-            'summary_locale'   => 'Dil: %s',
-            'summary_timezone' => 'Saat dilimi: %s',
+            'redis_question'       => 'Redis bileşeni webman/redis yüklensin mi',
+            'events_note'          => '  (Redis, illuminate/events gerektirir, otomatik olarak dahil edildi)',
+            'validation_question'  => 'Doğrulama bileşeni webman/validation yüklensin mi',
+            'template_question'    => 'Şablon motoru',
+            'template_none'        => 'Yok',
+            'no_components'        => 'İsteğe bağlı bileşen seçilmedi.',
+            'installing'           => 'Yükleniyor:',
+            'running'              => 'Çalıştırılıyor:',
+            'error_install'        => 'Yükleme başarısız. Manuel olarak deneyin: composer require %s',
+            'done'                 => 'İsteğe bağlı bileşenler yüklendi.',
+            'summary_locale'       => 'Dil: %s',
+            'summary_timezone'     => 'Saat dilimi: %s',
         ],
         'id' => [
             'skip'             => 'Mode non-interaktif, melewati wizard instalasi.',
@@ -464,15 +509,18 @@ class Setup
             'db_question'      => 'Komponen database',
             'db_none'          => 'Tidak ada',
             'db_invalid'       => 'Silakan masukkan opsi yang valid',
-            'redis_question'   => 'Instal komponen Redis webman/redis',
-            'events_note'      => '  (Redis memerlukan illuminate/events, otomatis disertakan)',
-            'no_components'    => 'Tidak ada komponen opsional yang dipilih.',
-            'installing'       => 'Menginstal:',
-            'running'          => 'Menjalankan:',
-            'error_install'    => 'Instalasi gagal. Coba manual: composer require %s',
-            'done'             => 'Komponen opsional terinstal.',
-            'summary_locale'   => 'Bahasa: %s',
-            'summary_timezone' => 'Zona waktu: %s',
+            'redis_question'       => 'Instal komponen Redis webman/redis',
+            'events_note'          => '  (Redis memerlukan illuminate/events, otomatis disertakan)',
+            'validation_question'  => 'Instal komponen validasi webman/validation',
+            'template_question'    => 'Mesin template',
+            'template_none'        => 'Tidak ada',
+            'no_components'        => 'Tidak ada komponen opsional yang dipilih.',
+            'installing'           => 'Menginstal:',
+            'running'              => 'Menjalankan:',
+            'error_install'        => 'Instalasi gagal. Coba manual: composer require %s',
+            'done'                 => 'Komponen opsional terinstal.',
+            'summary_locale'       => 'Bahasa: %s',
+            'summary_timezone'     => 'Zona waktu: %s',
         ],
         'th' => [
             'skip'             => 'โหมดไม่โต้ตอบ ข้ามตัวช่วยติดตั้ง',
@@ -494,15 +542,18 @@ class Setup
             'db_question'      => 'คอมโพเนนต์ฐานข้อมูล',
             'db_none'          => 'ไม่ติดตั้ง',
             'db_invalid'       => 'กรุณาป้อนตัวเลือกที่ถูกต้อง',
-            'redis_question'   => 'ติดตั้งคอมโพเนนต์ Redis webman/redis',
-            'events_note'      => '  (Redis ต้องการ illuminate/events รวมไว้โดยอัตโนมัติ)',
-            'no_components'    => 'ไม่ได้เลือกคอมโพเนนต์เสริม',
-            'installing'       => 'กำลังติดตั้ง:',
-            'running'          => 'กำลังดำเนินการ:',
-            'error_install'    => 'ติดตั้งล้มเหลว ลองด้วยตนเอง: composer require %s',
-            'done'             => 'คอมโพเนนต์เสริมติดตั้งเรียบร้อยแล้ว',
-            'summary_locale'   => 'ภาษา: %s',
-            'summary_timezone' => 'เขตเวลา: %s',
+            'redis_question'       => 'ติดตั้งคอมโพเนนต์ Redis webman/redis',
+            'events_note'          => '  (Redis ต้องการ illuminate/events รวมไว้โดยอัตโนมัติ)',
+            'validation_question'  => 'ติดตั้งคอมโพเนนต์ตรวจสอบ webman/validation',
+            'template_question'    => 'เทมเพลตเอนจิน',
+            'template_none'        => 'ไม่ติดตั้ง',
+            'no_components'        => 'ไม่ได้เลือกคอมโพเนนต์เสริม',
+            'installing'           => 'กำลังติดตั้ง:',
+            'running'              => 'กำลังดำเนินการ:',
+            'error_install'        => 'ติดตั้งล้มเหลว ลองด้วยตนเอง: composer require %s',
+            'done'                 => 'คอมโพเนนต์เสริมติดตั้งเรียบร้อยแล้ว',
+            'summary_locale'       => 'ภาษา: %s',
+            'summary_timezone'     => 'เขตเวลา: %s',
         ],
     ];
 
@@ -579,21 +630,39 @@ class Setup
         // 3. Optional components
         $packages = self::askComponents($io, $msg);
 
-        // 4. Summary
+        // 4. Remove unselected components
+        $removePackages = self::askRemoveComponents($event, $packages, $io, $msg);
+
+        // 5. Summary
         $io->write('');
         $io->write('─────────────────────────────────────');
         $io->write('<info>' . $msg('summary_locale', self::LOCALE_LABELS[$locale]) . '</info>');
         $io->write('<info>' . $msg('summary_timezone', $timezone) . '</info>');
 
-        if ($packages === []) {
+        if ($packages !== []) {
+            $io->write('<info>' . $msg('installing') . '</info> ' . implode(', ', $packages));
+            $io->write('');
+            self::runComposerRequire($packages, $io, $msg);
+        } else {
             $io->write('<info>' . $msg('no_components') . '</info>');
-            return;
         }
 
-        $io->write('<info>' . $msg('installing') . '</info> ' . implode(', ', $packages));
-        $io->write('');
+        if ($removePackages !== []) {
+            $io->write('');
+            $io->write('<info>' . $msg('removing') . '</info>');
 
-        self::runComposerRequire($packages, $io, $msg);
+            $secondaryPackages = [
+                self::PACKAGE_ILLUMINATE_EVENTS,
+                self::PACKAGE_ILLUMINATE_PAGINATION,
+                self::PACKAGE_SYMFONY_VAR_DUMPER,
+            ];
+            $displayRemovePackages = array_diff($removePackages, $secondaryPackages);
+            foreach ($displayRemovePackages as $pkg) {
+                $io->write('  - ' . $pkg);
+            }
+            $io->write('');
+            self::runComposerRemove($removePackages, $io, $msg);
+        }
     }
 
     private static function renderTitle(): void
@@ -1303,6 +1372,27 @@ class Setup
             $addPackage(self::PACKAGE_ILLUMINATE_EVENTS);
         }
 
+        // Validation (default: no)
+        if (self::confirmMenu($io, $msg('validation_question'), false)) {
+            $addPackage(self::PACKAGE_VALIDATION);
+        }
+
+        // Template engine
+        $tplItems = [
+            ['tag' => '0', 'label' => $msg('template_none')],
+            ['tag' => '1', 'label' => 'webman/blade'],
+            ['tag' => '2', 'label' => 'twig/twig'],
+            ['tag' => '3', 'label' => 'topthink/think-template'],
+        ];
+        $tplChoice = self::selectMenu($io, $msg('template_question'), $tplItems, 0);
+        if ($tplChoice === 1) {
+            $addPackage(self::PACKAGE_BLADE);
+        } elseif ($tplChoice === 2) {
+            $addPackage(self::PACKAGE_TWIG);
+        } elseif ($tplChoice === 3) {
+            $addPackage(self::PACKAGE_THINK_TEMPLATE);
+        }
+
         return $packages;
     }
 
@@ -1350,6 +1440,78 @@ class Setup
             $io->writeError('<error>' . $msg('error_install', implode(' ', $packages)) . '</error>');
         } else {
             $io->write('<info>' . $msg('done') . '</info>');
+        }
+    }
+
+    private static function askRemoveComponents(Event $event, array $selectedPackages, IOInterface $io, callable $msg): array
+    {
+        $requires = $event->getComposer()->getPackage()->getRequires();
+        $allOptionalPackages = [
+            self::PACKAGE_CONSOLE,
+            self::PACKAGE_DATABASE,
+            self::PACKAGE_THINK_ORM,
+            self::PACKAGE_REDIS,
+            self::PACKAGE_ILLUMINATE_EVENTS,
+            self::PACKAGE_ILLUMINATE_PAGINATION,
+            self::PACKAGE_SYMFONY_VAR_DUMPER,
+            self::PACKAGE_VALIDATION,
+            self::PACKAGE_BLADE,
+            self::PACKAGE_TWIG,
+            self::PACKAGE_THINK_TEMPLATE,
+        ];
+
+        $secondaryPackages = [
+            self::PACKAGE_ILLUMINATE_EVENTS,
+            self::PACKAGE_ILLUMINATE_PAGINATION,
+            self::PACKAGE_SYMFONY_VAR_DUMPER,
+        ];
+
+        $installedOptionalPackages = [];
+        foreach ($allOptionalPackages as $pkg) {
+            if (isset($requires[$pkg])) {
+                $installedOptionalPackages[] = $pkg;
+            }
+        }
+
+        $allPackagesToRemove = array_diff($installedOptionalPackages, $selectedPackages);
+
+        if (count($allPackagesToRemove) === 0) {
+            return [];
+        }
+
+        $displayPackagesToRemove = array_diff($allPackagesToRemove, $secondaryPackages);
+
+        if (count($displayPackagesToRemove) === 0) {
+            return $allPackagesToRemove;
+        }
+
+        $pkgListStr = "";
+        foreach ($displayPackagesToRemove as $pkg) {
+            $pkgListStr .= "\n  - <info>{$pkg}</info>";
+        }
+        $pkgListStr .= "\n";
+
+        if (self::confirmMenu($io, $msg('remove_package_question', $pkgListStr), true)) {
+            return $allPackagesToRemove;
+        }
+
+        return [];
+    }
+
+    private static function runComposerRemove(array $packages, IOInterface $io, callable $msg): void
+    {
+        $escaped = array_map('escapeshellarg', $packages);
+        $cmd = 'composer remove ' . implode(' ', $escaped) . ' --no-interaction';
+        $io->write('<comment>' . $msg('running') . '</comment> ' . $cmd);
+        $io->write('');
+
+        $code = 0;
+        passthru($cmd, $code);
+
+        if ($code !== 0) {
+            $io->writeError('<error>' . $msg('error_remove', implode(' ', $packages)) . '</error>');
+        } else {
+            $io->write('<info>' . $msg('done_remove') . '</info>');
         }
     }
 }
