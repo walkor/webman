@@ -688,9 +688,9 @@ class Setup
         $line3 = '└' . str_repeat('─', $innerWidth) . '┘';
 
         $output->writeln('');
-        $output->writeln('<fg=bright-blue>' . $line1 . '</>');
-        $output->writeln('<fg=bright-blue>' . $line2 . '</>');
-        $output->writeln('<fg=bright-blue>' . $line3 . '</>');
+        $output->writeln('<fg=blue;options=bold>' . $line1 . '</>');
+        $output->writeln('<fg=blue;options=bold>' . $line2 . '</>');
+        $output->writeln('<fg=blue;options=bold>' . $line3 . '</>');
         $output->writeln('');
     }
 
@@ -821,7 +821,7 @@ class Setup
 
         // Print title and initial options
         $output->writeln('');
-        $output->writeln('<fg=bright-blue>' . $title . '</>');
+        $output->writeln('<fg=blue;options=bold>' . $title . '</>');
         self::drawMenuItems($output, $items, $selected, $maxTagWidth);
         $output->write('> ' . $input);
 
@@ -917,7 +917,7 @@ class Setup
         $defaultTag = $items[$default]['tag'];
 
         $io->write('');
-        $io->write('<fg=bright-blue>' . $title . '</>');
+        $io->write('<fg=blue;options=bold>' . $title . '</>');
         foreach ($items as $item) {
             $tag = str_pad($item['tag'], $maxTagWidth);
             $io->write("  [$tag] " . $item['label']);
@@ -1027,7 +1027,7 @@ class Setup
         $cursor = new Cursor($output);
 
         $output->writeln('');
-        $output->writeln('<fg=bright-blue>' . $msg('timezone_title', $default) . '</>');
+        $output->writeln('<fg=blue;options=bold>' . $msg('timezone_title', $default) . '</>');
         $output->writeln($msg('timezone_help'));
         $output->write('> ');
 
@@ -1046,7 +1046,7 @@ class Setup
             if (!(count($matches) === 1 && $hint === $input)) {
                 $cursor->clearLineAfter();
                 $cursor->savePosition();
-                $output->write('  <fg=bright-blue>' . $hint . '</>');
+                $output->write('  <fg=blue;options=bold>' . $hint . '</>');
                 if (count($matches) > 1) {
                     $output->write('  <info>(' . count($matches) . ' matches, ↑↓)</info>');
                 }
@@ -1131,7 +1131,7 @@ class Setup
                 if (!empty($matches)) {
                     $hint = $matches[$ofs % count($matches)];
                     $cursor->savePosition();
-                    $output->write('  <fg=bright-blue>' . $hint . '</>');
+                    $output->write('  <fg=blue;options=bold>' . $hint . '</>');
                     if (count($matches) > 1) {
                         $output->write('  <info>(' . count($matches) . ' matches, ↑↓)</info>');
                     }
@@ -1259,7 +1259,7 @@ class Setup
         $allTimezones = \DateTimeZone::listIdentifiers();
 
         $io->write('');
-        $io->write('<fg=bright-blue>' . $msg('timezone_title', $default) . '</>');
+        $io->write('<fg=blue;options=bold>' . $msg('timezone_title', $default) . '</>');
         $io->write($msg('timezone_input_prompt'));
 
         /** @var string[]|null Currently displayed search result list */
