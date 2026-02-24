@@ -27,7 +27,13 @@
     "php": ">=8.1",
     "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0",
-    "webman/console": "^2.1"
+    "webman/console": "^2.2",
+    "webman/database": "^2.1",
+    "illuminate/pagination": "^12.52",
+    "illuminate/events": "^12.52",
+    "symfony/var-dumper": "^8.0",
+    "webman/redis": "^2.1",
+    "webman/validation": "^2.2"
   },
   "suggest": {
     "ext-event": "For better performance. "

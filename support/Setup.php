@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace support;
 
+use Composer\Console\Application as ComposerApplication;
 use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Symfony\Component\Console\Cursor;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Terminal;
 
@@ -598,6 +600,17 @@ class Setup
             return;
         }
 
+        try {
+            self::doRun($event, $io);
+        } catch (\Throwable $e) {
+            $io->writeError('');
+            $io->writeError('<error>Setup wizard error: ' . $e->getMessage() . '</error>');
+            $io->writeError('<comment>Run "composer setup-webman" to retry.</comment>');
+        }
+    }
+
+    private static function doRun(Event $event, IOInterface $io): void
+    {
         $io->write('');
 
         // Register Ctrl+C handler
@@ -639,14 +652,7 @@ class Setup
         $io->write('<info>' . $msg('summary_locale', self::LOCALE_LABELS[$locale]) . '</info>');
         $io->write('<info>' . $msg('summary_timezone', $timezone) . '</info>');
 
-        if ($packages !== []) {
-            $io->write('<info>' . $msg('installing') . '</info> ' . implode(', ', $packages));
-            $io->write('');
-            self::runComposerRequire($packages, $io, $msg);
-        } else {
-            $io->write('<info>' . $msg('no_components') . '</info>');
-        }
-
+        // Remove unselected packages first to avoid dependency conflicts
         if ($removePackages !== []) {
             $io->write('');
             $io->write('<info>' . $msg('removing') . '</info>');
@@ -662,6 +668,16 @@ class Setup
             }
             $io->write('');
             self::runComposerRemove($removePackages, $io, $msg);
+        }
+
+        // Then install selected packages
+        if ($packages !== []) {
+            $io->write('');
+            $io->write('<info>' . $msg('installing') . '</info> ' . implode(', ', $packages));
+            $io->write('');
+            self::runComposerRequire($packages, $io, $msg);
+        } elseif ($removePackages === []) {
+            $io->write('<info>' . $msg('no_components') . '</info>');
         }
     }
 
@@ -727,7 +743,7 @@ class Setup
     private static function handleInterrupt(): void
     {
         // Restore terminal if in raw mode
-        if (self::$sttyMode !== null) {
+        if (self::$sttyMode !== null && function_exists('shell_exec')) {
             @shell_exec('stty ' . self::$sttyMode);
             self::$sttyMode = null;
         }
@@ -747,7 +763,7 @@ class Setup
      */
     private static function supportsInteractive(): bool
     {
-        return Terminal::hasSttyAvailable();
+        return function_exists('shell_exec') && Terminal::hasSttyAvailable();
     }
 
     /**
@@ -1008,7 +1024,7 @@ class Setup
 
     private static function askTimezone(IOInterface $io, callable $msg, string $default): string
     {
-        if (Terminal::hasSttyAvailable()) {
+        if (self::supportsInteractive()) {
             return self::askTimezoneAutocomplete($msg, $default);
         }
 
@@ -1428,13 +1444,10 @@ class Setup
 
     private static function runComposerRequire(array $packages, IOInterface $io, callable $msg): void
     {
-        $escaped = array_map('escapeshellarg', $packages);
-        $cmd = 'composer require ' . implode(' ', $escaped) . ' --no-interaction';
-        $io->write('<comment>' . $msg('running') . '</comment> ' . $cmd);
+        $io->write('<comment>' . $msg('running') . '</comment> composer require ' . implode(' ', $packages));
         $io->write('');
 
-        $code = 0;
-        passthru($cmd, $code);
+        $code = self::runComposerCommand('require', $packages);
 
         if ($code !== 0) {
             $io->writeError('<error>' . $msg('error_install', implode(' ', $packages)) . '</error>');
@@ -1487,11 +1500,12 @@ class Setup
 
         $pkgListStr = "";
         foreach ($displayPackagesToRemove as $pkg) {
-            $pkgListStr .= "\n  - <info>{$pkg}</info>";
+            $pkgListStr .= "\n  - {$pkg}";
         }
         $pkgListStr .= "\n";
 
-        if (self::confirmMenu($io, $msg('remove_package_question', $pkgListStr), true)) {
+        $title = '<comment>' . $msg('remove_package_question', '') . '</comment>' . $pkgListStr;
+        if (self::confirmMenu($io, $title, false)) {
             return $allPackagesToRemove;
         }
 
@@ -1500,18 +1514,45 @@ class Setup
 
     private static function runComposerRemove(array $packages, IOInterface $io, callable $msg): void
     {
-        $escaped = array_map('escapeshellarg', $packages);
-        $cmd = 'composer remove ' . implode(' ', $escaped) . ' --no-interaction';
-        $io->write('<comment>' . $msg('running') . '</comment> ' . $cmd);
+        $io->write('<comment>' . $msg('running') . '</comment> composer remove ' . implode(' ', $packages));
         $io->write('');
 
-        $code = 0;
-        passthru($cmd, $code);
+        $code = self::runComposerCommand('remove', $packages);
 
         if ($code !== 0) {
             $io->writeError('<error>' . $msg('error_remove', implode(' ', $packages)) . '</error>');
         } else {
             $io->write('<info>' . $msg('done_remove') . '</info>');
+        }
+    }
+
+    /**
+     * Run a Composer command (require/remove) in-process via Composer's Application API.
+     * No shell execution functions needed — works even when passthru/exec/shell_exec are disabled.
+     */
+    private static function runComposerCommand(string $command, array $packages): int
+    {
+        try {
+            // Already inside a user-initiated Composer session — suppress duplicate root/superuser warnings
+            $_SERVER['COMPOSER_ALLOW_SUPERUSER'] = '1';
+            if (function_exists('putenv')) {
+                putenv('COMPOSER_ALLOW_SUPERUSER=1');
+            }
+
+            $application = new ComposerApplication();
+            $application->setAutoExit(false);
+
+            return $application->run(
+                new ArrayInput([
+                    'command'  => $command,
+                    'packages' => $packages,
+                    '--no-interaction' => true,
+                    '--update-with-all-dependencies' => true,
+                ]),
+                new ConsoleOutput()
+            );
+        } catch (\Throwable) {
+            return 1;
         }
     }
 }
