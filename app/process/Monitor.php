@@ -280,26 +280,20 @@ class Monitor
         if ($memoryLimit == -1) {
             return 0;
         }
-        $unit = strtolower($memoryLimit[strlen($memoryLimit) - 1]);
+        $unit = strtolower(substr($memoryLimit, -1));
         $memoryLimit = (int)$memoryLimit;
-        if ($unit === 'g') {
-            $memoryLimit = 1024 * $memoryLimit;
-        } else if ($unit === 'k') {
-            $memoryLimit = ($memoryLimit / 1024);
-        } else if ($unit === 'm') {
-            $memoryLimit = (int)($memoryLimit);
-        } else if ($unit === 't') {
-            $memoryLimit = (1024 * 1024 * $memoryLimit);
-        } else {
-            $memoryLimit = ($memoryLimit / (1024 * 1024));
-        }
-        if ($memoryLimit < 50) {
-            $memoryLimit = 50;
-        }
+        $memoryLimitMb = match ($unit) {
+            't' => $memoryLimit * 1024 * 1024, // TB -> MB
+            'g' => $memoryLimit * 1024, // GB -> MB
+            'm' => $memoryLimit, // MB
+            'k' => round($memoryLimit / 1024), // KB -> MB
+            default => round($memoryLimit / 1024 / 1024), // bytes -> MB
+        };
+        $memoryLimitMb = max($memoryLimitMb, 50);
         if ($usePhpIni) {
-            $memoryLimit = (0.8 * $memoryLimit);
+            $memoryLimitMb = (0.8 * $memoryLimitMb);
         }
-        return (int)$memoryLimit;
+        return (int)$memoryLimitMb;
     }
 
 }
