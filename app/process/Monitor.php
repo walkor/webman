@@ -147,6 +147,7 @@ class Monitor
             $iterator = new RecursiveIteratorIterator($dirIterator);
         }
         $count = 0;
+        $datetime = date('Y-m-d H:i:s');
         foreach ($iterator as $file) {
             $count ++;
             /** @var SplFileInfo $file */
@@ -157,7 +158,7 @@ class Monitor
             if (in_array($file->getExtension(), $this->extensions, true) && $lastMtime < $file->getMTime()) {
                 $lastMtime = $file->getMTime();
                 if (DIRECTORY_SEPARATOR === '/' && isset($this->loadedFiles[$file->getRealPath()])) {
-                    echo "$file updated but cannot be reloaded because only auto-loaded files support reload.\n";
+                    echo "[{$datetime}] " . "$file updated but cannot be reloaded because only auto-loaded files support reload.\n";
                     continue;
                 }
                 $var = 0;
@@ -168,19 +169,19 @@ class Monitor
                 // send SIGUSR1 signal to master process for reload
                 if (DIRECTORY_SEPARATOR === '/') {
                     if ($masterPid = $this->getMasterPid()) {
-                        echo $file . " updated and reload\n";
+                        echo "[{$datetime}] " . $file . " updated and reload\n";
                         posix_kill($masterPid, SIGUSR1);
                     } else {
-                        echo "Master process has gone away and can not reload\n";
+                        echo "[{$datetime}] " . "Master process has gone away and can not reload\n";
                     }
                     return true;
                 }
-                echo $file . " updated and reload\n";
+                echo "[{$datetime}] " . $file . " updated and reload\n";
                 return true;
             }
         }
         if (!$tooManyFilesCheck && $count > 1000) {
-            echo "Monitor: There are too many files ($count files) in $monitorDir which makes file monitoring very slow\n";
+            echo "[{$datetime}] " . "Monitor: There are too many files ($count files) in $monitorDir which makes file monitoring very slow\n";
             $tooManyFilesCheck = 1;
         }
         return false;
