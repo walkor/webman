@@ -108,9 +108,8 @@ class Monitor
         if (!Worker::getAllWorkers()) {
             return;
         }
-        $disableFunctions = explode(',', ini_get('disable_functions'));
-        if (in_array('exec', $disableFunctions, true)) {
-            echo "\nMonitor file change turned off because exec() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH . "/php.ini\n";
+        if (!function_exists('proc_open')) {
+            echo "\nMonitor file change turned off because proc_open() has been disabled by disable_functions setting in " . PHP_CONFIG_FILE_PATH . "/php.ini\n";
         } else {
             if ($options['enable_file_monitor'] ?? true) {
                 Timer::add(1, function () {
@@ -160,9 +159,13 @@ class Monitor
                     echo "$file updated but cannot be reloaded because only auto-loaded files support reload.\n";
                     continue;
                 }
-                $var = 0;
-                exec('"'.PHP_BINARY . '" -l ' . $file, $out, $var);
-                if ($var) {
+                $process = proc_open([PHP_BINARY, '-l', $file->getPathname()], [STDIN, ['pipe', 'w'], STDERR], $pipes);
+                if (!$process) {
+                    continue;
+                }
+                stream_get_contents($pipes[1]);
+                fclose($pipes[1]);
+                if (proc_close($process) !== 0) {
                     continue;
                 }
                 // send SIGUSR1 signal to master process for reload
