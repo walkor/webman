@@ -26,8 +26,8 @@ class StaticFile implements MiddlewareInterface
 {
     public function process(Request $request, callable $handler): Response
     {
-        // Access to files beginning with. Is prohibited
-        if (strpos($request->path(), '/.') !== false) {
+        // Access to files beginning with a dot is prohibited
+        if (strpos(urldecode($request->path()), '/.') !== false) {
             return response('<h1>403 forbidden</h1>', 403);
         }
         /** @var Response $response */
