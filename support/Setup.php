@@ -162,6 +162,11 @@ class Setup
             'summary_timezone'     => '時區：%s',
         ],
         'en' => [
+            'remove_package_question' => 'The following installed components were not selected. Remove them?%s',
+            'removing_package'  => '- Preparing to remove package %s',
+            'removing'         => 'Removing:',
+            'error_remove'     => 'Failed to remove. Try manually: composer remove %s',
+            'done_remove'      => 'Optional components removed.',
             'skip'             => 'Non-interactive mode, skipping setup wizard.',
             'default_choice'   => ' (default %s)',
             'timezone_prompt'  => 'Timezone (default=%s, type to autocomplete): ',
@@ -623,8 +628,10 @@ class Setup
         $locale = self::askLocale($io);
         self::$interruptLocale = $locale;
         $defaultTimezone = self::LOCALE_DEFAULT_TIMEZONES[$locale] ?? 'UTC';
-        $msg = fn(string $key, string ...$args): string =>
-        empty($args) ? self::MESSAGES[$locale][$key] : sprintf(self::MESSAGES[$locale][$key], ...$args);
+        $msg = static function (string $key, string ...$args) use ($locale): string {
+            $message = self::MESSAGES[$locale][$key] ?? self::MESSAGES['en'][$key];
+            return empty($args) ? $message : sprintf($message, ...$args);
+        };
 
         // Write locale config (update when not default)
         if ($locale !== 'zh_CN') {
