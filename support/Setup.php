@@ -626,19 +626,15 @@ class Setup
         $msg = fn(string $key, string ...$args): string =>
         empty($args) ? self::MESSAGES[$locale][$key] : sprintf(self::MESSAGES[$locale][$key], ...$args);
 
-        // Write locale config (update when not default)
-        if ($locale !== 'zh_CN') {
-            self::updateConfig($event, 'config/translation.php', "'locale'", $locale);
-        }
+        // Persist the selected locale, including the default when setup is rerun.
+        self::updateConfig($event, 'config/translation.php', "'locale'", $locale);
 
         $io->write('');
         $io->write('');
 
         // 2. Timezone selection (default by locale)
         $timezone = self::askTimezone($io, $msg, $defaultTimezone);
-        if ($timezone !== 'Asia/Shanghai') {
-            self::updateConfig($event, 'config/app.php', "'default_timezone'", $timezone);
-        }
+        self::updateConfig($event, 'config/app.php', "'default_timezone'", $timezone);
 
         // 3. Optional components
         $packages = self::askComponents($io, $msg);
