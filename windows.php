@@ -63,11 +63,12 @@ foreach (config('plugin', []) as $firm => $projects) {
 
 function write_process_file($runtimeProcessPath, $processName, $firm): string
 {
+    $autoloadFile = var_export(__DIR__ . '/vendor/autoload.php', true);
     $processParam = $firm ? "plugin.$firm.$processName" : $processName;
     $configParam = $firm ? "config('plugin.$firm.process')['$processName']" : "config('process')['$processName']";
     $fileContent = <<<EOF
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once $autoloadFile;
 
 use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
@@ -113,11 +114,11 @@ if ($monitorConfig = config('process.monitor.constructor')) {
 
 function popen_processes($processFiles)
 {
-    $cmd = '"' . PHP_BINARY . '" ' . implode(' ', $processFiles);
+    $cmd = array_merge([PHP_BINARY], $processFiles);
     $descriptorspec = [STDIN, STDOUT, STDOUT];
     $resource = proc_open($cmd, $descriptorspec, $pipes, null, null, ['bypass_shell' => true]);
     if (!$resource) {
-        exit("Can not execute $cmd\r\n");
+        exit("Can not execute " . implode(' ', $cmd) . "\r\n");
     }
     return $resource;
 }
